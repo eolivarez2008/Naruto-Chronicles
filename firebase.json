@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "./Naruto",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "./Naruto/index.html"
+      }
+    ]
+  }
+}
