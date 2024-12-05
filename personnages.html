@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Naruto Chronicles - Personnages</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="./Logo/Logo naruto.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <style>    
+    @media (min-width: 600px) and (max-width: 768px) {
+        .col-md-2 {
+          width: 25%; /* 4 images par ligne entre 600px et 768px */
+        }
+    }
+
+     @media (min-width: 992px) {
+        .col-lg-1-3 {
+          width: 11.1%; /* 100% / 9 = 11.1% pour les grands écrans */
+        }
+    }
+  </style>
+  <section class="nave">
+    <nav class="navebar">
+      <a href="index.html">
+        <img src="./Logo/Logo complet naruto.jpg" alt="logo naruto" height="40" class="logo" />
+      </a>
+      <!-- Liens de navigation pour ordinateur -->
+      <div class="nave-links">
+        <ul>
+          <li class="has-sous-nave"><a href="./histoire.html">Histoire</a></li>
+          <li class="has-sous-nave"><a style="color: #ff6600;" href="./personnages.html">Personnages</a></li>
+          <li class="has-sous-nave"><a href="./saga.html">Saga</a></li>
+          <li class="has-sous-nave"><a href="./contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <!-- Bouton hamburger pour mobile -->
+      <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <!-- Volet latéral pour mobile -->
+      <div class="side-menu" id="side-menu">
+        <ul>
+          <li class="has-sous-nav"><a href="./histoire.html">Histoire</a></li>
+          <li class="has-sous-nav"><a style="color: #ff6600;" href="./personnages.html">Personnages</a></li>
+          <li class="has-sous-nav"><a href="./saga.html">Saga</a></li>
+          <li class="has-sous-nav"><a href="./contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav> 
+  </section>
+  <body class="body">
+    <div class="center-container">
+     <div class="container-fluid">
+      <h1>Ninja</h1>
+      <div class="separation-persos"></div>
+      <div class="row m-0">
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/abumi_zaku_643.webp" class="img-fluid rounded">
+          <p>Abumi Zaku</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/aburame_shibi_4236.webp" class="img-fluid rounded">
+          <p>Aburame Shibi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/aburame_shino_624.webp" class="img-fluid rounded">
+          <p>Aburame Shino</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/agari_15061.webp" class="img-fluid rounded">
+          <p>Agari</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ageha_15058.webp" class="img-fluid rounded">
+          <p>Ageha</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/akame_iwana_15168.webp" class="img-fluid rounded">
+          <p>Akame Iwana</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/akane_15054.webp" class="img-fluid rounded">
+          <p>Akane</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/chouji_akimichi_622.webp" class="img-fluid rounded">
+          <p>Akimichi Chouji</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/akimichi_chouza_4456.webp" class="img-fluid rounded">
+          <p>Akimichi Chouza</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/akodo_yoroi_652.webp" class="img-fluid rounded">
+          <p>Akodo Yoroi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ami_15141.webp" class="img-fluid rounded">
+          <p>Ami</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/anko_mitarashi_641.webp" class="img-fluid rounded">
+          <p>Anko Mitarashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/aoi_rokushou_948.webp" class="img-fluid rounded">
+          <p>Aoi Rokushou</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ayame_12896.webp" class="img-fluid rounded">
+          <p>Ayame</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/baiu_15134.webp" class="img-fluid rounded">
+          <p>Baiu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/baki_666.webp" class="img-fluid rounded">
+          <p>Baki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/bekko_15167.webp" class="img-fluid rounded">
+          <p>Bekko</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/chohan_15309.webp" class="img-fluid rounded">
+          <p>Chohan</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/choseki_15312.webp" class="img-fluid rounded">
+          <p>Choseki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/dan_4192.webp" class="img-fluid rounded">
+          <p>Dan</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/dengaku_15324.webp" class="img-fluid rounded">
+          <p>Dengaku</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ebisu_659.webp" class="img-fluid rounded">
+          <p>Ebisu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/emi_15325.webp" class="img-fluid rounded">
+          <p>Emi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuki_15142.webp" class="img-fluid rounded">
+          <p>Fuki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuujin_971.webp" class="img-fluid rounded">
+          <p>Fuujin</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuuma_arashi_959.webp" class="img-fluid rounded">
+          <p>Fuuma Arashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuuma_hanzaki_958.webp" class="img-fluid rounded">
+          <p>Fuuma Hanzaki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuuma_jigumo_955.webp" class="img-fluid rounded">
+          <p>Fuuma Jigumo</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuuma_kagerou_957.webp" class="img-fluid rounded">
+          <p>Fuuma Kagerou</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuuma_kamakiri_956.webp" class="img-fluid rounded">
+          <p>Fuuma Kamakiri</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/fuuma_sasame_954.webp" class="img-fluid rounded">
+          <p>Fuuma Sasame</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/gantetsu_15311.webp" class="img-fluid rounded">
+          <p>Gantetsu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/gato_10553.webp" class="img-fluid rounded">
+          <p>Gato</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/gekkou_hayate_657.webp" class="img-fluid rounded">
+          <p>Gekkou Hayate</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/genin_oboro_651.webp" class="img-fluid rounded">
+          <p>Genin Oboro</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/genma_shiranui_658.webp" class="img-fluid rounded">
+          <p>Genma Shiranui</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/gennai_15185.webp" class="img-fluid rounded">
+          <p>Gennai</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/genno_19281.webp" class="img-fluid rounded">
+          <p>Genno</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/genyumaru_18342.webp" class="img-fluid rounded">
+          <p>Genyumaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/genzo_15050.webp" class="img-fluid rounded">
+          <p>Genzo</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/giichi_15063.webp" class="img-fluid rounded">
+          <p>Giichi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/goshiki_15330.webp" class="img-fluid rounded">
+          <p>Goshiki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hagane_kotetsu_639.webp" class="img-fluid rounded">
+          <p>Hagane Kotetsu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/haku_634.webp" class="img-fluid rounded">
+          <p>Haku</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/haruna_19243.webp" class="img-fluid rounded">
+          <p>Haruna</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/haruno_sakura_617.webp" class="img-fluid rounded">
+          <p>Haruno Sakura</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hayase_15757.webp" class="img-fluid rounded">
+          <p>Hayase</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hiashi_hyuuga_667.webp" class="img-fluid rounded">
+          <p>Hyuuga Hiashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hinata_hyuuga_620.webp" class="img-fluid rounded">
+          <p>Hyuuga Hinata</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hizashi_hyuuga_668.webp" class="img-fluid rounded">
+          <p>Hyuuga Hizashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hyuuga_hanabi_3681.webp" class="img-fluid rounded">
+          <p>Hyuuga Hanabi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/neji_hyuuga_637.webp" class="img-fluid rounded">
+          <p>Hyuuga Neji</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hyuga_no_kodai_15164.webp" class="img-fluid rounded">
+          <p>Hyuga</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hiruzen_sarutobi_sandaime_632.webp" class="img-fluid rounded">
+          <p>Hiruzen Sarotobi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hoki_19076.webp" class="img-fluid rounded">
+          <p>Hoki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/hosho_15866.webp" class="img-fluid rounded">
+          <p>Hosho</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/houki_4868.webp" class="img-fluid rounded">
+          <p>Houki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ibara_15651.webp" class="img-fluid rounded">
+          <p>Ibara</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ibiki_morino_640.webp" class="img-fluid rounded">
+          <p>Ibiki Morino</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ichikaru_teuchi_945.webp" class="img-fluid rounded">
+          <p>Ichikaru Teuchi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/inaho_15190.webp" class="img-fluid rounded">
+          <p>Inaho</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/inari_15065.webp" class="img-fluid rounded">
+          <p>Inari</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ino_yamanaka_619.webp" class="img-fluid rounded">
+          <p>Ino Yamanaka</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/inoichi_yamanaka_4237.webp" class="img-fluid rounded">
+          <p>Inoichi Yamanaka</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/inuzuka_hana_10698.webp" class="img-fluid rounded">
+          <p>Inuzuka Hana</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/inuzuka_kiba_630.webp" class="img-fluid rounded">
+          <p>Inuzuka Kiba</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/inuzuka_tsume_16083.webp" class="img-fluid rounded">
+          <p>Inuzuka Tsume</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/iruka_umino_631.webp" class="img-fluid rounded">
+          <p>Iruka Umino</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/isarabi_7865.webp" class="img-fluid rounded">
+          <p>Isarabi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/iyashi_15867.webp" class="img-fluid rounded">
+          <p>Iyashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/janto_15314.webp" class="img-fluid rounded">
+          <p>Janto</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/jibachi_1108.webp" class="img-fluid rounded">
+          <p>Jibachi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/jiraiya_ero-sennin_669.webp" class="img-fluid rounded">
+          <p>Jiraiya</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/jiroubou_949.webp" class="img-fluid rounded">
+          <p>Jiroubou</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kaiza_15066.webp" class="img-fluid rounded">
+          <p>Kaiza</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kaji_15060.webp" class="img-fluid rounded">
+          <p>Kaji</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kakashi_hatake_618.webp" class="img-fluid rounded">
+          <p>Kakashi Hatake</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kamizuki_izumo_642.webp" class="img-fluid rounded">
+          <p>Kamizuki izumo</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kankurou_664.webp" class="img-fluid rounded">
+          <p>Kankurou</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kanpo_15868.webp" class="img-fluid rounded">
+          <p>Kanpo</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kaori_15869.webp" class="img-fluid rounded">
+          <p>Kaori</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/karashi_1198.webp" class="img-fluid rounded">
+          <p>Karashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/karura_18772.webp" class="img-fluid rounded">
+          <p>Karura</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kasumi_15143.webp" class="img-fluid rounded">
+          <p>Kasumi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kazabune_15331.webp" class="img-fluid rounded">
+          <p>Kazabune</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kaze_no_kuni_no_daimyo_17852.webp" class="img-fluid rounded">
+          <p>Kaze</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kazekage_671.webp" class="img-fluid rounded">
+          <p>Kazekage</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kidoumaru_950.webp" class="img-fluid rounded">
+          <p>Kidoumaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kimimaro_kaguya_953.webp" class="img-fluid rounded">
+          <p>Kimimaro</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kinuta_dosu_644.webp" class="img-fluid rounded">
+          <p>Kinuta Dosu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kisame_hoshigaki_679.webp" class="img-fluid rounded">
+          <p>Kisame Hoshigaki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kity_15870.webp" class="img-fluid rounded">
+          <p>Kity</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/komaza_19277.webp" class="img-fluid rounded">
+          <p>Komaza</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/komugi_15191.webp" class="img-fluid rounded">
+          <p>Komugi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/konohamaru_660.webp" class="img-fluid rounded">
+          <p>Konohamaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/korobi_15925.webp" class="img-fluid rounded">
+          <p>Korobi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kurama_yakumo_3966.webp" class="img-fluid rounded">
+          <p>Kurama Yakumo</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kurobachi_1109.webp" class="img-fluid rounded">
+          <p>Kurobachi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kusabi_18165.webp" class="img-fluid rounded">
+          <p>Kusabi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kusuma_15328.webp" class="img-fluid rounded">
+          <p>Kusuma</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/kusushi_15881.webp" class="img-fluid rounded">
+          <p>Kusushi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/maito_gai_654.webp" class="img-fluid rounded">
+          <p>Maito Gai</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/manabu_akado_15052.webp" class="img-fluid rounded">
+          <p>Manabu Akado</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/matsuri_5273.webp" class="img-fluid rounded">
+          <p>Matsuri</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/meizu_15139.webp" class="img-fluid rounded">
+          <p>Meizu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/mibu_shinobu_19365.webp" class="img-fluid rounded">
+          <p>Mibu Shinobi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/midare_15108.webp" class="img-fluid rounded">
+          <p>Midare</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/midori_19278.webp" class="img-fluid rounded">
+          <p>Midori</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/migaki_15882.webp" class="img-fluid rounded">
+          <p>Migaki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/minoji_15250.webp" class="img-fluid rounded">
+          <p>Minoji</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/mitate_15883.webp" class="img-fluid rounded">
+          <p>Mitate</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/mitokado_homura_4626.webp" class="img-fluid rounded">
+          <p>Mitokado Homura</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/mizuki_635.webp" class="img-fluid rounded">
+          <p>Mizuki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/moegi_661.webp" class="img-fluid rounded">
+          <p>Moegi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/momiji_15326.webp" class="img-fluid rounded">
+          <p>Momiji</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/morino_idate_946.webp" class="img-fluid rounded">
+          <p>Morino Idate</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/mubi_19372.webp" class="img-fluid rounded">
+          <p>Mubi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/namiashi_raido_947.webp" class="img-fluid rounded">
+          <p>Namiashi Raido</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/namikaze_minato_yondaime_4207.webp" class="img-fluid rounded">
+          <p>Namikaze Minato</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/nanafushi_19280.webp" class="img-fluid rounded">
+          <p>Nanafushi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/nara_shikaku_682.webp" class="img-fluid rounded">
+          <p>Nara shikaku</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/nara_shikamaru_623.webp" class="img-fluid rounded">
+          <p>Nara Shikamaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/natsuhi_19242.webp" class="img-fluid rounded">
+          <p>Natsuhi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/nawaki_3943.webp" class="img-fluid rounded">
+          <p>Nawaki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/nidaime_676.webp" class="img-fluid rounded">
+          <p>Nidaime</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/okei_15756.webp" class="img-fluid rounded">
+          <p>Okei</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/orochimaru_677.webp" class="img-fluid rounded">
+          <p>Orochimaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/otokaze_15909.webp" class="img-fluid rounded">
+          <p>Otokaze</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/otora_17259.webp" class="img-fluid rounded">
+          <p>Otora</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/raiga_kurosuke_1196.webp" class="img-fluid rounded">
+          <p>Raiga Kurosuke</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/raijin_970.webp" class="img-fluid rounded">
+          <p>Raijin</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ranmaru_1197.webp" class="img-fluid rounded">
+          <p>Ranmaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/riichi_15329.webp" class="img-fluid rounded">
+          <p>Riichi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/rock_lee_621.webp" class="img-fluid rounded">
+          <p>Rock Lee</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sabaku_no_gaara_663.webp" class="img-fluid rounded">
+          <p>Sabaku Gaara</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sajin_15910.webp" class="img-fluid rounded">
+          <p>Sajin</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sakon_952.webp" class="img-fluid rounded">
+          <p>Sakon</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sanshou_obasan_1199.webp" class="img-fluid rounded">
+          <p>Sanshou Obasan</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sarutobi_asuma_656.webp" class="img-fluid rounded">
+          <p>Sarutobi Asuma</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/satetsu_15911.webp" class="img-fluid rounded">
+          <p>Satetsu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/senju_hashirima_shodaime_675.webp" class="img-fluid rounded">
+          <p>Senju Hashirama</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/shiba_kusa_19305.webp" class="img-fluid rounded">
+          <p>Shiba Kusa</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/shibire_15251.webp" class="img-fluid rounded">
+          <p>Shibire</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/shigure_15085.webp" class="img-fluid rounded">
+          <p>Shigure</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/shiore_18170.webp" class="img-fluid rounded">
+          <p>Shiore</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/shizune_681.webp" class="img-fluid rounded">
+          <p>Shizune</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sozu_15310.webp" class="img-fluid rounded">
+          <p>Sozu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sukima_19361.webp" class="img-fluid rounded">
+          <p>Sukima</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/sumaru_19252.webp" class="img-fluid rounded">
+          <p>Sumaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/susuki_15327.webp" class="img-fluid rounded">
+          <p>Susuki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/suzume_19335.webp" class="img-fluid rounded">
+          <p>Suzume</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/suzumebachi_1107.webp" class="img-fluid rounded">
+          <p>Suzumebachi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tatami_iwashi_19357.webp" class="img-fluid rounded">
+          <p>Tatami Iwashi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tayuya_951.webp" class="img-fluid rounded">
+          <p>Tayuya</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tazuna_15053.webp" class="img-fluid rounded">
+          <p>Tazuna</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/teguse_15064.webp" class="img-fluid rounded">
+          <p>Teguse</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/temari_665.webp" class="img-fluid rounded">
+          <p>Temari</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tenten_636.webp" class="img-fluid rounded">
+          <p>Tenten</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tobio_19336.webp" class="img-fluid rounded">
+          <p>Tobio</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tobitake_tonbo_19349.webp" class="img-fluid rounded">
+          <p>Tobitake Tonbo</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tsubaki_1054.webp" class="img-fluid rounded">
+          <p>Tsubaki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tsubaki_parent_15448.webp" class="img-fluid rounded">
+          <p>Tsubaki Parent</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tsuchi_kin_645.webp" class="img-fluid rounded">
+          <p>Tsuchin kin</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tsunade_koichi_godaime_680.webp" class="img-fluid rounded">
+          <p>Tsunade Koichi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tsunami_10636.webp" class="img-fluid rounded">
+          <p>Tsunami</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/tsurugu_misumi_653.webp" class="img-fluid rounded">
+          <p>Tsurugu Misumi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/uchiha_mikoto_11593.webp" class="img-fluid rounded">
+          <p>Uchiha Mikoto</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/uchiha_teyaki_16256.webp" class="img-fluid rounded">
+          <p>Uchiha Teyaki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/uchiha_uruchi_16270.webp" class="img-fluid rounded">
+          <p>Uchiha Uruchi</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/uchiwa_fugaku_4600.webp" class="img-fluid rounded">
+          <p>Uchiwa Fugaku</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/uchiwa_sasuke_616.webp" class="img-fluid rounded">
+          <p>Uchiwa Sasuke</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/udon_662.webp" class="img-fluid rounded">
+          <p>Udon</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/ugai_15893.webp" class="img-fluid rounded">
+          <p>Ugai</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/utatane_koharu_4627.webp" class="img-fluid rounded">
+          <p>Utatane Koharu</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/uzumaki_naruto_615.webp" class="img-fluid rounded">
+          <p>Uzumaki Naruto</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/waraji_15084.webp" class="img-fluid rounded">
+          <p>Waraji</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/yajirobee_15169.webp" class="img-fluid rounded">
+          <p>Yajirobee</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/yakushi_kabuto_638.webp" class="img-fluid rounded">
+          <p>Yakushi Kabuto</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/yamashiro_aoba_4599.webp" class="img-fluid rounded">
+          <p>Yamashiro Aoba</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/yaoki_15926.webp" class="img-fluid rounded">
+          <p>Yaoki</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/yashamaru_4589.webp" class="img-fluid rounded">
+          <p>Yashamaru</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/yuushi_kurenai_655.jpg" class="img-fluid rounded">
+          <p>Yuushi Kurenai</p>
+        </div>
+        <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+          <img src="./Img personnages/zabuza_momochi_633.webp" class="img-fluid rounded">
+          <p>Zabuza Momochi</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="center-container">
+    <div class="container-fluid">
+     <h1>Invocations</h1>
+     <div class="separation-invocs"></div>
+     <div class="row m-0">
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+         <img src="./Img personnages/Invocation/akino_12934.webp" class="img-fluid rounded">
+         <p>Akino</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/bisuke_15147.webp" class="img-fluid rounded">
+        <p>Bisuke</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/bull_15148.webp" class="img-fluid rounded">
+        <p>Bull</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/kamatari_18115.webp" class="img-fluid rounded">
+        <p>Kamatari</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/pak-kun_674.webp" class="img-fluid rounded">
+        <p>Pak-kun</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/shiba_15150.webp" class="img-fluid rounded">
+        <p>Shiba</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/uhei_15152.webp" class="img-fluid rounded">
+        <p>Uhei</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/urushi_15151.webp" class="img-fluid rounded">
+        <p>Urushi</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/guruko_15149.webp" class="img-fluid rounded">
+        <p>Guruko</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gama_15960.webp" class="img-fluid rounded">
+        <p>Gama</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamahiro_15958.webp" class="img-fluid rounded">
+        <p>Gamahiro</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamakichi_673.webp" class="img-fluid rounded">
+        <p>Gamakichi</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamatatsu_5269.webp" class="img-fluid rounded">
+        <p>Gamatatsu</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/fukasaku_6404.webp" class="img-fluid rounded">
+        <p>Fukasaku</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/shima_15998.webp" class="img-fluid rounded">
+        <p>Shima</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamamaru_15997.webp" class="img-fluid rounded">
+        <p>Gamamaro</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamaken_15959.webp" class="img-fluid rounded">
+        <p>Gamaken</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamaden_15999.webp" class="img-fluid rounded">
+        <p>Gamaden</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gerotora_15957.webp" class="img-fluid rounded">
+        <p>Gerotora</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/kosuke_16000.webp" class="img-fluid rounded">
+        <p>Kosuke</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/gamabunta_672.webp" class="img-fluid rounded">
+        <p>Gamabunta</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/katsuyu_5946.webp" class="img-fluid rounded">
+        <p>Katsuyu</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/manda_6419.webp" class="img-fluid rounded">
+        <p>Manda</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/aoda_18113.webp" class="img-fluid rounded">
+        <p>Aoda</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/ningame_18110.webp" class="img-fluid rounded">
+        <p>Ningame</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/enma_4602.webp" class="img-fluid rounded">
+        <p>Enma</p>
+      </div>
+      <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Invocation/kyodaigumo_18116.webp" class="img-fluid rounded">
+        <p>Kyodaigumo</p>
+      </div>
+     </div>  
+    </div>
+  </div>  
+  <div class="center-container">
+    <div class="container-fluid">
+     <h1>Démons à queues</h1>
+     <div class="separation-demons"></div>
+     <div class="row m-0">
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+         <img src="./Img personnages/Demon/ichibi_16477.webp" class="img-fluid rounded">
+         <p>Ichibi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/nibi_16644.webp" class="img-fluid rounded">
+        <p>Nibi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/sanbi_16645.webp" class="img-fluid rounded">
+        <p>Sanbi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/yonbi_16715.webp" class="img-fluid rounded">
+        <p>Yonbi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/gobi_16836.webp" class="img-fluid rounded">
+        <p>Gobi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/rokubi_16837.webp" class="img-fluid rounded">
+        <p>Rokubi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/nanabi_16847.webp" class="img-fluid rounded">
+        <p>Nanabi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/gyuki_16942.webp" class="img-fluid rounded">
+        <p>Hachibi</p>
+       </div>
+       <div class="col-4 col-md-2 col-lg-1-3 text-center gallery-item pictures">
+        <img src="./Img personnages/Demon/kyuubi_2550.webp" class="img-fluid rounded">
+        <p>Kyuubi</p>
+       </div>
+      </div>
+     </div>
+ </div>   
+</html>
