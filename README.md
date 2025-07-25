@@ -1,45 +1,74 @@
-# 🌌 Naruto Fan Website – Versions History
+# 🌌 Naruto Chronicles – Website
 
-Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.  
-Ce projet regroupe trois versions différentes du site, toutes conçues pour évoluer en design et en structure.
+Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
 
 🔗 Ce site est **hébergé avec Firebase Hosting** :  
-👉 [https://naruto-chronicles.web.app]
+👉 [https://naruto-chronicles.web.app](https://naruto-chronicles.web.app)
+
+---
+
+## 📝 Présentation
+
+Ce projet a commencé en **2023**, dans le cadre d’un **projet scolaire**.
+
+- La **version 1** était très simple : une seule page `index.html`, sans structure avancée.
+- Quelques mois plus tard, j’ai voulu améliorer le site :  
+  → j’ai créé des **dossiers**, **fichiers séparés**, et ajouté des **scripts JavaScript**.
+- Aujourd’hui, j’en suis à la **version 3**, avec une **arborescence entièrement retravaillée** pour une organisation plus claire et professionnelle.
+
+Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleure structure, et un design plus soigné.
 
 ---
 
 ## 🔖 Versions disponibles
 
 ### 🌀 Version 1 – Prototype de base
-- 📁 Dossier : `/v1`
-- 🎯 Objectif : première version du site avec structure HTML/CSS simple
-- 🧪 Contenu :
-  - Page d’accueil avec image de Naruto
-  - Fichier `index.html` statique
-  - Design basique, sans navigation avancée
+
+- 📁 Fichier : src/releases/naruto-chonicles-v1.0
+- 📅 Année : 2023
+- 🎯 Objectif : poser les bases du site Naruto dans le cadre d’un projet scolaire
+- 📄 Contenu :
+  - Une seule page statique : `index.html`
+  - Image de Naruto
+  - Aucune arborescence, aucun script
+- 💬 Commentaire :
+  > Une version très simple et basique, sans structure. C’était un premier essai pour comprendre HTML et CSS.
 
 ---
 
-### 🌀 Version 2 – Composants & Organisation
-- 📁 Dossier : `/v2`
-- 🧩 Objectif : réorganiser le projet avec des composants séparés
-- 🧱 Structure :
-  - `components/navbar.html`, `footer.html`...
-  - Dossier `assets/` pour les images, logos et vidéos
-  - Utilisation de JavaScript pour charger les composants
-- 🎨 Design un peu amélioré
+### 🌀 Version 2 – Début d'organisation
+
+- 📁 Fichier : src/releases/naruto-chonicles-v2.0
+- 📅 2024
+- 🧩 Objectif : rendre le site plus moderne, propre et modulaire 
+- 📂 Structure :
+  - Création de dossiers
+  - Fichiers séparés pour le HTML et le CSS
+  - Ajout de scripts JS pour quelques fonctions
+  - Ajout de la responsive
+- 🎨 Design :
+  - Mise en page légèrement améliorée
+  - Meilleure gestion des contenus (images, vidéos, logos)
+- 💬 Commentaire :
+  > J’ai voulu faire mieux, plus propre. Cette version m’a appris à organiser un projet web correctement.
 
 ---
 
-### 🌀 Version 3 – Version finale ou presque
-- 📁 Dossier : `/v3`
-- 💡 Objectif : rendre le site plus dynamique, responsive et propre
-- 🚀 Fonctionnalités :
-  - Menu hamburger pour mobile
-  - Organisation propre des fichiers :
-    - `components/`, `assets/`, `include/`
-    - Séparation du `head`, `nav`, `footer`
-  - Design sombre inspiré de Naruto, sobre et efficace
+### 🌀 Version 3 – Version actuelle
+
+- 📁 Fichier : src/releases/naruto-chonicles-v3.0
+- 📅 2025
+- 💡 Objectif : améliorer la structure du site
+- 🛠️ Fonctionnalités :
+  - Chargement dynamique des composants HTML avec JavaScript
+- 🗂️ Organisation :
+  - Dossiers bien définis
+  - Séparation claire
+- 🎨 Design :
+  - Thème sombre inspiré de l’univers Naruto
+  - Structure professionnelle
+- 💬 Commentaire :
+  > J’ai complètement repensé l’arborescence pour mieux organiser les fichiers. C’est la version la plus aboutie du projet.
 
 ---
 
@@ -47,7 +76,7 @@ Ce projet regroupe trois versions différentes du site, toutes conçues pour év
 
 - HTML5 / CSS3
 - JavaScript
-- Un peu d’organisation façon Web moderne
+- Un peu de bootsrap
 
 ---
 
