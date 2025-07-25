@@ -61,6 +61,7 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 - 💡 Objectif : améliorer la structure du site
 - 🛠️ Fonctionnalités :
   - Chargement dynamique des composants HTML avec JavaScript
+  - Ajout d'une page 404 personnalisée
 - 🗂️ Organisation :
   - Dossiers bien définis
   - Séparation claire
