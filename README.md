@@ -26,8 +26,8 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 ### 🌀 Version 1 – Prototype de base
 
-- 📁 Fichier : src/releases/naruto-chonicles-v1.0
-- 📅 Année : 2023
+- 📁 Fichier : versions/naruto-chonicles-v1.0
+- 📅 Année : début 2024
 - 🎯 Objectif : poser les bases du site Naruto dans le cadre d’un projet scolaire
 - 📄 Contenu :
   - Une seule page statique : `index.html`
@@ -40,8 +40,8 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 ### 🌀 Version 2 – Début d'organisation
 
-- 📁 Fichier : src/releases/naruto-chonicles-v2.0
-- 📅 2024
+- 📁 Fichier : versions/naruto-chonicles-v2.0
+- 📅 fin 2024
 - 🎯 Objectif : rendre le site plus moderne, propre et modulaire 
 - 💡 Nouveautés :
   - Création de dossiers
@@ -57,8 +57,8 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 ### 🌀 Version 3 – Nouvelle architecture
 
-- 📁 Fichier : src/releases/naruto-chonicles-v3.0
-- 📅 2025
+- 📁 Fichier : versions/naruto-chonicles-v3.0
+- 📅 début 2025
 - 🎯 Objectif : améliorer l'architecture du site
 - 💡 Nouveautés :
   - Chargement dynamique des composants HTML avec JavaScript
@@ -74,8 +74,8 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 ### 🌀 Version 4 – Version actuelle
 
-- 📁 Fichier : src/releases/naruto-chonicles-v4.0
-- 📅 2025
+- 📁 Fichier : versions/naruto-chonicles-v4.0
+- 📅 milieu 2025
 - 🎯 Objectif : améliorer le site
 - 💡 Nouveautés :
   - Création d'une api pour les personnages naruto : les images ne sont plus local
