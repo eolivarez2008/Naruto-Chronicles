@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Page non trouvée - 404</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/logo/favicon-naruto.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles/main.css">
+    <script src="/scripts/include-components.js" defer></script>
+    <script src="/scripts/navbar-mobile.js" defer></script>
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <div class="centered-message">
+      <h1>404 - Page non trouvée</h1>
+      <p>Désolé, la page que vous recherchez n'existe pas ou a été déplacée.</p>
+      <button class="button" onclick="location.href='/'">Retour à l'accueil</button>
+    </div>
+  </body>
+  <style>
+  .centered-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centre verticalement */
+    align-items: center;     /* centre horizontalement */
+    height: 80vh;            /* hauteur ajustable, ici 80% de la hauteur viewport */
+    text-align: center;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    /* background-color: #3F4449; */
+  }
+
+  .centered-message h1 {
+    color: #ff6600;
+    font-size: 3rem;
+    margin-bottom: 0.5em;
+  }
+
+  .centered-message p {
+    margin: 20px 0;
+    font-size: 1.2rem;
+  }
+
+  .centered-message .button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #ff6600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .centered-message .button:hover {
+    background-color: #e65500;
+    transform: scale(1.05);
+  }
+
+  </style>
+</html>

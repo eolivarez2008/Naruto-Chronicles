@@ -1,0 +1,736 @@
+{
+  "characters": [
+    {
+      "name": "Abumi Zaku",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Abumi Zaku.webp"
+    },
+    {
+      "name": "Aburame Shibi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Aburame Shibi.webp"
+    },
+    {
+      "name": "Aburame Shino",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Aburame Shino.webp"
+    },
+    {
+      "name": "Agari",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Agari.webp"
+    },
+    {
+      "name": "Ageha",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ageha.webp"
+    },
+    {
+      "name": "Akame Iwana",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Akame Iwana.webp"
+    },
+    {
+      "name": "Akane",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Akane.webp"
+    },
+    {
+      "name": "Akimichi Chouza",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Akimichi Chouza.webp"
+    },
+    {
+      "name": "Akodo Yoroi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Akodo Yoroi.webp"
+    },
+    {
+      "name": "Ami",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ami.webp"
+    },
+    {
+      "name": "Anko Mitarashi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Anko Mitarashi.webp"
+    },
+    {
+      "name": "Aoi Rokushou",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Aoi Rokushou.webp"
+    },
+    {
+      "name": "Ayame",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ayame.webp"
+    },
+    {
+      "name": "Baiu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Baiu.webp"
+    },
+    {
+      "name": "Baki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Baki.webp"
+    },
+    {
+      "name": "Bekko",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Bekko.webp"
+    },
+    {
+      "name": "Chohan",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Chohan.webp"
+    },
+    {
+      "name": "Choseki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Choseki.webp"
+    },
+    {
+      "name": "Chouji Akimichi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Chouji Akimichi.webp"
+    },
+    {
+      "name": "Dan",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Dan.webp"
+    },
+    {
+      "name": "Dengaku",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Dengaku.webp"
+    },
+    {
+      "name": "Ebisu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ebisu.webp"
+    },
+    {
+      "name": "Emi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Emi.webp"
+    },
+    {
+      "name": "Fuki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuki.webp"
+    },
+    {
+      "name": "Fuujin",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuujin.webp"
+    },
+    {
+      "name": "Fuuma Arashi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuuma Arashi.webp"
+    },
+    {
+      "name": "Fuuma Hanzaki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuuma Hanzaki.webp"
+    },
+    {
+      "name": "Fuuma Jigumo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuuma Jigumo.webp"
+    },
+    {
+      "name": "Fuuma Kagerou",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuuma Kagerou.webp"
+    },
+    {
+      "name": "Fuuma Kamakiri",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuuma Kamakiri.webp"
+    },
+    {
+      "name": "Fuuma Sasame",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Fuuma Sasame.webp"
+    },
+    {
+      "name": "Gantetsu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Gantetsu.webp"
+    },
+    {
+      "name": "Gato",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Gato.webp"
+    },
+    {
+      "name": "Gekkou Hayate",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Gekkou Hayate.webp"
+    },
+    {
+      "name": "Genin Oboro",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Genin Oboro.webp"
+    },
+    {
+      "name": "Genma Shiranui",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Genma Shiranui.webp"
+    },
+    {
+      "name": "Gennai",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Gennai.webp"
+    },
+    {
+      "name": "Genno",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Genno.webp"
+    },
+    {
+      "name": "Genyumaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Genyumaru.webp"
+    },
+    {
+      "name": "Genzo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Genzo.webp"
+    },
+    {
+      "name": "Giichi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Giichi.webp"
+    },
+    {
+      "name": "Goshiki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Goshiki.webp"
+    },
+    {
+      "name": "Hagane Kotetsu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hagane Kotetsu.webp"
+    },
+    {
+      "name": "Haku",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Haku.webp"
+    },
+    {
+      "name": "Haruna",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Haruna.webp"
+    },
+    {
+      "name": "Haruno Sakura",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Haruno Sakura.webp"
+    },
+    {
+      "name": "Hayase",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hayase.webp"
+    },
+    {
+      "name": "Hiashi Hyuuga",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hiashi Hyuuga.webp"
+    },
+    {
+      "name": "Hinata Hyuuga",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hinata Hyuuga.webp"
+    },
+    {
+      "name": "Hiruzen Sarutobi Sandaime",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hiruzen Sarutobi Sandaime.webp"
+    },
+    {
+      "name": "Hizashi Hyuuga",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hizashi Hyuuga.webp"
+    },
+    {
+      "name": "Hoki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hoki.webp"
+    },
+    {
+      "name": "Hosho",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hosho.webp"
+    },
+    {
+      "name": "Houki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Houki.webp"
+    },
+    {
+      "name": "Hyuga No Kodai",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hyuga No Kodai.webp"
+    },
+    {
+      "name": "Hyuuga Hanabi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Hyuuga Hanabi.webp"
+    },
+    {
+      "name": "Ibara",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ibara.webp"
+    },
+    {
+      "name": "Ibiki Morino",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ibiki Morino.webp"
+    },
+    {
+      "name": "Ichikaru Teuchi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ichikaru Teuchi.webp"
+    },
+    {
+      "name": "Inaho",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Inaho.webp"
+    },
+    {
+      "name": "Inari",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Inari.webp"
+    },
+    {
+      "name": "Ino Yamanaka",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ino Yamanaka.webp"
+    },
+    {
+      "name": "Inoichi Yamanaka",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Inoichi Yamanaka.webp"
+    },
+    {
+      "name": "Inuzuka Hana",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Inuzuka Hana.webp"
+    },
+    {
+      "name": "Inuzuka Kiba",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Inuzuka Kiba.webp"
+    },
+    {
+      "name": "Inuzuka Tsume",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Inuzuka Tsume.webp"
+    },
+    {
+      "name": "Iruka Umino",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Iruka Umino.webp"
+    },
+    {
+      "name": "Isarabi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Isarabi.webp"
+    },
+    {
+      "name": "Iyashi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Iyashi.webp"
+    },
+    {
+      "name": "Janto",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Janto.webp"
+    },
+    {
+      "name": "Jibachi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Jibachi.webp"
+    },
+    {
+      "name": "Jiraiya Ero-Sennin",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Jiraiya Ero-Sennin.webp"
+    },
+    {
+      "name": "Jiroubou",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Jiroubou.webp"
+    },
+    {
+      "name": "Kaiza",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kaiza.webp"
+    },
+    {
+      "name": "Kaji",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kaji.webp"
+    },
+    {
+      "name": "Kakashi Hatake",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kakashi Hatake.webp"
+    },
+    {
+      "name": "Kamizuki Izumo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kamizuki Izumo.webp"
+    },
+    {
+      "name": "Kankurou",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kankurou.webp"
+    },
+    {
+      "name": "Kanpo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kanpo.webp"
+    },
+    {
+      "name": "Kaori",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kaori.webp"
+    },
+    {
+      "name": "Karashi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Karashi.webp"
+    },
+    {
+      "name": "Karura",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Karura.webp"
+    },
+    {
+      "name": "Kasumi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kasumi.webp"
+    },
+    {
+      "name": "Kazabune",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kazabune.webp"
+    },
+    {
+      "name": "Kaze No Kuni No Daimyo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kaze No Kuni No Daimyo.webp"
+    },
+    {
+      "name": "Kazekage",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kazekage.webp"
+    },
+    {
+      "name": "Kidoumaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kidoumaru.webp"
+    },
+    {
+      "name": "Kimimaro Kaguya",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kimimaro Kaguya.webp"
+    },
+    {
+      "name": "Kinuta Dosu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kinuta Dosu.webp"
+    },
+    {
+      "name": "Kisame Hoshigaki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kisame Hoshigaki.webp"
+    },
+    {
+      "name": "Kity",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kity.webp"
+    },
+    {
+      "name": "Komaza",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Komaza.webp"
+    },
+    {
+      "name": "Komugi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Komugi.webp"
+    },
+    {
+      "name": "Konohamaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Konohamaru.webp"
+    },
+    {
+      "name": "Korobi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Korobi.webp"
+    },
+    {
+      "name": "Kurama Yakumo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kurama Yakumo.webp"
+    },
+    {
+      "name": "Kurobachi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kurobachi.webp"
+    },
+    {
+      "name": "Kusabi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kusabi.webp"
+    },
+    {
+      "name": "Kusuma",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kusuma.webp"
+    },
+    {
+      "name": "Kusushi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Kusushi.webp"
+    },
+    {
+      "name": "Maito Gai",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Maito Gai.webp"
+    },
+    {
+      "name": "Manabu Akado",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Manabu Akado.webp"
+    },
+    {
+      "name": "Matsuri",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Matsuri.webp"
+    },
+    {
+      "name": "Meizu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Meizu.webp"
+    },
+    {
+      "name": "Mibu Shinobu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Mibu Shinobu.webp"
+    },
+    {
+      "name": "Midare",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Midare.webp"
+    },
+    {
+      "name": "Midori",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Midori.webp"
+    },
+    {
+      "name": "Migaki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Migaki.webp"
+    },
+    {
+      "name": "Minoji",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Minoji.webp"
+    },
+    {
+      "name": "Mitate",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Mitate.webp"
+    },
+    {
+      "name": "Mitokado Homura",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Mitokado Homura.webp"
+    },
+    {
+      "name": "Mizuki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Mizuki.webp"
+    },
+    {
+      "name": "Moegi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Moegi.webp"
+    },
+    {
+      "name": "Momiji",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Momiji.webp"
+    },
+    {
+      "name": "Morino Idate",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Morino Idate.webp"
+    },
+    {
+      "name": "Mubi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Mubi.webp"
+    },
+    {
+      "name": "Namiashi Raido",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Namiashi Raido.webp"
+    },
+    {
+      "name": "Namikaze Minato Yondaime",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Namikaze Minato Yondaime.webp"
+    },
+    {
+      "name": "Nanafushi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Nanafushi.webp"
+    },
+    {
+      "name": "Nara Shikaku",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Nara Shikaku.webp"
+    },
+    {
+      "name": "Nara Shikamaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Nara Shikamaru.webp"
+    },
+    {
+      "name": "Natsuhi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Natsuhi.webp"
+    },
+    {
+      "name": "Nawaki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Nawaki.webp"
+    },
+    {
+      "name": "Neji Hyuuga",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Neji Hyuuga.webp"
+    },
+    {
+      "name": "Nidaime",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Nidaime.webp"
+    },
+    {
+      "name": "Okei",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Okei.webp"
+    },
+    {
+      "name": "Orochimaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Orochimaru.webp"
+    },
+    {
+      "name": "Otokaze",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Otokaze.webp"
+    },
+    {
+      "name": "Otora",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Otora.webp"
+    },
+    {
+      "name": "Raiga Kurosuke",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Raiga Kurosuke.webp"
+    },
+    {
+      "name": "Raijin",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Raijin.webp"
+    },
+    {
+      "name": "Ranmaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ranmaru.webp"
+    },
+    {
+      "name": "Riichi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Riichi.webp"
+    },
+    {
+      "name": "Rock Lee",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Rock Lee.webp"
+    },
+    {
+      "name": "Sabaku No Gaara",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sabaku No Gaara.webp"
+    },
+    {
+      "name": "Sajin",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sajin.webp"
+    },
+    {
+      "name": "Sakon",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sakon.webp"
+    },
+    {
+      "name": "Sanshou Obasan",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sanshou Obasan.webp"
+    },
+    {
+      "name": "Sarutobi Asuma",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sarutobi Asuma.webp"
+    },
+    {
+      "name": "Satetsu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Satetsu.webp"
+    },
+    {
+      "name": "Senju Hashirima Shodaime",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Senju Hashirima Shodaime.webp"
+    },
+    {
+      "name": "Shiba Kusa",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Shiba Kusa.webp"
+    },
+    {
+      "name": "Shibire",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Shibire.webp"
+    },
+    {
+      "name": "Shigure",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Shigure.webp"
+    },
+    {
+      "name": "Shiore",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Shiore.webp"
+    },
+    {
+      "name": "Shizune",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Shizune.webp"
+    },
+    {
+      "name": "Sozu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sozu.webp"
+    },
+    {
+      "name": "Sukima",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sukima.webp"
+    },
+    {
+      "name": "Sumaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Sumaru.webp"
+    },
+    {
+      "name": "Susuki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Susuki.webp"
+    },
+    {
+      "name": "Suzume",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Suzume.webp"
+    },
+    {
+      "name": "Suzumebachi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Suzumebachi.webp"
+    },
+    {
+      "name": "Tatami Iwashi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tatami Iwashi.webp"
+    },
+    {
+      "name": "Tayuya",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tayuya.webp"
+    },
+    {
+      "name": "Tazuna",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tazuna.webp"
+    },
+    {
+      "name": "Teguse",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Teguse.webp"
+    },
+    {
+      "name": "Temari",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Temari.webp"
+    },
+    {
+      "name": "Tenten",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tenten.webp"
+    },
+    {
+      "name": "Tobio",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tobio.webp"
+    },
+    {
+      "name": "Tobitake Tonbo",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tobitake Tonbo.webp"
+    },
+    {
+      "name": "Tsubaki Parent",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tsubaki Parent.webp"
+    },
+    {
+      "name": "Tsubaki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tsubaki.webp"
+    },
+    {
+      "name": "Tsuchi Kin",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tsuchi Kin.webp"
+    },
+    {
+      "name": "Tsunade Koichi Godaime",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tsunade Koichi Godaime.webp"
+    },
+    {
+      "name": "Tsunami",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tsunami.webp"
+    },
+    {
+      "name": "Tsurugu Misumi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Tsurugu Misumi.webp"
+    },
+    {
+      "name": "Uchiha Mikoto",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Uchiha Mikoto.webp"
+    },
+    {
+      "name": "Uchiha Teyaki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Uchiha Teyaki.webp"
+    },
+    {
+      "name": "Uchiha Uruchi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Uchiha Uruchi.webp"
+    },
+    {
+      "name": "Uchiwa Fugaku",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Uchiwa Fugaku.webp"
+    },
+    {
+      "name": "Uchiwa Sasuke",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Uchiwa Sasuke.webp"
+    },
+    {
+      "name": "Udon",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Udon.webp"
+    },
+    {
+      "name": "Ugai",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Ugai.webp"
+    },
+    {
+      "name": "Utatane Koharu",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Utatane Koharu.webp"
+    },
+    {
+      "name": "Uzumaki Naruto",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Uzumaki Naruto.webp"
+    },
+    {
+      "name": "Waraji",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Waraji.webp"
+    },
+    {
+      "name": "Yajirobee",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Yajirobee.webp"
+    },
+    {
+      "name": "Yakushi Kabuto",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Yakushi Kabuto.webp"
+    },
+    {
+      "name": "Yamashiro Aoba",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Yamashiro Aoba.webp"
+    },
+    {
+      "name": "Yaoki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Yaoki.webp"
+    },
+    {
+      "name": "Yashamaru",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Yashamaru.webp"
+    },
+    {
+      "name": "Yuushi Kurenai",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Yuushi Kurenai.jpg"
+    },
+    {
+      "name": "Zabuza Momochi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/personnages/Zabuza Momochi.webp"
+    }
+  ]
+}

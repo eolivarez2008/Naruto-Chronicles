@@ -1,0 +1,40 @@
+{
+  "characters": [
+    {
+      "name": "Gobi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Gobi.webp"
+    },
+    {
+      "name": "Gyuki",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Gyuki.webp"
+    },
+    {
+      "name": "Ichibi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Ichibi.webp"
+    },
+    {
+      "name": "Kyuubi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Kyuubi.webp"
+    },
+    {
+      "name": "Nanabi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Nanabi.webp"
+    },
+    {
+      "name": "Nibi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Nibi.webp"
+    },
+    {
+      "name": "Rokubi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Rokubi.webp"
+    },
+    {
+      "name": "Sanbi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Sanbi.webp"
+    },
+    {
+      "name": "Yonbi",
+      "image": "https://raw.githubusercontent.com/eolivarez2008/Photo-naruto/main/demons/Yonbi.webp"
+    }
+  ]
+}
