@@ -9,12 +9,14 @@ Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
 
 ## 📝 Présentation
 
-Ce projet a commencé en **2023**, dans le cadre d’un **projet scolaire**.
+**Naruto Chronicles** est un site web francophone dédié à l’univers de Naruto, développé dans le cadre d’un projet scolaire démarré en **2023**.
 
-- La **version 1** était très simple : une seule page `index.html`, sans structure avancée.
-- Quelques mois plus tard, j’ai voulu améliorer le site :  
-  → j’ai créé des **dossiers**, **fichiers séparés**, et ajouté des **scripts JavaScript**.
-- Aujourd’hui, j’en suis à la **version 3**, avec une **arborescence entièrement retravaillée** pour une organisation plus claire et professionnelle.
+Ce site propose une immersion complète dans le monde de **Naruto**, à travers différentes rubriques :
+
+- 📖 **Histoire** : pour comprendre les grandes lignes du récit.  
+- 👥 **Personnages** : présentation de tous les ninjas, invocations et démons a queues.  
+- 🗺️ **Saga** : une présentation structurée de la collection Naruto  
+- 📬 **Contact** : formulaire pour vos remarques ou suggestions.
 
 Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleure structure, et un design plus soigné.
 
@@ -40,36 +42,50 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 - 📁 Fichier : src/releases/naruto-chonicles-v2.0
 - 📅 2024
-- 🧩 Objectif : rendre le site plus moderne, propre et modulaire 
-- 📂 Structure :
+- 🎯 Objectif : rendre le site plus moderne, propre et modulaire 
+- 💡 Nouveautés :
   - Création de dossiers
   - Fichiers séparés pour le HTML et le CSS
   - Ajout de scripts JS pour quelques fonctions
   - Ajout de la responsive
-- 🎨 Design :
-  - Mise en page légèrement améliorée
+  - Mise en page améliorée
   - Meilleure gestion des contenus (images, vidéos, logos)
 - 💬 Commentaire :
   > J’ai voulu faire mieux, plus propre. Cette version m’a appris à organiser un projet web correctement.
 
 ---
 
-### 🌀 Version 3 – Version actuelle
+### 🌀 Version 3 – Nouvelle architecture
 
 - 📁 Fichier : src/releases/naruto-chonicles-v3.0
 - 📅 2025
-- 💡 Objectif : améliorer la structure du site
-- 🛠️ Fonctionnalités :
+- 🎯 Objectif : améliorer l'architecture du site
+- 💡 Nouveautés :
   - Chargement dynamique des composants HTML avec JavaScript
   - Ajout d'une page 404 personnalisée
 - 🗂️ Organisation :
-  - Dossiers bien définis
+  - Dossiers bien redéfinis
   - Séparation claire
-- 🎨 Design :
-  - Thème sombre inspiré de l’univers Naruto
   - Structure professionnelle
 - 💬 Commentaire :
-  > J’ai complètement repensé l’arborescence pour mieux organiser les fichiers. C’est la version la plus aboutie du projet.
+  > J’ai complètement repensé l’arborescence pour mieux organiser les fichiers.
+
+---
+
+### 🌀 Version 4 – Version actuelle
+
+- 📁 Fichier : src/releases/naruto-chonicles-v4.0
+- 📅 2025
+- 🎯 Objectif : améliorer le site
+- 💡 Nouveautés :
+  - Création d'une api pour les personnages naruto : les images ne sont plus local
+  - Amélioration de la navbar : une navbar fixe à une navbar sticky auto-cachante qui se masque au scroll vers le bas et réapparaît au scroll
+  - Ajout d'un footer
+- 🗂️ Organisation :
+  - Ajout du dossier data qui contient les .json
+  - Regroupement des pages dans un dossier
+- 💬 Commentaire :
+  > Je voulais améliorer le site pour le rendre plus léger, avec moins de fichiers, tout en le rendant plus professionnel et agréable à utiliser.
 
 ---
 
@@ -77,7 +93,8 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 - HTML5 / CSS3
 - JavaScript
-- Un peu de bootsrap
+- Firebase pour le déploiement
+- Formspree pour le formulaire de contact
 
 ---
 
