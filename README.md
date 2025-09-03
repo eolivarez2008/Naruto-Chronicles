@@ -100,7 +100,7 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
 
 ## Auteur
 
-Développé par **Emilien Olivarez** – Étudiant en 1re Pro CIEL (ex-SN)  
+Développé par **Emilien Olivarez** – Étudiant en Bac Pro CIEL (ex-SN)  
 Lycée Louis de Cormontaigne, Metz
 
 ---
