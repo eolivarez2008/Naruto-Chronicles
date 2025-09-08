@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      { "source": "/saga", "destination": "/pages/saga/index.html" },
+      { "source": "/story", "destination": "/pages/story/index.html" },
+      { "source": "/characters", "destination": "/pages/characters/index.html" },
+      { "source": "/contact", "destination": "/pages/contact/index.html" },
+      { "source": "/contact/thanks", "destination": "/pages/contact/thanks/index.html" },
+
+      { "source": "**", "destination": "/404.html" }
+    ]
+  }
+}

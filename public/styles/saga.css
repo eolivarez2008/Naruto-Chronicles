@@ -1,0 +1,212 @@
+@media (min-width: 901px) {
+
+    .collection-section {
+        display: flex;
+        align-items: flex-start;
+        border-radius: 10px;
+        align-items: center;    
+        background-color: #3F4449;
+        margin: 30px;
+        border: 2px solid black;
+    }
+    
+    .collection-section img {
+        width: 200px;
+        height: auto;
+        border-radius: 10px;
+        margin: 20px;
+    }
+    
+    .collection-section p {
+        font-size: 20px;
+        margin-right: 20px;
+        text-align: justify;
+    }
+    
+    .collection-section h2 {
+        color: #ff6600;
+    }
+    
+    .collection-description {
+        color: white;
+        font-size: 16px;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+    
+    .btn {
+        background-color: #ff6600; 
+        color: white;             
+        padding: 10px 20px;     
+        margin: 10px 10px 10px 0px;
+        font-size: 14px;          
+        border: none;              
+        border-radius: 5px;      
+        cursor: pointer;         
+        text-align: center;     
+        text-decoration: none;   
+        transition: transform 0.3s ease; 
+    }
+    
+    .btn:hover {
+        background-color: #e65500;
+        transform: scale(1.05);
+    }
+    
+    .mobile {
+        display: none;
+    }
+
+    .separation-mobile-naruto {
+        display: none;
+    }
+
+    .separation-mobile-shippudden  {
+        display: none;
+    }
+
+    .separation-mobile-boruto {
+        display: none;
+    }
+
+    .separation-mobile-vortex {
+        display: none;
+    }
+
+    .separation-ordi-naruto {
+        width: 78px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 10px;
+    }
+
+    .separation-ordi-shippudden {
+        width: 204px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 10px;
+    }
+
+    .separation-ordi-boruto {
+        width: 380px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 10px;
+    }
+
+    .separation-ordi-vortex {
+        width: 270px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 10px;
+    }
+
+}
+
+@media (max-width: 900px) {
+
+        .collection-section {
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        align-items: center;    
+        border: 2px solid black;
+        margin: 20px;
+        padding: 20px;
+        background-color: #3F4449;
+    }
+    
+    .collection-section img {
+        width: 200px;
+        height: auto;
+        border-radius: 10px;
+        margin: 20px;
+    }
+    
+    .collection-section p {
+        font-size: 20px;
+        text-align: justify;
+    }
+    
+    .collection-section h2 {
+        color: #ff6600;
+        font-size: 30px;
+    }
+    
+    .collection-description {
+        color: white;
+        font-size: 16px;
+        line-height: 1.6;
+        flex-grow: 1;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .btn {
+        background-color: #ff6600; 
+        color: white;            
+        padding: 10px 20px;       
+        font-size: 14px;           
+        border: none;         
+        border-radius: 5px;   
+        cursor: pointer;        
+        text-align: center;      
+        text-decoration: none;
+        margin-top: 10px;
+        align-items: center;
+    }
+
+    .ordi {
+        display: none;
+    }
+
+    .separation-ordi-naruto {
+        display: none;
+    }
+
+    .separation-mobile-naruto {
+        width: 95px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+    }
+
+    .separation-ordi-shippudden {
+        display: none;
+    }
+
+    .separation-mobile-shippudden {
+        width: 270px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+    }
+
+    .separation-ordi-boruto {
+        display: none;
+    }
+    
+    .separation-mobile-boruto {
+        width: 260px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+    }
+
+
+    .separation-ordi-vortex {
+        display: none;
+    }
+
+    .separation-mobile-vortex {
+        width: 230px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+    }
+
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Message envoyé</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/logo/favicon-naruto.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
+    <script src="/scripts/include-components.js" defer></script>
+    <script src="/scripts/navbar-mobile.js" defer></script>
+    </head>
+    <body>
+<script>
+  if (sessionStorage.getItem('canAccessThanks') !== '1') {
+    window.location.href = '/contact';
+  } else {
+    // ✅ Supprime l'autorisation après chargement
+    sessionStorage.removeItem('canAccessThanks');
+  }
+</script>
+
+
+    <div id="navbar"></div>
+    <main>
+      <div class="centered-message">
+        <h1>Merci de nous avoir contacté</h1>
+        <p>Nous vous répondrons dans les plus bref délai sur l'adresse mail que vous nous avez donné.</p>
+        <button class="button" onclick="location.href='/'">Retour à l'accueil</button>
+      </div>
+    </main>
+  </body>
+  <style>
+  .centered-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;     
+    height: 80vh;            
+    text-align: center;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  .centered-message h1 {
+    color: #ff6600;
+    font-size: 3rem;
+    margin-bottom: 0.5em;
+  }
+
+  .centered-message p {
+    margin: 20px 0;
+    font-size: 1.2rem;
+  }
+
+  .centered-message .button {
+    padding: 10px 20px;
+    margin-top: 30px;
+    font-size: 16px;
+    color: white;
+    background-color: #ff6600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .centered-message .button:hover {
+    background-color: #e65500;
+    transform: scale(1.05);
+  }
+
+  </style>
+</html>

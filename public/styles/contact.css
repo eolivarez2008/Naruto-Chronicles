@@ -1,0 +1,225 @@
+@media (min-width: 901px) {
+
+    .contact {
+        margin-top: 30px;
+    }
+
+    body {
+        height: 100vh;
+        margin: 0;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .contact .form {
+        position: relative;
+        display: flex;
+        justify-content: center; 
+    }
+        
+    .contact form {
+        width: 100%; 
+        box-sizing: border-box; 
+        width: 80%;
+        padding: 40px; 
+        background-color: #3F4449;
+        color: white;
+        border-radius: 10px;
+        border: 2px solid black;
+        display: flex;
+        flex-direction: column; 
+    }
+    
+    .contact form h1 {
+        text-align: left;
+        font-size: 28px; 
+        color: #ff6600;
+        font-weight: bold;
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+    }
+    
+    .contact form .separation {
+        width: 273px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 15px;
+    }
+    
+    .contact form .description {
+        text-align: justify;
+        font-size: 16px;
+        color: #ffffff; 
+        margin-bottom: 20px; 
+    }
+    
+    .contact .corps-formulaire {
+        display: flex; 
+        gap: 20px; 
+    }
+    
+    .contact .gauche {
+        width: 30%;
+        display: flex;
+        flex-direction: column; 
+        gap: 15px;
+    }
+    
+    .contact .droite {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; 
+    }
+    
+    .contact .droite .groupe textarea {
+        height: 195px;
+    }
+    
+    .contact .groupe {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .contact .groupe label {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .contact .groupe input, .groupe textarea {
+        width: 100%; 
+        box-sizing: border-box; 
+        height: 35px; 
+        font-size: 16px; 
+        padding: 10px;
+        resize: none;
+
+    }
+    
+    .contact .pieds-formulaire {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .contact .pieds-formulaire button {
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+    
+    .contact .pieds-formulaire button:hover {
+        background-color: #e65500;
+        transform: scale(1.05);
+    }
+
+}
+
+@media (max-width: 900px) {
+
+        .form {
+        position: relative;
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    form {
+        width: 90%;
+        max-width: 1000px;
+        padding: 20px;
+        background-color: #3F4449;
+        color: white;
+        border-radius: 10px;
+        border: 2px solid black;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    form h1 {
+        text-align: left;
+        font-size: 28px;
+        color: #ff6600;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    form .separation {
+        width: 273px;
+        height: 4px;
+        background-color: #ff6600;
+        border-radius: 2px;
+        margin-bottom: 20px;
+    }
+    
+    form .description {
+        text-align: justify;
+        font-size: 16px;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+    
+    .corps-formulaire {
+        display: flex;
+        flex-direction: column; 
+        gap: 15px; 
+    }
+    
+    .groupe {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .groupe label {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .groupe input,
+    .groupe textarea {
+        width: 100%;
+        box-sizing: border-box;
+        height: 35px;
+        font-size: 16px;
+        padding: 10px;
+        resize: none;
+        margin-bottom: 10px;
+    }
+    
+    .groupe textarea {
+        height: 120px; 
+    }
+    
+    .pieds-formulaire {
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    .pieds-formulaire button {
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+    
+    .pieds-formulaire button:hover {
+        background-color: #e65500;
+        transform: scale(1.05);
+    }
+    
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Naruto Chronicles - Contact</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/logo/favicon-naruto.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/contact.css" />
+    <script src="/scripts/include-components.js" defer></script>
+    <script src="/scripts/navbar-mobile.js" defer></script>
+    <script src="/scripts/contact-form.js" defer></script>
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <main class="form contact">
+      <form id="contactForm" action="https://formspree.io/f/mgvezzgp" method="POST" target="_blank">
+        <h1>Contactez-nous</h1>
+         <div class="separation"></div>
+            <p class="description">N'hésitez pas à nous envoyer vos questions ou remarques via ce formulaire.</p>
+            <div class="corps-formulaire">
+                <div class="gauche">
+                    <div class="groupe">
+                        <label for="nom">Nom</label>
+                        <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                    </div>
+                    <div class="groupe">
+                      <label for="email">Email</label>
+                      <input type="email" id="email" name="email" placeholder="Votre email" required>
+                  </div>
+                    <div class="groupe">  
+                        <label for="objet">Objet</label>
+                        <input type="text" id="objet" name="objet" placeholder="L'objet du message" required>
+                    </div>
+                </div>
+                <div class="droite">
+                    <div class="groupe">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Votre message..." required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="pieds-formulaire">
+                <button type="submit">Envoyer</button>
+            </div>
+        </form>
+      </main> 
+    <div id="footer"></div>
+  </body>
+</html>

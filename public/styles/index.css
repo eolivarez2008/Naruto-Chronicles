@@ -1,0 +1,158 @@
+@media (min-width: 901px) {
+
+    .conteneur {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        width: 100%;
+    }
+    
+    .présentation {
+        width: 100%; 
+        padding: 30px 30px 0px 30px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .end {
+        padding-bottom: 30px;
+    }
+
+    .index .naruto {
+        text-align: justify;
+        background-color: #3F4449;
+        border: 2px solid black;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #Description {
+        padding: 30px;
+    }
+    
+    .résumé{
+        display: flex;
+        flex-direction: column;
+        padding: 20px 30px 30px 30px;
+    }
+
+    .vidéos {
+        padding: 20px 30px 30px 30px;
+    }
+    
+    .résumé .separation{
+        width: 110px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 15px;
+    }
+    
+    
+    .naruto .affiche {
+        margin-left: auto;
+        border-radius: 10px;
+    }
+    
+    .video-trailer {
+        width: 100%; 
+        height: auto; 
+        border-radius: 15px;
+        max-width: 900px;
+    }
+    
+    .vidéos .separation{
+        width: 90px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 15px;
+    }
+    
+    .présentation h2{
+        color: #ff6600;
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    .conteneur {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        width: 100%;
+    }
+    
+    .présentation {
+        width: 90%; 
+        padding: 20px 0; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .index .naruto {
+        
+        text-align: justify;
+        flex-direction: column;
+        background-color: #3F4449;
+        padding: 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: left;
+        font-size: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .résumé{
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .résumé .separation{
+        width: 110px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 15px;
+    }
+
+    .naruto .affiche {
+        width: 100%;
+        height: auto;
+        margin-left: 0; 
+        margin-top: 20px;  
+        border-radius: 10px;
+        max-width: 500px;
+    }
+    
+    .video-trailer {
+        width: 100%; 
+        height: auto; 
+        border-radius: 15px;
+        max-width: 800px;
+    }
+    
+    .vidéos .separation{
+        width: 90px;
+        height: 4px; 
+        background-color: #ff6600; 
+        border-radius: 2px; 
+        margin-bottom: 15px;
+    }
+    
+    .présentation h2{
+        color: #ff6600;
+    }
+
+}
