@@ -50,7 +50,7 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
   - Ajout de la responsive
   - Mise en page améliorée
   - Meilleure gestion des contenus (images, vidéos, logos)
-- 💬 Commentaire :
+- Commentaire :
   J’ai voulu faire mieux, plus propre. Cette version m’a appris à organiser un projet web correctement.
 
 ---
@@ -67,7 +67,7 @@ Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleu
   - Dossiers bien redéfinis
   - Séparation claire
   - Structure professionnelle
-- 💬 Commentaire :
+- Commentaire :
   J’ai complètement repensé l’arborescence pour mieux organiser les fichiers.
 
 ---
