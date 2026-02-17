@@ -23,13 +23,17 @@ Ce site propose une immersion dans le monde de **Naruto**, à travers différent
 
 ---
 
-## Technologies utilisées
+## Stack Technique
 
-- HTML5 / CSS3
-- JavaScript
-- Firebase pour le déploiement
-- Formspree pour le formulaire de contact
-- Cloudinary pour le stockage des images
+Le projet repose sur une architecture web front-end classique, avec une logique orientée contenu dynamique et hébergement cloud.
+
+- **Structure & sémantique** :  [HTML5](https://developer.mozilla.org/fr/docs/Web/HTML) — Organisation des pages, hiérarchisation du contenu et intégration des médias.
+- **Mise en forme & responsive design** : [CSS3](https://developer.mozilla.org/fr/docs/Web/CSS) — Mise en page, animations légères, adaptation multi-écrans.
+- **Logique côté client** : [JavaScript (ES6+)](https://developer.mozilla.org/fr/docs/Web/JavaScript) — Manipulation du DOM, interactions dynamiques, gestion des données JSON.
+- **Backend as a Service / Hébergement** : [Firebase Hosting](https://firebase.google.com/docs/hosting) — Déploiement statique sécurisé, CDN global et gestion HTTPS.
+- **Gestion du formulaire de contact** : [Formspree](https://formspree.io/) — Traitement des soumissions sans backend personnalisé.
+- **Gestion des médias** : [Cloudinary](https://cloudinary.com/) — Stockage, optimisation et distribution d’images via CDN.
+- **Format de données** : JSON — Structuration des personnages, sagas et contenus dynamiques.
 
 ---
 
