@@ -1,111 +1,50 @@
-# 🌌 Naruto Chronicles – Website
+# Naruto Chronicles – Website
 
 Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
 
-🔗 Ce site est **hébergé avec Firebase Hosting** :  
-👉 [https://naruto-chronicles.web.app](https://naruto-chronicles.web.app)
+Ce site est déployé sur **Firebase Hosting** :  
+https://naruto-chronicles.web.app  
+
+Un nom de domaine personnalisé a été configuré :  
+https://naruto.eolivarez.site
 
 ---
 
-## 📝 Présentation
+## Présentation
 
-**Naruto Chronicles** est un site web francophone dédié à l’univers de Naruto, développé dans le cadre d’un projet scolaire démarré en **2023**.
+**Naruto Chronicles** est un site web dédié à l’univers de Naruto, développé dans le cadre d’un projet scolaire démarré en **2023**.
 
-Ce site propose une immersion complète dans le monde de **Naruto**, à travers différentes rubriques :
+Ce site propose une immersion dans le monde de **Naruto**, à travers différentes rubriques :
 
-- 📖 **Histoire** : pour comprendre les grandes lignes du récit.  
-- 👥 **Personnages** : présentation de tous les ninjas, invocations et démons a queues.  
-- 🗺️ **Saga** : une présentation structurée de la collection Naruto  
-- 📬 **Contact** : formulaire pour vos remarques ou suggestions.
-
-Ce site évolue au fil du temps, avec de nouvelles fonctionnalités, une meilleure structure, et un design plus soigné.
+- **Histoire** : pour comprendre les grandes lignes du récit.  
+- **Personnages** : présentation de tous les ninjas, invocations et démons a queues.  
+- **Saga** : une présentation structurée de la collection Naruto  
+- **Contact** : formulaire pour vos remarques ou suggestions.
 
 ---
 
-## 🔖 Versions disponibles
+## Stack Technique
 
-### 🌀 Version 1 – Prototype de base
+Le projet repose sur une architecture web front-end classique, avec une logique orientée contenu dynamique et hébergement cloud.
 
-- 📁 Fichier : versions/naruto-chonicles-v1.0
-- 📅 Année : début 2024
-- 🎯 Objectif : poser les bases du site Naruto dans le cadre d’un projet scolaire
-- 📄 Contenu :
-  - Une seule page statique : `index.html`
-  - Image de Naruto
-  - Aucune arborescence, aucun script
-- 💬 Commentaire :
-  > Une version très simple et basique, sans structure. C’était un premier essai pour comprendre HTML et CSS.
+- **Structure & sémantique** :  [HTML5](https://developer.mozilla.org/fr/docs/Web/HTML) — Organisation des pages, hiérarchisation du contenu et intégration des médias.
+- **Mise en forme & responsive design** : [CSS3](https://developer.mozilla.org/fr/docs/Web/CSS) — Mise en page, animations légères, adaptation multi-écrans.
+- **Logique côté client** : [JavaScript (ES6+)](https://developer.mozilla.org/fr/docs/Web/JavaScript) — Manipulation du DOM, interactions dynamiques, gestion des données JSON.
+- **Backend as a Service / Hébergement** : [Firebase Hosting](https://firebase.google.com/docs/hosting) — Déploiement statique sécurisé, CDN global et gestion HTTPS.
+- **Gestion du formulaire de contact** : [Formspree](https://formspree.io/) — Traitement des soumissions sans backend personnalisé.
+- **Gestion des médias** : [Cloudinary](https://cloudinary.com/) — Stockage, optimisation et distribution d’images via CDN.
+- **Format de données** : JSON — Structuration des personnages, sagas et contenus dynamiques.
 
 ---
 
-### 🌀 Version 2 – Début d'organisation
+## Auteur
 
-- 📁 Fichier : versions/naruto-chonicles-v2.0
-- 📅 fin 2024
-- 🎯 Objectif : rendre le site plus moderne, propre et modulaire 
-- 💡 Nouveautés :
-  - Création de dossiers
-  - Fichiers séparés pour le HTML et le CSS
-  - Ajout de scripts JS pour quelques fonctions
-  - Ajout de la responsive
-  - Mise en page améliorée
-  - Meilleure gestion des contenus (images, vidéos, logos)
-- 💬 Commentaire :
-  > J’ai voulu faire mieux, plus propre. Cette version m’a appris à organiser un projet web correctement.
+Développé par **Emilien Olivarez** – Étudiant en Bac Pro CIEL (ex-SN)  
+Lycée Louis de Cormontaigne, Metz
 
 ---
 
-### 🌀 Version 3 – Nouvelle architecture
-
-- 📁 Fichier : versions/naruto-chonicles-v3.0
-- 📅 début 2025
-- 🎯 Objectif : améliorer l'architecture du site
-- 💡 Nouveautés :
-  - Chargement dynamique des composants HTML avec JavaScript
-  - Ajout d'une page 404 personnalisée
-- 🗂️ Organisation :
-  - Dossiers bien redéfinis
-  - Séparation claire
-  - Structure professionnelle
-- 💬 Commentaire :
-  > J’ai complètement repensé l’arborescence pour mieux organiser les fichiers.
-
----
-
-### 🌀 Version 4 – Version actuelle
-
-- 📁 Fichier : versions/naruto-chonicles-v4.0
-- 📅 milieu 2025
-- 🎯 Objectif : améliorer le site
-- 💡 Nouveautés :
-  - Création d'une api pour les personnages naruto : les images ne sont plus local
-  - Amélioration de la navbar : une navbar fixe à une navbar sticky auto-cachante qui se masque au scroll vers le bas et réapparaît au scroll
-  - Ajout d'un footer
-- 🗂️ Organisation :
-  - Ajout du dossier data qui contient les .json
-  - Regroupement des pages dans un dossier
-- 💬 Commentaire :
-  > Je voulais améliorer le site pour le rendre plus léger, avec moins de fichiers, tout en le rendant plus professionnel et agréable à utiliser.
-
----
-
-## 🧠 Technologies utilisées
-
-- HTML5 / CSS3
-- JavaScript
-- Firebase pour le déploiement
-- Formspree pour le formulaire de contact
-
----
-
-## 👨‍💻 Auteur
-
-Développé par **Emilien Olivarez** – Étudiant en 1re Pro CIEL (ex-SN)  
-📍 Lycée Louis de Cormontaigne, Metz
-
----
-
-## 📝 Licence
+## Licence
 
 Ce projet est sous licence **Apache 2.0**.  
 Tu peux :
