@@ -2,8 +2,11 @@
 
 Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
 
-Ce site est **hébergé avec Firebase Hosting** :  
-[https://naruto-chronicles.web.app](https://naruto-chronicles.web.app)
+Ce site est déployé sur **Firebase Hosting** :  
+https://naruto-chronicles.web.app  
+
+Un nom de domaine personnalisé a été configuré :  
+https://naruto.eolivarez.site
 
 ---
 
