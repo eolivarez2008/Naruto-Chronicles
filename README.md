@@ -33,7 +33,8 @@ Le projet repose sur une architecture web front-end classique, avec une logique 
 - **Structure & sémantique** :  [HTML5](https://developer.mozilla.org/fr/docs/Web/HTML) — Organisation des pages, hiérarchisation du contenu et intégration des médias.
 - **Mise en forme & responsive design** : [CSS3](https://developer.mozilla.org/fr/docs/Web/CSS) — Mise en page, animations légères, adaptation multi-écrans.
 - **Logique côté client** : [JavaScript (ES6+)](https://developer.mozilla.org/fr/docs/Web/JavaScript) — Manipulation du DOM, interactions dynamiques, gestion des données JSON.
-- **Backend as a Service / Hébergement** : [Firebase Hosting](https://firebase.google.com/docs/hosting) — Déploiement statique sécurisé, CDN global et gestion HTTPS.
+- **Hébergement & Infra** : [Docker](https://www.docker.com/) — Containerisation du site statique avec un serveur Nginx optimisé, auto-hébergé sur une VM dédiée.
+- **Réseau & Sécurité** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Exposition sécurisée du service sans ouverture de ports (Zero Trust), protection contre les attaques et gestion automatique du certificat SSL.
 - **Gestion du formulaire de contact** : [Formspree](https://formspree.io/) — Traitement des soumissions sans backend personnalisé.
 - **Gestion des médias** : [Cloudinary](https://cloudinary.com/) — Stockage, optimisation et distribution d’images via CDN.
 - **Format de données** : JSON — Structuration des personnages, sagas et contenus dynamiques.
