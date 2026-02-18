@@ -2,16 +2,6 @@
 
 Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
 
-Ce site est déployé sur **Firebase Hosting** :  
-https://naruto-chronicles.web.app  
-
-Un nom de domaine personnalisé a été configuré :  
-https://naruto.eolivarez.site
-
----
-
-## Présentation
-
 **Naruto Chronicles** est un site web dédié à l’univers de Naruto, développé dans le cadre d’un projet scolaire démarré en **2023**.
 
 Ce site propose une immersion dans le monde de **Naruto**, à travers différentes rubriques :
@@ -20,6 +10,19 @@ Ce site propose une immersion dans le monde de **Naruto**, à travers différent
 - **Personnages** : présentation de tous les ninjas, invocations et démons a queues.  
 - **Saga** : une présentation structurée de la collection Naruto  
 - **Contact** : formulaire pour vos remarques ou suggestions.
+
+---
+
+## Déploiement & Architecture
+
+Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via un reverse-proxy **Nginx**.
+
+* **Infrastructure** : Docker & Docker Compose
+* **Reverse Proxy** : Nginx (Hôte)
+* **Tunneling & Sécurité** : Cloudflare Tunnel
+* **CI/CD** : Déploiement manuel via `docker compose up --build`
+
+**Accès au site :** [https://naruto.eolivarez.site](https://naruto.eolivarez.site)  
 
 ---
 

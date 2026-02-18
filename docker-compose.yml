@@ -1,0 +1,7 @@
+services:
+  naruto:
+    build: .
+    container_name: naruto
+    restart: always
+    ports:
+      - "3001:80"
