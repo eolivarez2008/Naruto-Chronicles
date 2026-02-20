@@ -37,7 +37,7 @@ Le projet repose sur une architecture web front-end classique, avec une logique 
 - **Réseau & Sécurité** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Exposition sécurisée du service sans ouverture de ports (Zero Trust), protection contre les attaques et gestion automatique du certificat SSL.
 - **Gestion du formulaire de contact** : [Formspree](https://formspree.io/) — Traitement des soumissions sans backend personnalisé.
 - **Gestion des médias** : [Cloudinary](https://cloudinary.com/) — Stockage, optimisation et distribution d’images via CDN.
-<!-- - **Web analytics** : [Umami](https://umami.is/) — Solution open-source d’analyse d’audience, légère et respectueuse de la vie privée, auto-hébergée. -->
+- **Web analytics** : [Umami](https://umami.is/) — Solution open-source d’analyse d’audience, légère et respectueuse de la vie privée, auto-hébergée.
 - **Format de données** : [JSON](https://www.json.org/json-fr.html) — Structuration des personnages, sagas et contenus dynamiques.
 
 ---
