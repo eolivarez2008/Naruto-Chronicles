@@ -18,7 +18,6 @@
   if (sessionStorage.getItem('canAccessThanks') !== '1') {
     window.location.href = '/contact';
   } else {
-    // ✅ Supprime l'autorisation après chargement
     sessionStorage.removeItem('canAccessThanks');
   }
 </script>

@@ -19,8 +19,8 @@ Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via un 
 
 * **Infrastructure** : Docker & Docker Compose
 * **Reverse Proxy** : Nginx (Hôte)
-* **Tunneling & Sécurité** : Cloudflare Tunnel
-* **CI/CD** : Déploiement manuel via `docker compose up --build`
+* **Tunneling & Sécurité** : Cloudflare Tunnel (Zero Trust)
+* **CI/CD** : Déploiement manuel via Git & Docker Compose
 
 **Accès au site :** [https://naruto.eolivarez.site](https://naruto.eolivarez.site)  
 
@@ -37,7 +37,8 @@ Le projet repose sur une architecture web front-end classique, avec une logique 
 - **Réseau & Sécurité** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Exposition sécurisée du service sans ouverture de ports (Zero Trust), protection contre les attaques et gestion automatique du certificat SSL.
 - **Gestion du formulaire de contact** : [Formspree](https://formspree.io/) — Traitement des soumissions sans backend personnalisé.
 - **Gestion des médias** : [Cloudinary](https://cloudinary.com/) — Stockage, optimisation et distribution d’images via CDN.
-- **Format de données** : JSON — Structuration des personnages, sagas et contenus dynamiques.
+<!-- - **Web analytics** : [Umami](https://umami.is/) — Solution open-source d’analyse d’audience, légère et respectueuse de la vie privée, auto-hébergée. -->
+- **Format de données** : [JSON](https://www.json.org/json-fr.html) — Structuration des personnages, sagas et contenus dynamiques.
 
 ---
 
