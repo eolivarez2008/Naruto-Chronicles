@@ -8,7 +8,7 @@ Ce site propose une immersion dans le monde de **Naruto**, à travers différent
 
 - **Histoire** : pour comprendre les grandes lignes du récit.
 - **Personnages** : présentation de tous les ninjas, invocations et démons a queues.
-- **Saga** : une présentation structurée de la collection Naruto
+- **Saga** : Une présentation dynamique de la collection Naruto, synchronisée en temps réel avec les scores et statistiques de MyAnimeList via l'API Jikan.
 - **Contact** : formulaire pour vos remarques ou suggestions.
 
 ---
@@ -49,6 +49,7 @@ Le projet s’appuie sur un environnement **full-stack React moderne**, orienté
 - **Réseau** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Zero Trust, SSL automatique, protection DDoS
 - **Formulaire** : [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) — Anti-bot sans friction
 - **Notifications** : [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) — Réception des formulaires de contact
+- **Données (API)** : [Jikan API](https://jikan.moe/) — Intégration dynamique des scores et statistiques MyAnimeList avec gestion du rate limiting.
 
 ---
 
