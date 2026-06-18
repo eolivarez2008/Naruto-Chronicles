@@ -30,6 +30,7 @@ Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via un 
 - **Reverse Proxy** : Nginx (Reverse Proxy)
 - **Tunneling & Sécurité** : Cloudflare Tunnel (Zero Trust / SSL Automatique)
 - **CI/CD** : Déploiement manuel via Git & Docker Compose
+- **Base de données** : SQLite (local) géré par Prisma ORM.
 
 **Accès au site :** [https://naruto.eolivarez.site](https://naruto.eolivarez.site)
 
@@ -40,6 +41,7 @@ Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via un 
 Le projet s’appuie sur un environnement **full-stack React moderne**, orienté performance, typage strict et déploiement optimisé Edge.
 
 - **Framework** : [Next.js 16](https://nextjs.org/) — App Router, Server Components, API Routes
+- **ORM** : [Prisma 6](https://www.prisma.io/) — Gestion de la base de données SQLite
 - **Langage** : [TypeScript](https://www.typescriptlang.org/) — Typage strict, interfaces centralisées
 - **Styling** : [Tailwind CSS](https://tailwindcss.com/) — Design system cohérent, responsive natif
 - **Animations** : [Framer Motion](https://www.framer.com/motion/) — Transitions fluides, layout animations
@@ -50,29 +52,32 @@ Le projet s’appuie sur un environnement **full-stack React moderne**, orienté
 - **Formulaire** : [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) — Anti-bot sans friction
 - **Notifications** : [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) — Réception des formulaires de contact
 - **Données (API)** : [Jikan API](https://jikan.moe/) — Intégration dynamique des scores et statistiques MyAnimeList avec gestion du rate limiting.
+- **Maintenance** : [tsx](https://tsx.is/) — Exécution de scripts de maintenance TypeScript
 
 ---
 
 ## Installation et Configuration
 
-### 1 — Cloner le projet
+### 1 — Cloner et installer
 
 ```bash
 git clone https://github.com/eolivarez2008/Naruto-Chronicles.git
 cd Naruto-Chronicles
-```
-
-### 2 — Installer les dépendances
-
-```bash
 npm install
 ```
 
-### 3 — Configurer les variables d'environnement
+### 2 — Configurer les variables d'environnement
 
 ```bash
 # Copier le fichier et remplacer les variables par les siennes
 cp .env.example .env
+```
+
+### 3 — Configurer la base de données
+
+```bash
+# Générer le client Prisma et créer la base SQLite
+npx prisma migrate dev --name init
 ```
 
 ### 4 — Lancer en développement
@@ -81,15 +86,18 @@ cp .env.example .env
 npm run dev
 ```
 
+---
+
 Le projet sera accessible sur `http://localhost:3000`
 
 ## Scripts disponibles
 
 ```bash
-npm run dev          # Serveur de développement
-npm run build        # Build production
-npm run start        # Serveur production
-npm run lint         # Vérification ESLint
+npm run dev                        # Serveur de développement
+npm run build                      # Build production
+npm run start                      # Serveur production
+npm run lint                       # Vérification ESLint
+npx tsx src/scripts/sync-db.ts     # Syncronisation de l'api - db
 ```
 
 ---

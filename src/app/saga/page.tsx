@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
-import { getSagaData, SAGA_CONFIG, SagaData } from "@/lib/jikan";
+import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -10,25 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default async function SagaPage() {
-  const sagaKeys = Object.keys(SAGA_CONFIG) as (keyof typeof SAGA_CONFIG)[];
-  const validSagas: SagaData[] = [];
-
-  for (const key of sagaKeys) {
-    let data = null;
-    let attempts = 0;
-
-    while (!data && attempts < 3) {
-      data = await getSagaData(key);
-      if (!data) {
-        attempts++;
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-      }
-    }
-
-    if (data) {
-      validSagas.push(data);
-    }
-  }
+  const validSagas = await prisma.saga.findMany({
+    orderBy: { year: "asc" },
+  });
 
   return (
     <div
@@ -43,7 +27,7 @@ export default async function SagaPage() {
         <div className="accent-line w-16 lg:w-20 mt-4" />
       </div>
 
-      {/* DESKTOP LIST (à partir de 1024px) */}
+      {/* DESKTOP LIST */}
       <div className="hidden lg:grid grid-cols-1 gap-24">
         {validSagas.map((saga, i) => (
           <div
@@ -68,7 +52,7 @@ export default async function SagaPage() {
                 </div>
               </div>
               <div className="absolute top-2 right-6 lg:-top-4 lg:-right-4 bg-naruto-orange text-white font-black lg:p-4 rounded-xl shadow-xl z-30 group-hover:rotate-6 transition-transform duration-300 text-xs lg:text-base">
-                ⭐ {saga.score}
+                ⭐ {saga.score ?? "-"}
               </div>
             </div>
 
@@ -97,10 +81,10 @@ export default async function SagaPage() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-[9px] uppercase text-white/30 font-black tracking-widest">
-                    {saga.key === "tbv" ? "Chapitres" : "Épisodes"}
+                    {saga.type === "manga" ? "Chapitres" : "Épisodes"}
                   </p>
                   <p className="text-white font-bold text-xs lg:text-sm">
-                    {saga.total}
+                    {saga.total ?? "-"}
                   </p>
                 </div>
                 <div className="space-y-1">
@@ -108,7 +92,7 @@ export default async function SagaPage() {
                     Sortie
                   </p>
                   <p className="text-white font-bold text-xs lg:text-sm">
-                    {saga.year}
+                    {saga.year ?? "-"}
                   </p>
                 </div>
                 <div className="space-y-1 text-right lg:text-left">
@@ -127,7 +111,7 @@ export default async function SagaPage() {
         ))}
       </div>
 
-      {/* MOBILE LIST (jusqu'à 1024px) */}
+      {/* MOBILE LIST */}
       <div className="lg:hidden space-y-0">
         {validSagas.map((saga, i) => (
           <div
@@ -148,26 +132,19 @@ export default async function SagaPage() {
                   className="object-cover object-center scale-[1.02]"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
-
                 <div className="absolute top-3 right-3 flex items-center gap-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 z-10">
                   <span className="text-naruto-orange text-xs">⭐</span>
                   <span className="text-white font-black text-xs">
-                    {saga.score}
+                    {saga.score ?? "-"}
                   </span>
                 </div>
-
                 <div className="absolute top-3 left-3 z-10">
                   <span
-                    className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${
-                      saga.status === "En cours"
-                        ? "bg-naruto-orange/90 text-white"
-                        : "bg-green-500/80 text-white"
-                    }`}
+                    className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${saga.status === "En cours" ? "bg-naruto-orange/90 text-white" : "bg-green-500/80 text-white"}`}
                   >
                     {saga.status}
                   </span>
                 </div>
-
                 <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 z-10">
                   <h2 className="text-3xl font-bold text-white font-syne italic leading-tight drop-shadow-lg">
                     {saga.label}
@@ -178,10 +155,10 @@ export default async function SagaPage() {
               <div className="flex items-stretch rounded-b-2xl overflow-hidden border border-white/8 border-t-0 divide-x divide-white/8 bg-white/4 backdrop-blur-xl mb-5">
                 {[
                   {
-                    label: saga.key === "tbv" ? "Chapitres" : "Épisodes",
-                    value: saga.total,
+                    label: saga.type === "manga" ? "Chapitres" : "Épisodes",
+                    value: saga.total ?? "-",
                   },
-                  { label: "Sortie", value: saga.year },
+                  { label: "Sortie", value: saga.year ?? "-" },
                   { label: "Auteur", value: saga.creator },
                 ].map((stat) => (
                   <div key={stat.label} className="flex-1 px-3 py-4 min-w-0">
@@ -207,7 +184,6 @@ export default async function SagaPage() {
                 </p>
               </div>
             </div>
-
             {i < validSagas.length - 1 && (
               <div className="ml-6 mb-2 h-px bg-linear-to-r from-naruto-orange/20 via-white/5 to-transparent" />
             )}

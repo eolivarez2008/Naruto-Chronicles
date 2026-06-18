@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+const DISCORD_CONTACT_WEBHOOK_URL = process.env.DISCORD_CONTACT_WEBHOOK_URL;
 const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
 
 // ─── Vérification Cloudflare Turnstile ───────────────────────────────────────
@@ -64,8 +64,8 @@ function buildDiscordPayload(name: string, email: string, message: string) {
 // ─── Route POST /api/contact ──────────────────────────────────────────────────
 export async function POST(req: Request) {
   // Vérification config serveur
-  if (!DISCORD_WEBHOOK_URL) {
-    console.error("[contact] DISCORD_WEBHOOK_URL manquant");
+  if (!DISCORD_CONTACT_WEBHOOK_URL) {
+    console.error("[contact] DISCORD_CONTACT_WEBHOOK_URL manquant");
     return NextResponse.json(
       { error: "Configuration serveur incorrecte." },
       { status: 500 },
@@ -129,7 +129,7 @@ export async function POST(req: Request) {
   }
 
   // Envoi vers Discord
-  const discordRes = await fetch(DISCORD_WEBHOOK_URL, {
+  const discordRes = await fetch(DISCORD_CONTACT_WEBHOOK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(
