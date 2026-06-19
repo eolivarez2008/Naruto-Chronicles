@@ -1,13 +1,3 @@
-// ─── Character / Image types ──────────────────────────────────────────────────
-
-export type CharacterType = "personnages" | "invocations" | "demons";
-
-export interface Character {
-  name: string;
-  url: string;
-  type: CharacterType;
-}
-
 // ─── Saga types ───────────────────────────────────────────────────────────────
 
 export interface Saga {

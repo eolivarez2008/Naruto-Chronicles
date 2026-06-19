@@ -22,3 +22,23 @@ model Saga {
   year         Int?
   lastUpdated  DateTime @default(now())
 }
+
+model Character {
+  id             Int      @id
+  name           String
+  normalizedName String
+  image          String?
+  sex            String
+  birthdate      String
+  age            String
+  height         String
+  rank           String 
+  natureType     String 
+  jutsu          String 
+  family         String   
+  debut          String   
+  popularity     Int
+  lastUpdated    DateTime
+
+  @@index([normalizedName])
+}

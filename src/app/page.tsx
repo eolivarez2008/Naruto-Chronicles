@@ -10,11 +10,9 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="relative flex flex-col items-center w-full">
-
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section className="w-full max-w-6xl mx-auto px-6 pt-16 pb-10 fade-in-up">
         <div className="flex flex-col md:flex-row items-center gap-12">
-
           {/* Text side */}
           <div className="flex-1 space-y-6">
             <span className="inline-block text-naruto-orange text-xs font-bold tracking-[0.2em] uppercase border border-[rgba(255,102,0,0.3)] rounded-full px-3 py-1 bg-[rgba(255,102,0,0.08)]">
@@ -47,9 +45,9 @@ export default function HomePage() {
 
           {/* Poster */}
           <div className="relative shrink-0 fade-in-up delay-200">
-            <div className="absolute inset-0 rounded-2xl bg-[#ff6600] opacity-10 blur-3xl scale-110" />
+            <div className="absolute inset-0 rounded-2xl bg-naruto-orange opacity-10 blur-3xl scale-110" />
             <Image
-              src="/affiches/affiche naruto.webp"
+              src="https://m.media-amazon.com/images/M/MV5BZTNjOWI0ZTAtOGY1OS00ZGU0LWEyOWYtMjhkYjdlYmVjMDk2XkEyXkFqcGc@._V1_.jpg"
               alt="Affiche Naruto"
               width={240}
               height={340}
@@ -104,9 +102,8 @@ export default function HomePage() {
               Tout au long de son parcours, Naruto se lie d&rsquo;amitié avec
               d&rsquo;autres ninjas, dont{" "}
               <strong className="text-white">Sasuke Uchiwa</strong>, son rival
-              et ami, et{" "}
-              <strong className="text-white">Sakura Haruno</strong>, pour qui il
-              a un faible. Sous la tutelle de{" "}
+              et ami, et <strong className="text-white">Sakura Haruno</strong>,
+              pour qui il a un faible. Sous la tutelle de{" "}
               <strong className="text-white">Kakashi Hatake</strong>, ils
               forment l&rsquo;équipe 7, et ensemble, ils affrontent de nombreux
               ennemis et découvrent les sombres secrets de leur monde.
@@ -139,7 +136,6 @@ export default function HomePage() {
           </video>
         </GlassCard>
       </section>
-
     </div>
   );
 }

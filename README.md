@@ -2,13 +2,13 @@
 
 Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
 
-**Naruto Chronicles** est un site web dédié à l’univers de Naruto. Initialement lancé en **2023** en HTML/CSS pur, le projet a évolué en **2026** vers une architecture moderne sous **Next.js**.
+**Naruto Chronicles** est un site web dédié à l'univers de Naruto. Initialement lancé en **2023** en HTML/CSS pur, le projet a évolué en **2026** vers une architecture moderne sous **Next.js**.
 
 Ce site propose une immersion dans le monde de **Naruto**, à travers différentes rubriques :
 
 - **Histoire** : pour comprendre les grandes lignes du récit.
-- **Personnages** : présentation de tous les ninjas, invocations et démons a queues.
-- **Saga** : Une présentation dynamique de la collection Naruto, synchronisée en temps réel avec les scores et statistiques de MyAnimeList via l'API Jikan.
+- **Personnages** : une présentation dynamique des personnages de Naruto, synchronisée en temps réel avec le score de popularité de MyAnimeList via l'API Jikan.
+- **Saga** : une présentation dynamique de la collection Naruto, synchronisée en temps réel avec les scores et statistiques de MyAnimeList via l'API Jikan.
 - **Contact** : formulaire pour vos remarques ou suggestions.
 
 ---
@@ -17,20 +17,19 @@ Ce site propose une immersion dans le monde de **Naruto**, à travers différent
 
 Ce projet est organisé en deux branches distinctes pour séparer l'évolution technique :
 
-- **`react-version` (Main)** : La version actuelle et performante. Développée avec **Next.js (App Router)**, optimisée pour le SEO, la rapidité et le design, toujours en cours de développement.
-- **`vanilla`** : L'archive historique du projet. Entièrement réalisée en **HTML5/CSS3/JS natif**. Idéal pour consulter les bases du développement web.
+- **`react-version` (Main)** : la version actuelle et performante. Développée avec **Next.js (App Router)**, optimisée pour le SEO, la rapidité et le design, toujours en cours de développement.
+- **`vanilla`** : l'archive historique du projet. Entièrement réalisée en **HTML5/CSS3/JS natif**. Idéal pour consulter les bases du développement web.
 
 ---
 
 ## Déploiement & Architecture
 
-Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via un reverse-proxy **Nginx**.
+Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via **Cloudflare Tunnel**.
 
 - **Infrastructure** : Docker & Docker Compose
-- **Reverse Proxy** : Nginx (Reverse Proxy)
-- **Tunneling & Sécurité** : Cloudflare Tunnel (Zero Trust / SSL Automatique)
-- **CI/CD** : Déploiement manuel via Git & Docker Compose
-- **Base de données** : SQLite (local) géré par Prisma ORM.
+- **Tunneling & Sécurité** : Cloudflare Tunnel (Zero Trust / SSL automatique)
+- **CI/CD** : déploiement manuel via Git & Docker Compose
+- **Base de données** : SQLite (local) géré par Prisma ORM
 
 **Accès au site :** [https://naruto.eolivarez.site](https://naruto.eolivarez.site)
 
@@ -38,7 +37,7 @@ Le projet est containerisé avec **Docker** et auto-hébergé sur une VM via un 
 
 ## Stack Technique
 
-Le projet s’appuie sur un environnement **full-stack React moderne**, orienté performance, typage strict et déploiement optimisé Edge.
+Le projet s'appuie sur un environnement **full-stack React moderne**, orienté performance, typage strict et déploiement optimisé Edge.
 
 - **Framework** : [Next.js 16](https://nextjs.org/) — App Router, Server Components, API Routes
 - **ORM** : [Prisma 6](https://www.prisma.io/) — Gestion de la base de données SQLite
@@ -47,12 +46,16 @@ Le projet s’appuie sur un environnement **full-stack React moderne**, orienté
 - **Animations** : [Framer Motion](https://www.framer.com/motion/) — Transitions fluides, layout animations
 - **Icônes** : [Lucide React](https://lucide.dev/) — SVG optimisés, tree-shaking compatible
 - **Analytics** : [Umami](https://umami.is/) — Auto-hébergé, sans cookie, RGPD compliant
-- **Hébergement** : [Docker](https://www.docker.com/) — Containerisation, auto-hébergé sur VM Debian dédiée
+- **Hébergement** : [Docker](https://www.docker.com/) — Containerisation via Docker Compose, auto-hébergé sur VM Debian dédiée
 - **Réseau** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Zero Trust, SSL automatique, protection DDoS
 - **Formulaire** : [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) — Anti-bot sans friction
-- **Notifications** : [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) — Réception des formulaires de contact
-- **Données (API)** : [Jikan API](https://jikan.moe/) — Intégration dynamique des scores et statistiques MyAnimeList avec gestion du rate limiting.
-- **Maintenance** : [tsx](https://tsx.is/) — Exécution de scripts de maintenance TypeScript
+- **Notifications** : [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) — Alertes de monitoring et réception des formulaires de contact
+- **Données (seed & synchronisation)** :
+  - [narutodb-website](https://github.com/sriniously/narutodb-website) — Source principale : données structurées (rangs, famille, débuts)
+  - [naruto-api](https://github.com/gustavonobreza/naruto-api) — Complément : jutsus, natures de chakra
+  - [Dattebayo API](https://dattebayo-api.onrender.com) — Fallback et données supplémentaires
+  - [Jikan API](https://jikan.moe/) — Scores de popularité MyAnimeList
+- **Maintenance** : [tsx](https://tsx.is/) — Exécution des scripts de seed et de synchronisation quotidienne TypeScript
 
 ---
 
@@ -73,11 +76,14 @@ npm install
 cp .env.example .env
 ```
 
-### 3 — Configurer la base de données
+### 3 — Initialiser la base de données
 
 ```bash
 # Générer le client Prisma et créer la base SQLite
-npx prisma migrate dev --name init
+npx prisma db push
+
+# Peupler la base (sources + api)
+npx tsx prisma/seed.ts
 ```
 
 ### 4 — Lancer en développement
@@ -86,18 +92,19 @@ npx prisma migrate dev --name init
 npm run dev
 ```
 
----
-
 Le projet sera accessible sur `http://localhost:3000`
+
+---
 
 ## Scripts disponibles
 
 ```bash
-npm run dev                        # Serveur de développement
-npm run build                      # Build production
-npm run start                      # Serveur production
-npm run lint                       # Vérification ESLint
-npx tsx src/scripts/sync-db.ts     # Syncronisation de l'api - db
+npm run dev                    # Serveur de développement
+npm run build                  # Build production
+npm run start                  # Serveur production
+npm run lint                   # Vérification ESLint
+npx tsx prisma/seed.ts         # Initialisation complète de la base de données
+npx tsx prisma/update.ts       # Synchronisation quotidienne (popularité + sagas)
 ```
 
 ---
@@ -105,21 +112,16 @@ npx tsx src/scripts/sync-db.ts     # Syncronisation de l'api - db
 ## Déploiement Docker
 
 ```bash
-# Build et démarrage
-docker compose up -d --build
-
-# Logs
-docker logs portfolio --tail 50
-
-# Arrêt
-docker compose down
+docker compose up -d --build     # Build et démarrage
+docker logs portfolio --tail 50  # Logs
+docker compose down              # Arrêt
 ```
 
 ---
 
 ## Auteur
 
-Développé par **Emilien Olivarez** – Étudiant en Bac Pro CIEL
+Développé par **Emilien Olivarez** – Étudiant en Bac Pro CIEL  
 Lycée Louis de Cormontaigne, Metz
 
 ---
@@ -132,5 +134,6 @@ Tu peux :
 - utiliser librement le code,
 - le modifier,
 - le distribuer,
-- même à usage commercial,  
-  tant que tu respectes les conditions de la [licence MIT](https://opensource.org/license/MIT).
+- même à usage commercial,
+
+tant que tu respectes les conditions de la [licence MIT](https://opensource.org/license/MIT).
