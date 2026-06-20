@@ -23,7 +23,7 @@ export default function CharactersPage() {
           />
           <div className="absolute inset-0 backdrop-blur-sm" />
           <div className="absolute inset-0 bg-[#050505]/60" />
-          <div className="absolute inset-x-0 bottom-0 h-17 bg-gradient-to-t from-[#050505] to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-17 bg-linear-to-t from-[#050505] to-transparent" />
         </div>
 
         {/* Contenu texte par-dessus */}

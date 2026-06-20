@@ -9,6 +9,7 @@ const LINKS = [
   { label: "Histoire", href: "/story" },
   { label: "Personnages", href: "/characters" },
   { label: "Saga", href: "/saga" },
+  { label: "Vidéos", href: "/videos" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -24,14 +25,14 @@ export default function Navbar() {
   return (
     <nav
       className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
-      style={{ width: "min(95vw, 600px)" }}
+      style={{ width: "min(95vw, 680px)" }}
     >
       <div
         className="relative flex items-center justify-center px-6 h-15 rounded-2xl border border-white/10 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)]"
         style={{ background: "rgba(10,10,10,0.75)" }}
       >
         {/* Desktop */}
-        <ul className="hidden md:flex items-center gap-4">
+        <ul className="hidden md:flex items-center gap-3">
           {LINKS.map((l) => {
             const active = isActive(l.href, l.exact);
             return (
@@ -39,7 +40,7 @@ export default function Navbar() {
                 <Link
                   href={l.href}
                   className={[
-                    "relative px-5 py-2 rounded-xl text-[14px] font-semibold transition-all duration-200",
+                    "relative px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200",
                     active
                       ? "text-naruto-orange bg-[rgba(255,102,0,0.12)]"
                       : "text-white/60 hover:text-white hover:bg-white/5",
@@ -90,6 +91,7 @@ export default function Navbar() {
               <li key={l.href}>
                 <Link
                   href={l.href}
+                  onClick={() => setMenuOpen(false)}
                   className={[
                     "flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all",
                     active

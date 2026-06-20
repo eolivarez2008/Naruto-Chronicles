@@ -42,3 +42,37 @@ model Character {
 
   @@index([normalizedName])
 }
+
+model Video {
+  id           String      @id              // YouTube videoId (ex: "dQw4w9WgXcQ")
+  title        String
+  thumbnail    String
+  channelTitle String
+  publishedAt  DateTime
+  category     String                       // "edit" | "theorie" | "react" | "fanart" | "ost"
+  keyword      String                       // mot-clé utilisé pour la récupérer
+  viewCount    BigInt      @default(0)
+  likesCount   Int         @default(0)      // likes internes (communauté du site)
+  fetchedAt    DateTime    @default(now())
+  lastUpdated  DateTime    @default(now())
+
+  likes        VideoLike[]
+
+  @@index([category])
+  @@index([publishedAt])
+  @@index([likesCount])
+}
+
+model VideoLike {
+  id        String   @id @default(cuid())
+  videoId   String
+  userId    String?                         // nullable — placeholder pour le futur auth
+  ipHash    String                          // fingerprint IP (actif tant que userId est null)
+  createdAt DateTime @default(now())
+
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  // unicité : un like par (video + ip) ou (video + user) selon le contexte
+  @@unique([videoId, ipHash])
+  @@index([videoId])
+}
