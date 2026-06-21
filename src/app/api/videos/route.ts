@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import type { VideoCard, VideoSortField } from "@/types/videos";
 import { VIDEO_CATEGORIES } from "@/types/videos";
 import * as crypto from "crypto";
+import { auth } from "@/auth";
 
 // ajout du helper hash IP pour vérifier si l'utilisateur a déjà liké
 function hashIp(req: NextRequest): string {
@@ -28,7 +29,6 @@ export async function GET(req: NextRequest) {
 
   const skip = (page - 1) * limit;
 
-  // ajout du filtre where dynamique
   const where: Prisma.VideoWhereInput = {};
 
   if (search) {
@@ -39,7 +39,6 @@ export async function GET(req: NextRequest) {
     where.category = category;
   }
 
-  // ajout du tri dynamique
   let orderBy: Prisma.VideoOrderByWithRelationInput;
   switch (sort) {
     case "popular":
@@ -53,7 +52,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const ipHash = hashIp(req);
+    const session = await auth();
+    const userId = session?.user?.id;
 
     const [total, videos] = await Promise.all([
       prisma.video.count({ where }),
@@ -63,11 +63,12 @@ export async function GET(req: NextRequest) {
         take: limit,
         orderBy,
         include: {
-          // ajout pour vérifier si l'IP courante a déjà liké chaque vidéo
-          likes: {
-            where: { ipHash },
-            select: { id: true },
-          },
+          likes: userId
+            ? {
+                where: { userId },
+                select: { id: true },
+              }
+            : false,
         },
       }),
     ]);
@@ -81,7 +82,7 @@ export async function GET(req: NextRequest) {
       category: v.category as any,
       likesCount: v.likesCount,
       viewCount: v.viewCount.toString(),
-      hasLiked: v.likes.length > 0,
+      hasLiked: Array.isArray(v.likes) && v.likes.length > 0,
     }));
 
     return NextResponse.json({

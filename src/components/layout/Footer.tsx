@@ -30,6 +30,13 @@ export default function Footer() {
           >
             Contact
           </Link>
+          <span className="text-white/20">|</span>
+          <Link
+            href="/legal"
+            className="hover:text-naruto-orange transition-colors"
+          >
+            Légal
+          </Link>
         </div>
       </div>
     </footer>

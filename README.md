@@ -9,6 +9,7 @@ Ce site propose une immersion dans le monde de **Naruto**, à travers différent
 - **Histoire** : pour comprendre les grandes lignes du récit.
 - **Personnages** : une présentation dynamique des personnages de Naruto, synchronisée en temps réel avec le score de popularité de MyAnimeList via l'API Jikan.
 - **Saga** : une présentation dynamique de la collection Naruto, synchronisée en temps réel avec les scores et statistiques de MyAnimeList via l'API Jikan.
+- **Vidéos** : agrégation automatique de contenu YouTube, mise à jour quotidienne et interactions utilisateurs (likes)
 - **Contact** : formulaire pour vos remarques ou suggestions.
 
 ---
@@ -50,11 +51,14 @@ Le projet s'appuie sur un environnement **full-stack React moderne**, orienté p
 - **Réseau** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Zero Trust, SSL automatique, protection DDoS
 - **Formulaire** : [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) — Anti-bot sans friction
 - **Notifications** : [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) — Alertes de monitoring et réception des formulaires de contact
+- **Authentification OAuth** : [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2?hl=fr) — Connexion utilisateur sécurisée
+- **Auth Backend** : [NextAuth.js](https://next-auth.js.org/) — Gestion des sessions, providers OAuth et sécurité
 - **Données (seed & synchronisation)** :
   - [narutodb-website](https://github.com/sriniously/narutodb-website) — Source principale : données structurées (rangs, famille, débuts)
   - [naruto-api](https://github.com/gustavonobreza/naruto-api) — Complément : jutsus, natures de chakra
   - [Dattebayo API](https://dattebayo-api.onrender.com) — Fallback et données supplémentaires
   - [Jikan API](https://jikan.moe/) — Scores de popularité MyAnimeList
+  - [YouTube Data API v3](https://developers.google.com/youtube/v3/getting-started?hl=fr) — Récupération automatique des vidéos (chaînes, stats, thumbnails)
 - **Maintenance** : [tsx](https://tsx.is/) — Exécution des scripts de seed et de synchronisation quotidienne TypeScript
 
 ---

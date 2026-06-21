@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
 import type { VideoCard } from "@/types/videos";
 import {
   CATEGORY_LABELS,
   CATEGORY_ICONS,
   CATEGORY_COLORS,
 } from "@/types/videos";
+import LoginPromptModal from "./LoginPromptModal";
 
 interface VideoModalProps {
   videoId: string | null;
@@ -16,7 +18,6 @@ interface VideoModalProps {
   onLikeToggle: (videoId: string, liked: boolean, newCount: number) => void;
 }
 
-// ajout du composant player YouTube en mode nocookie
 function YouTubePlayer({ videoId }: { videoId: string }) {
   return (
     <div className="relative w-full aspect-video bg-black rounded-t-2xl overflow-hidden">
@@ -37,13 +38,14 @@ export default function VideoModal({
   onOpenPage,
   onLikeToggle,
 }: VideoModalProps) {
+  const { data: session } = useSession();
   const [video, setVideo] = useState<VideoCard | null>(null);
   const [loading, setLoading] = useState(false);
   const [liking, setLiking] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const isOpen = videoId !== null;
 
-  // récupération des détails de la vidéo
   useEffect(() => {
     if (!videoId) {
       setVideo(null);
@@ -57,7 +59,6 @@ export default function VideoModal({
       .finally(() => setLoading(false));
   }, [videoId]);
 
-  // fermeture au clavier
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -66,7 +67,6 @@ export default function VideoModal({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // lock du scroll body
   useEffect(() => {
     if (isOpen) {
       const original = document.body.style.overflow;
@@ -78,6 +78,10 @@ export default function VideoModal({
   }, [isOpen]);
 
   const handleLike = async () => {
+    if (!session) {
+      setShowLoginPrompt(true);
+      return;
+    }
     if (!video || liking) return;
     setLiking(true);
     try {
@@ -103,7 +107,6 @@ export default function VideoModal({
 
   return (
     <>
-      {/* Backdrop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -112,61 +115,68 @@ export default function VideoModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-9999 bg-black/85 backdrop-blur-sm"
+            className="fixed inset-0 z-9999 bg-black/75 backdrop-blur-sm"
             onClick={onClose}
           />
         )}
       </AnimatePresence>
 
-      {/* Modal */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             key="video-modal"
-            initial={{ opacity: 0, y: 50, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed z-10000 inset-x-2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bottom-2 sm:bottom-auto sm:top-[8vh] sm:w-full sm:max-w-3xl max-h-[90dvh] bg-naruto-surface rounded-2xl border border-white/10 shadow-2xl flex flex-col overflow-hidden"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 60 }}
+            transition={{ type: "spring", stiffness: 320, damping: 32 }}
+            className={[
+              "fixed z-10000",
+              "inset-x-2 sm:inset-x-auto",
+              "bottom-1 sm:bottom-auto",
+              "sm:left-1/2 sm:-translate-x-1/2",
+              "top-[15vh] sm:top-[13vh]",
+              "max-h-[85dvh] sm:max-h-[84dvh]",
+              "sm:w-full sm:max-w-3xl",
+              "bg-naruto-surface rounded-2xl border border-white/10 shadow-2xl",
+              "flex flex-col overflow-hidden",
+            ].join(" ")}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* bouton fermer */}
-            <button
-              onClick={onClose}
-              className="absolute right-3 top-3 z-10 p-2 rounded-full bg-black/60 hover:bg-black/90 border border-white/10 text-white transition-colors cursor-pointer"
-              aria-label="Fermer"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="relative shrink-0">
+              <button
+                onClick={onClose}
+                className="absolute right-4 top-4 p-2 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors cursor-pointer z-10001"
+                aria-label="Fermer"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
 
             <div className="flex-1 overflow-y-auto overscroll-contain">
               {loading && (
-                <div className="aspect-video bg-black flex items-center justify-center">
+                <div className="flex items-center justify-center min-h-75">
                   <div className="w-10 h-10 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
                 </div>
               )}
 
               {!loading && videoId && (
                 <>
-                  {/* ajout du player YouTube nocookie */}
                   <YouTubePlayer videoId={videoId} />
 
-                  {/* infos vidéo */}
                   {video && (
-                    <div className="p-5 space-y-3">
-                      {/* titre + catégorie */}
+                    <div className="p-4 space-y-3">
                       <div className="flex items-start gap-3">
                         <span
                           className="shrink-0 flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold"
@@ -184,9 +194,7 @@ export default function VideoModal({
                         {video.channelTitle}
                       </p>
 
-                      {/* Actions */}
-                      <div className="flex items-center gap-3 pt-2 border-t border-white/8">
-                        {/* Like */}
+                      <div className="flex items-center gap-3 pt-4 border-t border-white/8">
                         <button
                           onClick={handleLike}
                           disabled={liking}
@@ -209,7 +217,6 @@ export default function VideoModal({
                           {video.likesCount > 0 ? video.likesCount : "J'aime"}
                         </button>
 
-                        {/* Bouton "ouvrir la page dédiée" */}
                         <button
                           onClick={() => onOpenPage(video.id)}
                           className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-white/6 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white transition-all"
@@ -227,23 +234,15 @@ export default function VideoModal({
                               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                             />
                           </svg>
-                          Ouvrir la page
+                          Ouvrir
                         </button>
 
-                        {/* Lien YouTube direct */}
                         <a
                           href={`https://www.youtube.com/watch?v=${video.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="ml-auto flex items-center gap-1.5 text-xs text-white/25 hover:text-white/50 transition-colors"
                         >
-                          <svg
-                            className="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05A6.34 6.34 0 003.15 15.3a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.53V6.77a4.85 4.85 0 01-1.02-.08z" />
-                          </svg>
                           YouTube
                         </a>
                       </div>
@@ -255,6 +254,11 @@ export default function VideoModal({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+      />
     </>
   );
 }

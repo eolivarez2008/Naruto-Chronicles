@@ -1,10 +1,3 @@
-/**
- * fetch-videos.ts
- * Récupération quotidienne des vidéos YouTube via l'API Data v3.
- * Usage : npx tsx prisma/fetch-videos.ts
- * CRON  : 0 1 * * * cd /app && npx tsx prisma/fetch-videos.ts >> /var/log/naruto-videos.log 2>&1
- */
-
 import { PrismaClient } from "@prisma/client";
 import * as crypto from "crypto";
 
@@ -15,9 +8,8 @@ const prisma = new PrismaClient();
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY ?? "";
 const DISCORD_WEBHOOK = process.env.DISCORD_ADMIN_WEBHOOK_URL ?? "";
 const ADMIN_ROLE_ID = "1483836726429356123";
-const MAX_RESULTS = 15; // résultats par mot-clé (quota : 100 unités/search)
+const MAX_RESULTS = 17;
 
-// ajout des mots-clés par catégorie — ordre intentionnel (les plus spécifiques d'abord)
 const CATEGORY_QUERIES: { category: string; label: string; query: string }[] = [
   { category: "edit", label: "Edit", query: "Naruto edit amv 4k" },
   { category: "theorie", label: "Théorie", query: "Naruto theories explained" },
@@ -85,7 +77,6 @@ async function searchVideos(
   return (data.items ?? []) as YouTubeSearchItem[];
 }
 
-// ajout de la récupération des stats (viewCount) par batch d'IDs
 async function fetchVideoStats(
   videoIds: string[],
 ): Promise<Map<string, bigint>> {
@@ -97,7 +88,7 @@ async function fetchVideoStats(
   url.searchParams.set("key", YOUTUBE_API_KEY);
 
   const res = await fetch(url.toString());
-  if (!res.ok) return new Map(); // non bloquant
+  if (!res.ok) return new Map();
 
   const data = await res.json();
   const map = new Map<string, bigint>();
@@ -114,9 +105,17 @@ function pickThumbnail(t: YouTubeSearchItem["snippet"]["thumbnails"]): string {
   return t.high?.url ?? t.medium?.url ?? t.default?.url ?? "";
 }
 
-// ajout d'un petit délai pour être gentil avec l'API
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+function decodeHtml(html: string): string {
+  return html
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
 }
 
 // ─── Traitement par catégorie ──────────────────────────────────────────────────
@@ -152,11 +151,9 @@ async function processCategory(
     return result;
   }
 
-  // récupération des stats en batch
   const videoIds = items.map((i) => i.id.videoId).filter(Boolean);
   const statsMap = await fetchVideoStats(videoIds);
 
-  // ajout des upserts en base — dédoublonnage natif via @id
   for (const item of items) {
     const videoId = item.id.videoId;
     if (!videoId) {
@@ -167,7 +164,7 @@ async function processCategory(
     const existing = await prisma.video.findUnique({ where: { id: videoId } });
 
     const videoData = {
-      title: item.snippet.title,
+      title: decodeHtml(item.snippet.title),
       thumbnail: pickThumbnail(item.snippet.thumbnails),
       channelTitle: item.snippet.channelTitle,
       publishedAt: new Date(item.snippet.publishedAt),
@@ -259,7 +256,7 @@ async function main(): Promise<void> {
   for (const { category, label, query } of CATEGORY_QUERIES) {
     const result = await processCategory(category, label, query);
     results.push(result);
-    await sleep(500); // respect du quota API
+    await sleep(500);
   }
 
   const duration = Math.round((Date.now() - startedAt) / 1000);

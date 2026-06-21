@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
   images: {
     remotePatterns: [
       // ── Sources de données principales ────────────────────────────────────
@@ -9,6 +10,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.myanimelist.net" },
       { protocol: "https", hostname: "raw.githubusercontent.com" },
       { protocol: "https", hostname: "naruto-official.com" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
 
       // ── Wikia / Fandom  ──
       { protocol: "https", hostname: "static.wikia.nocookie.net" },

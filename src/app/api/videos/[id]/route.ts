@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import * as crypto from "crypto";
+import { auth } from "@/auth";
 
 function hashIp(req: NextRequest): string {
   const ip =
@@ -23,10 +24,14 @@ export async function GET(
   }
 
   try {
+    const session = await auth();
+    const userId = session?.user?.id;
     const ipHash = hashIp(req);
     const video = await prisma.video.findUnique({
       where: { id },
-      include: { likes: { where: { ipHash }, select: { id: true } } },
+      include: {
+        likes: userId ? { where: { userId }, select: { id: true } } : false,
+      },
     });
 
     if (!video) {
@@ -42,7 +47,7 @@ export async function GET(
       category: video.category,
       likesCount: video.likesCount,
       viewCount: video.viewCount.toString(),
-      hasLiked: video.likes.length > 0,
+      hasLiked: Array.isArray(video.likes) && video.likes.length > 0,
     });
   } catch (error) {
     console.error("Video detail API Error:", error);

@@ -8,19 +8,19 @@ datasource db {
 }
 
 model Saga {
-  id           String   @id @default(cuid())
-  jikanId      Int      @unique
-  key          String   @unique
-  type         String
-  label        String
-  synopsisFr   String
-  image        String
-  status       String
-  score        Float?
-  creator      String
-  total        Int?
-  year         Int?
-  lastUpdated  DateTime @default(now())
+  id          String   @id @default(cuid())
+  jikanId     Int      @unique
+  key         String   @unique
+  type        String
+  label       String
+  synopsisFr  String
+  image       String
+  status      String
+  score       Float?
+  creator     String
+  total       Int?
+  year        Int?
+  lastUpdated DateTime @default(now())
 }
 
 model Character {
@@ -32,27 +32,83 @@ model Character {
   birthdate      String
   age            String
   height         String
-  rank           String 
-  natureType     String 
-  jutsu          String 
-  family         String   
-  debut          String   
+  rank           String
+  natureType     String
+  jutsu          String
+  family         String
+  debut          String
   popularity     Int
   lastUpdated    DateTime
 
   @@index([normalizedName])
 }
 
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+
+  avatarSnapshot String?
+  image         String?
+
+  consentGiven  Boolean  @default(false)
+  consentAt     DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  videoLikes    VideoLike[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model Video {
-  id           String      @id              // YouTube videoId (ex: "dQw4w9WgXcQ")
+  id           String      @id
   title        String
   thumbnail    String
   channelTitle String
   publishedAt  DateTime
-  category     String                       // "edit" | "theorie" | "react" | "fanart" | "ost"
-  keyword      String                       // mot-clé utilisé pour la récupérer
+  category     String
+  keyword      String
   viewCount    BigInt      @default(0)
-  likesCount   Int         @default(0)      // likes internes (communauté du site)
+  likesCount   Int         @default(0)
   fetchedAt    DateTime    @default(now())
   lastUpdated  DateTime    @default(now())
 
@@ -66,13 +122,14 @@ model Video {
 model VideoLike {
   id        String   @id @default(cuid())
   videoId   String
-  userId    String?                         // nullable — placeholder pour le futur auth
-  ipHash    String                          // fingerprint IP (actif tant que userId est null)
+  userId    String?
+  ipHash    String
   createdAt DateTime @default(now())
 
   video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  // unicité : un like par (video + ip) ou (video + user) selon le contexte
   @@unique([videoId, ipHash])
+  @@index([userId])
   @@index([videoId])
 }

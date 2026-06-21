@@ -21,11 +21,7 @@ import type { VideosApiResponse } from "@/types/videos";
 import VideoCardItem from "./VideoCard";
 import VideoModal from "./VideoModal";
 
-// ─── Constants ─────────────────────────────────────────────────────────────────
-
 const LIMIT = 12;
-
-// ─── Hook données ──────────────────────────────────────────────────────────────
 
 function useVideos(
   search: string,
@@ -61,17 +57,22 @@ function useVideos(
         const res = await fetch(`/api/videos?${params}`, {
           signal: controller.signal,
         });
+
+        if (!res.ok) {
+          setVideos([]);
+          return;
+        }
+
         const json: VideosApiResponse = await res.json();
 
         setVideos((prev) =>
-          pageNum === 1 ? json.data : [...prev, ...json.data],
+          pageNum === 1 ? (json.data ?? []) : [...prev, ...(json.data ?? [])],
         );
         setTotalPages(json.meta.totalPages);
         setTotal(json.meta.total);
         setPage(pageNum);
       } catch (e: any) {
         if (e.name === "AbortError") return;
-        console.error("Videos fetch error:", e);
       } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
@@ -91,7 +92,6 @@ function useVideos(
     if (!loadingMore && page < totalPages) fetchPage(page + 1);
   }, [loadingMore, page, totalPages, fetchPage]);
 
-  // ajout du toggle like local sans refetch
   const toggleLike = useCallback(
     (videoId: string, liked: boolean, newCount: number) => {
       setVideos((prev) =>
@@ -116,13 +116,11 @@ function useVideos(
   };
 }
 
-// ─── Composant principal ───────────────────────────────────────────────────────
-
 export default function VideoListClient() {
   const router = useRouter();
   const [searchRaw, setSearchRaw] = useState("");
   const [category, setCategory] = useState<VideoCategory | "all">("all");
-  const [sort, setSort] = useState<VideoSortField>("recent");
+  const [sort, setSort] = useState<VideoSortField>("popular");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -133,21 +131,18 @@ export default function VideoListClient() {
   const { videos, loading, loadingMore, loadMore, hasMore, total, toggleLike } =
     useVideos(search, category, sort);
 
-  // fermeture du menu tri au clic extérieur
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (
         sortMenuRef.current &&
         !sortMenuRef.current.contains(e.target as Node)
-      ) {
+      )
         setIsSortOpen(false);
-      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // infinite scroll sentinel
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
@@ -155,7 +150,7 @@ export default function VideoListClient() {
       ([entry]) => {
         if (entry.isIntersecting) loadMore();
       },
-      { rootMargin: "300px" },
+      { rootMargin: "400px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -174,15 +169,10 @@ export default function VideoListClient() {
     window.history.pushState({}, "", "/videos");
   };
 
-  const handleOpenPage = (id: string) => {
-    router.push(`/videos/${id}`);
-  };
-
   return (
     <>
-      {/* ── Toolbar ──────────────────────────────────────────────────────────── */}
+      {/* ── Toolbar ── */}
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        {/* Search */}
         <div className="relative flex-1 min-w-40">
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30"
@@ -206,7 +196,6 @@ export default function VideoListClient() {
           />
         </div>
 
-        {/* Sort menu */}
         <div className="relative" ref={sortMenuRef}>
           <button
             onClick={() => setIsSortOpen((v) => !v)}
@@ -280,7 +269,7 @@ export default function VideoListClient() {
         </div>
       </div>
 
-      {/* ── Filtres catégories ────────────────────────────────────────────────── */}
+      {/* ── Filtres catégories ── */}
       <div className="flex flex-wrap gap-2 mb-8">
         {(["all", ...VIDEO_CATEGORIES] as const).map((cat) => {
           const active = category === cat;
@@ -304,15 +293,20 @@ export default function VideoListClient() {
         })}
       </div>
 
-      {/* ── Grille ───────────────────────────────────────────────────────────── */}
+      {/* ── Grille — PAS de layout sur le wrapper pour éviter le saut au chargement ── */}
       {loading ? (
         <VideoSkeletonGrid />
-      ) : videos.length === 0 ? (
+      ) : !videos || videos.length === 0 ? (
         <VideoEmpty />
       ) : (
         <>
-          <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <AnimatePresence mode="popLayout">
+          {/*
+            ajout : pas de motion.div layout sur la grille — c'est lui qui causait
+            le recalcul de positions et le saut d'écran lors du loadMore.
+            Le layout reste sur chaque carte individuelle.
+          */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <AnimatePresence mode="popLayout" initial={false}>
               {videos.map((video, i) => (
                 <VideoCardItem
                   key={video.id}
@@ -323,13 +317,14 @@ export default function VideoListClient() {
                 />
               ))}
             </AnimatePresence>
-          </motion.div>
+          </div>
 
-          <div ref={sentinelRef} className="h-8 mt-4" />
+          {/* sentinel invisible — déclenche le chargement avant d'atteindre le bas */}
+          <div ref={sentinelRef} className="h-1 mt-4" aria-hidden />
 
           {loadingMore && (
-            <div className="flex justify-center py-8">
-              <div className="w-8 h-8 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
+            <div className="flex justify-center py-6">
+              <div className="w-7 h-7 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
             </div>
           )}
 
@@ -341,18 +336,15 @@ export default function VideoListClient() {
         </>
       )}
 
-      {/* ── Modal ────────────────────────────────────────────────────────────── */}
       <VideoModal
         videoId={selectedId}
         onClose={handleModalClose}
-        onOpenPage={handleOpenPage}
+        onOpenPage={(id) => router.push(`/videos/${id}`)}
         onLikeToggle={toggleLike}
       />
     </>
   );
 }
-
-// ─── Squelettes ────────────────────────────────────────────────────────────────
 
 function VideoSkeletonGrid() {
   return (

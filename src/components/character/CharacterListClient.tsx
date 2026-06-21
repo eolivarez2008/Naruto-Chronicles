@@ -556,7 +556,7 @@ function CharacterModal({
               "inset-x-2 sm:inset-x-auto",
               "bottom-1 sm:bottom-auto",
               "sm:left-1/2 sm:-translate-x-1/2",
-              "top-[13vh] sm:top-[13vh]",
+              "top-[15vh] sm:top-[13vh]",
               "max-h-[85dvh] sm:max-h-[84dvh]",
               "sm:w-full sm:max-w-2xl",
               "bg-naruto-surface rounded-2xl border border-white/10 shadow-2xl",

@@ -73,7 +73,7 @@ export interface VideoLikeResponse {
 export type VideoSortField = "recent" | "popular" | "views";
 
 export const SORT_OPTIONS: { value: VideoSortField; label: string }[] = [
-  { value: "recent", label: "Plus récents" },
   { value: "popular", label: "Plus aimés" },
+  { value: "recent", label: "Plus récents" },
   { value: "views", label: "Plus vus" },
 ];
