@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Mentions légales & Confidentialité",
+  title: "Légal",
   description:
     "Politique de confidentialité et mentions légales de Naruto Chronicles.",
 };
@@ -26,7 +26,6 @@ export default function LegalPage() {
       </div>
 
       <div className="space-y-10 text-white/65 text-sm leading-relaxed">
-        {/* ── Mentions légales ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">
             1. Mentions légales
@@ -52,22 +51,20 @@ export default function LegalPage() {
             </p>
             <p className="text-white/35 text-xs pt-2">
               Ce site est un projet personnel à caractère non commercial, dédié
-              à l'univers fictif de Naruto. Naruto est une propriété de Masashi
-              Kishimoto / Shueisha / Studio Pierrot. Ce site ne revendique aucun
-              droit sur ces œuvres.
+              à l&apos;univers fictif de Naruto. Naruto est une propriété de
+              Masashi Kishimoto / Shueisha / Studio Pierrot. Ce site ne
+              revendique aucun droit sur ces œuvres.
             </p>
           </div>
         </section>
 
-        {/* ── Données collectées ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">
             2. Données personnelles collectées
           </h2>
           <p className="mb-3">
-            Conformément au Règlement Général sur la Protection des Données
-            (RGPD — UE 2016/679), voici les données que nous collectons et
-            pourquoi.
+            Conformément au RGPD (UE 2016/679), voici les données collectées et
+            leur finalité.
           </p>
           <div className="rounded-xl border border-white/8 overflow-hidden">
             <table className="w-full text-xs">
@@ -83,43 +80,48 @@ export default function LegalPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/6">
-                <tr>
-                  <td className="px-4 py-2.5 text-white/70">Nom Google</td>
-                  <td className="px-4 py-2.5">Identifier le compte</td>
-                  <td className="px-4 py-2.5">Jusqu'à suppression du compte</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2.5 text-white/70">Adresse e-mail</td>
-                  <td className="px-4 py-2.5">Authentification unique</td>
-                  <td className="px-4 py-2.5">Jusqu'à suppression du compte</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2.5 text-white/70">Photo de profil</td>
-                  <td className="px-4 py-2.5">Affichage dans l'interface</td>
-                  <td className="px-4 py-2.5">Jusqu'à suppression du compte</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2.5 text-white/70">Likes de vidéos</td>
-                  <td className="px-4 py-2.5">Fonctionnalité communautaire</td>
-                  <td className="px-4 py-2.5">Jusqu'à suppression du compte</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2.5 text-white/70">
-                    Hash d'adresse IP
-                  </td>
-                  <td className="px-4 py-2.5">Anti-spam likes (anonymisée)</td>
-                  <td className="px-4 py-2.5">Jusqu'à suppression du like</td>
-                </tr>
+                {[
+                  [
+                    "Nom Google",
+                    "Identifier le compte",
+                    "Jusqu'à suppression du compte",
+                  ],
+                  [
+                    "Adresse e-mail",
+                    "Authentification unique",
+                    "Jusqu'à suppression du compte",
+                  ],
+                  [
+                    "Photo de profil",
+                    "Affichage dans l'interface",
+                    "Jusqu'à suppression du compte",
+                  ],
+                  [
+                    "Likes de vidéos",
+                    "Fonctionnalité communautaire",
+                    "Jusqu'à suppression du compte",
+                  ],
+                  [
+                    "Hash d'adresse IP",
+                    "Anti-spam likes (anonymisée)",
+                    "Jusqu'à suppression du like",
+                  ],
+                ].map(([donnee, finalite, duree]) => (
+                  <tr key={donnee}>
+                    <td className="px-4 py-2.5 text-white/70">{donnee}</td>
+                    <td className="px-4 py-2.5">{finalite}</td>
+                    <td className="px-4 py-2.5">{duree}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
           <p className="text-white/35 text-xs mt-3">
-            Aucune donnée n'est vendue, partagée avec des tiers ou utilisée à
-            des fins publicitaires.
+            Aucune donnée n&apos;est vendue, partagée avec des tiers ou utilisée
+            à des fins publicitaires.
           </p>
         </section>
 
-        {/* ── Base légale ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">
             3. Base légale du traitement
@@ -127,13 +129,12 @@ export default function LegalPage() {
           <p>
             Le traitement repose sur le{" "}
             <strong className="text-white/80">consentement explicite</strong> de
-            l'utilisateur (Article 6.1.a du RGPD), recueilli lors de la première
-            connexion. Tu peux retirer ce consentement à tout moment en
+            l&apos;utilisateur (Article 6.1.a du RGPD), recueilli lors de la
+            première connexion. Tu peux retirer ce consentement à tout moment en
             supprimant ton compte.
           </p>
         </section>
 
-        {/* ── Droits ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">
             4. Tes droits (RGPD)
@@ -172,7 +173,7 @@ export default function LegalPage() {
             ))}
           </div>
           <p className="text-white/35 text-xs mt-4">
-            Pour exercer ces droits, contacte-nous via le{" "}
+            Pour exercer ces droits :{" "}
             <Link
               href="/contact"
               className="underline hover:text-white/55 transition-colors"
@@ -183,7 +184,6 @@ export default function LegalPage() {
           </p>
         </section>
 
-        {/* ── Cookies ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">
             5. Cookies et sessions
@@ -193,11 +193,11 @@ export default function LegalPage() {
             <code className="text-naruto-orange/80 text-xs bg-white/5 px-1 py-0.5 rounded">
               next-auth.session-token
             </code>
-            ) nécessaire au fonctionnement de l'authentification. Ce cookie est{" "}
-            <strong className="text-white/75">httpOnly</strong>,{" "}
+            ) nécessaire au fonctionnement de l&apos;authentification. Ce cookie
+            est <strong className="text-white/75">httpOnly</strong>,{" "}
             <strong className="text-white/75">Secure</strong> et{" "}
             <strong className="text-white/75">SameSite=Lax</strong>. Aucun
-            cookie publicitaire ou de tracking tiers n'est utilisé.
+            cookie publicitaire ou de tracking tiers n&apos;est utilisé.
           </p>
           <p className="mt-2">
             Les analytics sont assurés par{" "}
@@ -206,19 +206,17 @@ export default function LegalPage() {
           </p>
         </section>
 
-        {/* ── Sécurité ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">6. Sécurité</h2>
           <p>
-            L'authentification est déléguée à Google OAuth 2.0. Nous ne stockons
-            aucun mot de passe. Les communications sont chiffrées via HTTPS (TLS
-            1.3) avec certificat automatique Cloudflare. Les adresses IP ne sont
-            jamais stockées en clair — uniquement sous forme de hash SHA-256
-            irréversible.
+            L&apos;authentification est déléguée à Google OAuth 2.0. Nous ne
+            stockons aucun mot de passe. Les communications sont chiffrées via
+            HTTPS (TLS 1.3) avec certificat automatique Cloudflare. Les adresses
+            IP ne sont jamais stockées en clair — uniquement sous forme de hash
+            SHA-256 irréversible.
           </p>
         </section>
 
-        {/* ── Contact DPO ── */}
         <section>
           <h2 className="text-base font-bold text-white mb-3">
             7. Contact & réclamation

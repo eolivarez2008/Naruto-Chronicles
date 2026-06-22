@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(_req: NextRequest) {
+export async function DELETE() {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -21,23 +21,17 @@ export async function DELETE(_req: NextRequest) {
       ...userLikes.map((like) =>
         prisma.video.update({
           where: { id: like.videoId },
-          data: {
-            likesCount: { decrement: 1 },
-          },
+          data: { likesCount: { decrement: 1 } },
         }),
       ),
-
       prisma.videoLike.deleteMany({ where: { userId } }),
       prisma.account.deleteMany({ where: { userId } }),
       prisma.user.delete({ where: { id: userId } }),
     ]);
 
     return NextResponse.json({ ok: true });
-  } catch (e) {
-    console.error("[DELETE] Erreur:", e);
-    return NextResponse.json(
-      { error: "Erreur lors de la suppression." },
-      { status: 500 },
-    );
+  } catch (err) {
+    console.error("[DELETE profile] :", err);
+    return NextResponse.json({ error: "Erreur lors de la suppression." }, { status: 500 });
   }
 }

@@ -9,7 +9,12 @@ import {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import type { VideoCard, VideoCategory, VideoSortField } from "@/types/videos";
+import type {
+  VideoCard,
+  VideoCategory,
+  VideoSortField,
+  VideosApiResponse,
+} from "@/types/videos";
 import {
   CATEGORY_LABELS,
   CATEGORY_ICONS,
@@ -17,9 +22,9 @@ import {
   SORT_OPTIONS,
   VIDEO_CATEGORIES,
 } from "@/types/videos";
-import type { VideosApiResponse } from "@/types/videos";
-import VideoCardItem from "./VideoCard";
-import VideoModal from "./VideoModal";
+import { trackEvent, EVENTS } from "@/lib/analytics";
+import VideoCardItem from "@/components/videos/VideoCard";
+import VideoModal from "@/components/videos/VideoModal";
 
 const LIMIT = 12;
 
@@ -57,22 +62,20 @@ function useVideos(
         const res = await fetch(`/api/videos?${params}`, {
           signal: controller.signal,
         });
-
         if (!res.ok) {
           setVideos([]);
           return;
         }
 
         const json: VideosApiResponse = await res.json();
-
         setVideos((prev) =>
           pageNum === 1 ? (json.data ?? []) : [...prev, ...(json.data ?? [])],
         );
         setTotalPages(json.meta.totalPages);
         setTotal(json.meta.total);
         setPage(pageNum);
-      } catch (e: any) {
-        if (e.name === "AbortError") return;
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") return;
       } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
@@ -156,9 +159,6 @@ export default function VideoListClient() {
     return () => observer.disconnect();
   }, [loadMore]);
 
-  const currentSortLabel =
-    SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Trier";
-
   const handleCardClick = (id: string) => {
     setSelectedId(id);
     window.history.pushState({}, "", `/videos/${id}`);
@@ -169,9 +169,12 @@ export default function VideoListClient() {
     window.history.pushState({}, "", "/videos");
   };
 
+  const currentSortLabel =
+    SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Trier";
+
   return (
     <>
-      {/* ── Toolbar ── */}
+      {/* Barre de filtres */}
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
         <div className="relative flex-1 min-w-40">
           <svg
@@ -191,15 +194,20 @@ export default function VideoListClient() {
             type="text"
             placeholder="Rechercher une vidéo..."
             value={searchRaw}
-            onChange={(e) => setSearchRaw(e.target.value)}
+            onChange={(e) => {
+              setSearchRaw(e.target.value);
+              if (e.target.value.length > 2)
+                trackEvent(EVENTS.VIDEO_SEARCH, { query: e.target.value });
+            }}
             className="w-full bg-white/5 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
           />
         </div>
 
+        {/* Menu tri */}
         <div className="relative" ref={sortMenuRef}>
           <button
             onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
             <svg
               className="w-4 h-4 text-white/50"
@@ -269,7 +277,7 @@ export default function VideoListClient() {
         </div>
       </div>
 
-      {/* ── Filtres catégories ── */}
+      {/* Filtres catégories */}
       <div className="flex flex-wrap gap-2 mb-8">
         {(["all", ...VIDEO_CATEGORIES] as const).map((cat) => {
           const active = category === cat;
@@ -277,8 +285,11 @@ export default function VideoListClient() {
           return (
             <button
               key={cat}
-              onClick={() => setCategory(cat)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
+              onClick={() => {
+                setCategory(cat);
+                trackEvent(EVENTS.VIDEO_FILTER, { category: cat });
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer"
               style={{
                 background: active ? `${color}22` : "rgba(255,255,255,0.04)",
                 color: active ? color : "rgba(255,255,255,0.5)",
@@ -293,18 +304,13 @@ export default function VideoListClient() {
         })}
       </div>
 
-      {/* ── Grille — PAS de layout sur le wrapper pour éviter le saut au chargement ── */}
+      {/* Grille */}
       {loading ? (
         <VideoSkeletonGrid />
       ) : !videos || videos.length === 0 ? (
         <VideoEmpty />
       ) : (
         <>
-          {/*
-            ajout : pas de motion.div layout sur la grille — c'est lui qui causait
-            le recalcul de positions et le saut d'écran lors du loadMore.
-            Le layout reste sur chaque carte individuelle.
-          */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <AnimatePresence mode="popLayout" initial={false}>
               {videos.map((video, i) => (
@@ -319,7 +325,6 @@ export default function VideoListClient() {
             </AnimatePresence>
           </div>
 
-          {/* sentinel invisible — déclenche le chargement avant d'atteindre le bas */}
           <div ref={sentinelRef} className="h-1 mt-4" aria-hidden />
 
           {loadingMore && (
@@ -339,7 +344,6 @@ export default function VideoListClient() {
       <VideoModal
         videoId={selectedId}
         onClose={handleModalClose}
-        onOpenPage={(id) => router.push(`/videos/${id}`)}
         onLikeToggle={toggleLike}
       />
     </>

@@ -4,14 +4,13 @@ import { STORY_PARAGRAPHS } from "@/lib/homeData";
 
 export const metadata: Metadata = {
   title: "Histoire",
-  description: "Découvrez l'histoire de Naruto Uzumaki depuis ses origines.",
+  description:
+    "Découvrez l'histoire complète de Naruto Uzumaki depuis ses origines jusqu'à son ascension en tant que Hokage.",
 };
 
 export default function StoryPage() {
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-12 fade-in-up">
-
-      {/* Page header */}
       <div className="mb-10">
         <h1
           className="text-4xl md:text-5xl font-bold tracking-tight text-white mt-2"
@@ -22,7 +21,6 @@ export default function StoryPage() {
         <span className="accent-line w-20" />
       </div>
 
-      {/* Content card */}
       <GlassCard className="p-6 md:p-10">
         <div className="space-y-5">
           {STORY_PARAGRAPHS.map((p, i) => (
@@ -36,7 +34,6 @@ export default function StoryPage() {
           ))}
         </div>
       </GlassCard>
-
     </div>
   );
 }

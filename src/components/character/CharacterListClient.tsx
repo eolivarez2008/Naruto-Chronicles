@@ -19,46 +19,45 @@ import {
   NATURE_ICONS,
   formatNatureName,
 } from "@/types/characters";
-
-// ─── Constants ────────────────────────────────────────────────────────────────
+import { trackEvent, EVENTS } from "@/lib/analytics";
+import BaseModal from "@/components/ui/BaseModal";
+import { normalizeString } from "@/lib/network";
 
 const LIMIT = 40;
 const FALLBACK = "/logo/favicon-naruto.png";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type SortField = "popularity" | "name_asc" | "name_desc";
-type RankType = (typeof RANK_OPTIONS)[number] | "";
+type RankType = "" | "Academy Student" | "Genin" | "Chūnin" | "Jōnin" | "Kage";
 
-const RANK_OPTIONS = [
+const RANK_OPTIONS: RankType[] = [
   "Academy Student",
   "Genin",
   "Chūnin",
   "Jōnin",
   "Kage",
-] as const;
+];
+const SORT_OPTIONS: { value: SortField; label: string }[] = [
+  { value: "popularity", label: "Popularité" },
+  { value: "name_asc", label: "Nom (A-Z)" },
+  { value: "name_desc", label: "Nom (Z-A)" },
+];
 
-function normalizeString(str: string): string {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
+// ─── Hook chargement liste ────────────────────────────────────────────────────
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
-
-function useCharacters(search: string, rank: string, sort: SortField) {
+function useCharacters(search: string, rank: RankType, sort: SortField) {
   const [characters, setCharacters] = useState<CharacterCard[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const fetchPage = useCallback(
     async (pageNum: number) => {
-      if (abortControllerRef.current) abortControllerRef.current.abort();
-
+      if (abortRef.current) abortRef.current.abort();
       const controller = new AbortController();
-      abortControllerRef.current = controller;
+      abortRef.current = controller;
 
       if (pageNum === 1) setLoading(true);
       else setLoadingMore(true);
@@ -77,20 +76,14 @@ function useCharacters(search: string, rank: string, sort: SortField) {
         });
         const json: CharactersApiResponse = await res.json();
 
-        if (!json.data || !json.meta) {
-          console.error("Réponse API inattendue:", json);
-          return;
-        }
-
         setCharacters((prev) =>
           pageNum === 1 ? json.data : [...prev, ...json.data],
         );
         setTotalPages(json.meta.totalPages);
         setTotal(json.meta.total);
         setPage(pageNum);
-      } catch (error: any) {
-        if (error.name === "AbortError") return;
-        console.error("Erreur de chargement:", error);
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") return;
       } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
@@ -120,6 +113,8 @@ function useCharacters(search: string, rank: string, sort: SortField) {
   };
 }
 
+// ─── Hook détail personnage ───────────────────────────────────────────────────
+
 function useCharacterDetail(id: number | null) {
   const [data, setData] = useState<CharacterDetail | null>(null);
   const [loading, setLoading] = useState(false);
@@ -133,7 +128,7 @@ function useCharacterDetail(id: number | null) {
     setData(null);
     fetch(`/api/characters/${id}`)
       .then((r) => r.json())
-      .then(setData)
+      .then((d: CharacterDetail) => setData(d))
       .catch(() => setData(null))
       .finally(() => setLoading(false));
   }, [id]);
@@ -152,16 +147,15 @@ export default function CharacterListClient() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const search = useDeferredValue(normalizeString(searchRaw));
-
   const sortMenuRef = useRef<HTMLDivElement>(null);
   const rankMenuRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const { characters, loading, loadingMore, loadMore, hasMore, total } =
     useCharacters(search, rank, sort);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (!isSortOpen && !isRankOpen) return;
       const target = e.target as Node;
       if (sortMenuRef.current && !sortMenuRef.current.contains(target))
         setIsSortOpen(false);
@@ -170,9 +164,8 @@ export default function CharacterListClient() {
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [isSortOpen, isRankOpen]);
+  }, []);
 
-  const sentinelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
@@ -186,21 +179,14 @@ export default function CharacterListClient() {
     return () => observer.disconnect();
   }, [loadMore]);
 
-  const SORT_OPTIONS: { value: SortField; label: string }[] = [
-    { value: "popularity", label: "Popularité" },
-    { value: "name_asc", label: "Nom (A-Z)" },
-    { value: "name_desc", label: "Nom (Z-A)" },
-  ];
-
   const currentSortLabel =
     SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Trier";
   const currentRankLabel = rank || "Tous les rangs";
 
   return (
     <>
-      {/* ── Toolbar ── */}
+      {/* Barre de filtres */}
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        {/* Search */}
         <div className="relative flex-1 min-w-35">
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30"
@@ -219,16 +205,20 @@ export default function CharacterListClient() {
             type="text"
             placeholder="Rechercher un ninja..."
             value={searchRaw}
-            onChange={(e) => setSearchRaw(e.target.value)}
+            onChange={(e) => {
+              setSearchRaw(e.target.value);
+              if (e.target.value.length > 2)
+                trackEvent(EVENTS.CHARACTER_SEARCH, { query: e.target.value });
+            }}
             className="w-full bg-white/5 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
           />
         </div>
 
-        {/* Menu Tri */}
+        {/* Menu tri */}
         <div className="relative" ref={sortMenuRef}>
           <button
             onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
             <svg
               className="w-4 h-4 text-white/50"
@@ -258,7 +248,6 @@ export default function CharacterListClient() {
               />
             </svg>
           </button>
-
           <AnimatePresence>
             {isSortOpen && (
               <motion.ul
@@ -267,21 +256,17 @@ export default function CharacterListClient() {
                 exit={{ opacity: 0, y: -6, scale: 0.97 }}
                 className="absolute top-full left-0 mt-2 w-40 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
               >
-                {SORT_OPTIONS.map((option) => (
-                  <li key={option.value}>
+                {SORT_OPTIONS.map((opt) => (
+                  <li key={opt.value}>
                     <button
                       onClick={() => {
-                        setSort(option.value);
+                        setSort(opt.value);
                         setIsSortOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${
-                        sort === option.value
-                          ? "text-orange-400 bg-orange-500/10"
-                          : "text-white/70 hover:bg-white/5 hover:text-white"
-                      }`}
+                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
-                      <span>{option.label}</span>
-                      {sort === option.value && (
+                      {opt.label}
+                      {sort === opt.value && (
                         <svg
                           className="w-3.5 h-3.5"
                           fill="currentColor"
@@ -302,11 +287,11 @@ export default function CharacterListClient() {
           </AnimatePresence>
         </div>
 
-        {/* Menu Rang */}
+        {/* Menu rang */}
         <div className="relative" ref={rankMenuRef}>
           <button
             onClick={() => setIsRankOpen((v) => !v)}
-            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
             <svg
               className="w-4 h-4 text-white/50"
@@ -336,7 +321,6 @@ export default function CharacterListClient() {
               />
             </svg>
           </button>
-
           <AnimatePresence>
             {isRankOpen && (
               <motion.ul
@@ -356,21 +340,17 @@ export default function CharacterListClient() {
                     Tous les rangs
                   </button>
                 </li>
-                {RANK_OPTIONS.map((option) => (
-                  <li key={option}>
+                {RANK_OPTIONS.map((opt) => (
+                  <li key={opt}>
                     <button
                       onClick={() => {
-                        setRank(option);
+                        setRank(opt);
                         setIsRankOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${
-                        rank === option
-                          ? "text-orange-400 bg-orange-500/10"
-                          : "text-white/70 hover:bg-white/5 hover:text-white"
-                      }`}
+                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${rank === opt ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
-                      <span>{option}</span>
-                      {rank === option && (
+                      {opt}
+                      {rank === opt && (
                         <svg
                           className="w-3.5 h-3.5"
                           fill="currentColor"
@@ -392,7 +372,7 @@ export default function CharacterListClient() {
         </div>
       </div>
 
-      {/* ── Grille ── */}
+      {/* Grille */}
       {loading ? (
         <SkeletonGrid />
       ) : characters.length === 0 ? (
@@ -409,7 +389,13 @@ export default function CharacterListClient() {
                   key={char.id}
                   character={char}
                   index={i}
-                  onClick={() => setSelectedId(char.id)}
+                  onClick={() => {
+                    setSelectedId(char.id);
+                    trackEvent(EVENTS.CHARACTER_OPEN, {
+                      characterId: char.id,
+                      name: char.name,
+                    });
+                  }}
                 />
               ))}
             </AnimatePresence>
@@ -419,7 +405,7 @@ export default function CharacterListClient() {
 
           {loadingMore && (
             <div className="flex justify-center py-8">
-              <LoadingSpinner />
+              <div className="w-10 h-10 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
             </div>
           )}
 
@@ -431,7 +417,7 @@ export default function CharacterListClient() {
         </>
       )}
 
-      {/* ── Modal ── */}
+      {/* Modal personnage */}
       <CharacterModal
         characterId={selectedId}
         onClose={() => setSelectedId(null)}
@@ -440,7 +426,7 @@ export default function CharacterListClient() {
   );
 }
 
-// ─── Card ─────────────────────────────────────────────────────────────────────
+// ─── Carte personnage ─────────────────────────────────────────────────────────
 
 function CharacterCardItem({
   character,
@@ -451,10 +437,8 @@ function CharacterCardItem({
   index: number;
   onClick: () => void;
 }) {
-  const imageSrc =
-    character.image && character.image.trim() !== ""
-      ? character.image
-      : FALLBACK;
+  const imageSrc = character.image?.trim() ? character.image : FALLBACK;
+
   return (
     <motion.button
       layout
@@ -463,9 +447,9 @@ function CharacterCardItem({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2, delay: Math.min(index % LIMIT, 20) * 0.02 }}
       onClick={onClick}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-[#050505] outline-none"
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-[#050505] outline-none cursor-pointer"
     >
-      <div className="relative w-full aspect-3/4 overflow-hidden cursor-pointer">
+      <div className="relative w-full aspect-3/4 overflow-hidden">
         <Image
           src={imageSrc}
           alt={character.name}
@@ -485,15 +469,12 @@ function CharacterCardItem({
           </h3>
         </div>
       </div>
-      <div
-        className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-        style={{ backgroundColor: "#ff6600" }}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-naruto-orange" />
     </motion.button>
   );
 }
 
-// ─── Modal ────────────────────────────────────────────────────────────────────
+// ─── Modal personnage (via BaseModal) ─────────────────────────────────────────
 
 function CharacterModal({
   characterId,
@@ -503,107 +484,28 @@ function CharacterModal({
   onClose: () => void;
 }) {
   const { data, loading } = useCharacterDetail(characterId);
-  const isOpen = characterId !== null;
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onClose]);
-
-  useEffect(() => {
-    if (isOpen) {
-      const original = window.getComputedStyle(document.body).overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = original;
-      };
-    }
-  }, [isOpen]);
-
   const accent = data?.natureType?.[0]
     ? (NATURE_COLORS[formatNatureName(data.natureType[0])] ?? "#e5c97e")
     : "#e5c97e";
 
   return (
-    <>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-9999 bg-black/75 backdrop-blur-sm"
-            onClick={onClose}
+    <BaseModal isOpen={characterId !== null} onClose={onClose}>
+      {loading && (
+        <div className="flex items-center justify-center min-h-50">
+          <div
+            className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin"
+            style={{
+              borderColor: `${accent} transparent transparent transparent`,
+            }}
           />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            key="modal"
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 60 }}
-            transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className={[
-              "fixed z-10000",
-              "inset-x-2 sm:inset-x-auto",
-              "bottom-1 sm:bottom-auto",
-              "sm:left-1/2 sm:-translate-x-1/2",
-              "top-[15vh] sm:top-[13vh]",
-              "max-h-[85dvh] sm:max-h-[84dvh]",
-              "sm:w-full sm:max-w-2xl",
-              "bg-naruto-surface rounded-2xl border border-white/10 shadow-2xl",
-              "flex flex-col overflow-hidden",
-            ].join(" ")}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative shrink-0">
-              <button
-                onClick={onClose}
-                className="absolute right-4 top-4 p-2 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors cursor-pointer z-10001"
-                aria-label="Fermer"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto overscroll-contain">
-              {loading && (
-                <div className="flex items-center justify-center min-h-50">
-                  <LoadingSpinner color={accent} />
-                </div>
-              )}
-              {!loading && data && (
-                <DrawerContent data={data} accent={accent} />
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+        </div>
+      )}
+      {!loading && data && <DrawerContent data={data} accent={accent} />}
+    </BaseModal>
   );
 }
 
-// ─── Drawer content ───────────────────────────────────────────────────────────
+// ─── Contenu drawer personnage ────────────────────────────────────────────────
 
 function DrawerContent({
   data,
@@ -614,7 +516,6 @@ function DrawerContent({
 }) {
   return (
     <div className="flex flex-col pb-8">
-      {/* Hero */}
       <div className="relative w-full aspect-video overflow-hidden">
         <Image
           src={data.image ?? FALLBACK}
@@ -628,35 +529,30 @@ function DrawerContent({
         />
         <div className="absolute inset-0 bg-linear-to-t from-naruto-surface via-naruto-surface/30 to-transparent" />
         <div className="absolute bottom-0 left-0 p-5">
-          <motion.h2
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+          <h2
             className="text-2xl sm:text-3xl font-black text-white leading-none"
             style={{ textShadow: `0 0 40px ${accent}66` }}
           >
             {data.name}
-          </motion.h2>
+          </h2>
         </div>
       </div>
 
       <div className="p-5 flex flex-col gap-5">
-        {/* Nature types */}
         {data.natureType?.length > 0 && (
           <DrawerSection title="Affinités chakra" accent={accent}>
             <div className="flex flex-wrap gap-2">
               {data.natureType.map((rawName) => {
-                const cleanName = formatNatureName(rawName);
-
-                const color = NATURE_COLORS[cleanName] ?? "#888";
-                const icon = NATURE_ICONS[cleanName] ?? "✨";
-
+                const clean = formatNatureName(rawName);
+                const color = NATURE_COLORS[clean] ?? "#888";
+                const icon = NATURE_ICONS[clean] ?? "✨";
                 return (
                   <span
                     key={rawName}
                     className="flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
                     style={{
                       background: `${color}1a`,
-                      color: color,
+                      color,
                       border: `1px solid ${color}44`,
                     }}
                   >
@@ -668,7 +564,6 @@ function DrawerContent({
           </DrawerSection>
         )}
 
-        {/* Infos */}
         {(data.sex || data.birthdate) && (
           <DrawerSection title="Informations" accent={accent}>
             <div className="grid grid-cols-2 gap-3">
@@ -677,7 +572,6 @@ function DrawerContent({
                 <InfoPair label="Anniversaire" value={data.birthdate} />
               )}
             </div>
-
             {data.height && Object.keys(data.height).length > 0 && (
               <div className="mt-3">
                 <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
@@ -696,7 +590,6 @@ function DrawerContent({
                 </div>
               </div>
             )}
-
             {data.age && Object.keys(data.age).length > 0 && (
               <div className="mt-3">
                 <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
@@ -718,41 +611,28 @@ function DrawerContent({
           </DrawerSection>
         )}
 
-        {/* Rang */}
         {data.rank && Object.keys(data.rank).length > 0 && (
           <DrawerSection title="Rang ninja" accent={accent}>
-            {"ninjaRank" in data.rank ? (
-              <div className="grid grid-cols-2 gap-3">
-                {Object.entries(
-                  (data.rank as any).ninjaRank as Record<string, string>,
-                ).map(([arc, r]) => (
+            <div className="grid grid-cols-2 gap-3">
+              {Object.entries(data.rank as Record<string, string>).map(
+                ([arc, r]) => (
                   <InfoPair key={arc} label={arc} value={r} />
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3">
-                {Object.entries(data.rank as Record<string, string>).map(
-                  ([arc, r]) => (
-                    <InfoPair key={arc} label={arc} value={r} />
-                  ),
-                )}
-              </div>
-            )}
+                ),
+              )}
+            </div>
           </DrawerSection>
         )}
 
-        {/* Famille */}
         {data.family && Object.keys(data.family).length > 0 && (
           <DrawerSection title="Famille" accent={accent}>
             <div className="grid grid-cols-2 gap-3">
-              {Object.entries(data.family).map(([relation, member]) => (
-                <InfoPair key={relation} label={relation} value={member} />
+              {Object.entries(data.family).map(([rel, member]) => (
+                <InfoPair key={rel} label={rel} value={member} />
               ))}
             </div>
           </DrawerSection>
         )}
 
-        {/* Jutsus */}
         {data.jutsu?.length > 0 && (
           <DrawerSection
             title={`Jutsus · ${data.jutsu.length}`}
@@ -771,7 +651,6 @@ function DrawerContent({
           </DrawerSection>
         )}
 
-        {/* Premières apparitions */}
         {(data.debut?.anime ||
           data.debut?.manga ||
           data.debut?.movie ||
@@ -797,8 +676,6 @@ function DrawerContent({
     </div>
   );
 }
-
-// ─── Utilitaires UI ───────────────────────────────────────────────────────────
 
 function DrawerSection({
   title,
@@ -838,15 +715,6 @@ function InfoPair({
       </dt>
       <dd className="text-sm text-white/80 font-medium mt-0.5">{value}</dd>
     </div>
-  );
-}
-
-function LoadingSpinner({ color = "#e5c97e" }: { color?: string }) {
-  return (
-    <div
-      className="w-10 h-10 rounded-full border-2 animate-spin"
-      style={{ borderColor: `${color} transparent transparent transparent` }}
-    />
   );
 }
 

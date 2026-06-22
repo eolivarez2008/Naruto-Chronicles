@@ -2,15 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
 import { Play } from "lucide-react";
 import type { VideoCard } from "@/types/videos";
-import {
-  CATEGORY_LABELS,
-  CATEGORY_ICONS,
-  CATEGORY_COLORS,
-} from "@/types/videos";
-import LoginPromptModal from "./LoginPromptModal";
+import { CATEGORY_LABELS, CATEGORY_ICONS, CATEGORY_COLORS } from "@/types/videos";
+import { useLike } from "@/hooks/useLike";
+import LoginPromptModal from "@/components/ui/LoginPromptModal";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 interface VideoCardProps {
   video: VideoCard;
@@ -27,51 +24,20 @@ function formatCount(n: string | number): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", {
-    month: "short",
-    year: "numeric",
-  });
+  return new Date(iso).toLocaleDateString("fr-FR", { month: "short", year: "numeric" });
 }
 
-export default function VideoCardItem({
-  video,
-  index,
-  onClick,
-  onLikeToggle,
-}: VideoCardProps) {
-  const [liking, setLiking] = useState(false);
-  const color = CATEGORY_COLORS[video.category] ?? "#ff6600";
-  const { data: session } = useSession();
+export default function VideoCardItem({ video, index, onClick, onLikeToggle }: VideoCardProps) {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const title = video.title;
+  const color = CATEGORY_COLORS[video.category] ?? "#ff6600";
 
-  const handleLike = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (!session) {
-      setShowLoginPrompt(true);
-      return;
-    }
-
-    if (liking) return;
-    setLiking(true);
-
-    try {
-      const res = await fetch(`/api/videos/${video.id}/like`, {
-        method: "POST",
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        onLikeToggle(video.id, data.liked, data.likesCount);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLiking(false);
-    }
-  };
+  const { liked, likesCount, liking, handleLike } = useLike({
+    videoId: video.id,
+    initialLiked: video.hasLiked,
+    initialCount: video.likesCount,
+    onToggle: onLikeToggle,
+    onUnauthenticated: () => setShowLoginPrompt(true),
+  });
 
   return (
     <>
@@ -82,12 +48,16 @@ export default function VideoCardItem({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18, delay: Math.min(index % 12, 8) * 0.04 }}
         className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/4 cursor-pointer hover:border-white/15 transition-colors duration-300"
-        onClick={onClick}
+        onClick={() => {
+          trackEvent(EVENTS.VIDEO_OPEN, { videoId: video.id, category: video.category });
+          onClick();
+        }}
       >
+        {/* Thumbnail */}
         <div className="relative aspect-video overflow-hidden bg-black">
           <img
             src={video.thumbnail}
-            alt={title}
+            alt={video.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
@@ -107,7 +77,7 @@ export default function VideoCardItem({
         {/* Infos */}
         <div className="flex flex-col gap-2 p-4 flex-1">
           <h3 className="text-sm font-semibold text-white/90 leading-snug line-clamp-2 group-hover:text-white transition-colors">
-            {title}
+            {video.title}
           </h3>
           <p className="text-xs text-white/40">{video.channelTitle}</p>
 
@@ -119,37 +89,28 @@ export default function VideoCardItem({
             <button
               onClick={handleLike}
               disabled={liking}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all duration-200"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all duration-200 cursor-pointer"
               style={{
-                background: video.hasLiked
-                  ? `${color}22`
-                  : "rgba(255,255,255,0.06)",
-                color: video.hasLiked ? color : "rgba(255,255,255,0.4)",
-                border: `1px solid ${video.hasLiked ? color + "44" : "rgba(255,255,255,0.08)"}`,
+                background: liked ? `${color}22` : "rgba(255,255,255,0.06)",
+                color: liked ? color : "rgba(255,255,255,0.4)",
+                border: `1px solid ${liked ? color + "44" : "rgba(255,255,255,0.08)"}`,
               }}
             >
-              <span
-                className={`transition-transform duration-150 ${liking ? "scale-75" : video.hasLiked ? "scale-110" : ""}`}
-              >
-                {video.hasLiked ? "❤️" : "🤍"}
+              <span className={`transition-transform duration-150 ${liking ? "scale-75" : liked ? "scale-110" : ""}`}>
+                {liked ? "❤️" : "🤍"}
               </span>
-              {video.likesCount > 0 && video.likesCount}
+              {likesCount > 0 && likesCount}
             </button>
           </div>
         </div>
 
         <div
           className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background: `linear-gradient(90deg, ${color}, transparent)`,
-          }}
+          style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
         />
       </motion.div>
 
-      <LoginPromptModal
-        isOpen={showLoginPrompt}
-        onClose={() => setShowLoginPrompt(false)}
-      />
+      <LoginPromptModal isOpen={showLoginPrompt} onClose={() => setShowLoginPrompt(false)} />
     </>
   );
 }

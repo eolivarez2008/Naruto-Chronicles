@@ -1,4 +1,4 @@
-// ─── Character Card (grille) ──────────────────────────────────────────────────
+// ─── Carte personnage (grille) ────────────────────────────────────────────────
 
 export interface CharacterCard {
   id: number;
@@ -6,9 +6,10 @@ export interface CharacterCard {
   image: string | null;
   rank: string | null;
   natureType: string[];
+  popularity: number;
 }
 
-// ─── Character Detail (modal) ─────────────────────────────────────────────────
+// ─── Détail personnage (modal) ────────────────────────────────────────────────
 
 export interface CharacterDetail {
   id: number;
@@ -31,14 +32,7 @@ export interface CharacterDetail {
   };
 }
 
-export const formatNatureName = (name: string) => {
-  return name
-    .replace(/\s*Release\s*/g, "")
-    .replace(/\s*\(Affinity\)\s*/g, "")
-    .trim();
-};
-
-// ─── API Response ─────────────────────────────────────────────────────────────
+// ─── Réponse API ──────────────────────────────────────────────────────────────
 
 export interface CharactersApiResponse {
   data: CharacterCard[];
@@ -50,7 +44,14 @@ export interface CharactersApiResponse {
   };
 }
 
-// ─── Nature Types ─────────────────────────────────────────────────────────────
+// ─── Helpers natures ──────────────────────────────────────────────────────────
+
+export function formatNatureName(name: string): string {
+  return name
+    .replace(/\s*Release\s*/g, "")
+    .replace(/\s*\(Affinity\)\s*/g, "")
+    .trim();
+}
 
 export const NATURE_COLORS: Record<string, string> = {
   Fire: "#ef4444",

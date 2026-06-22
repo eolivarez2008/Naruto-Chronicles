@@ -37,7 +37,7 @@ export const CATEGORY_COLORS: Record<VideoCategory | "all", string> = {
   ost: "#4ade80",
 };
 
-// ─── Video Card (grille) ──────────────────────────────────────────────────────
+// ─── Carte vidéo (grille) ─────────────────────────────────────────────────────
 
 export interface VideoCard {
   id: string;
@@ -51,7 +51,7 @@ export interface VideoCard {
   hasLiked?: boolean;
 }
 
-// ─── API Responses ────────────────────────────────────────────────────────────
+// ─── Réponses API ─────────────────────────────────────────────────────────────
 
 export interface VideosApiResponse {
   data: VideoCard[];
@@ -68,7 +68,7 @@ export interface VideoLikeResponse {
   likesCount: number;
 }
 
-// ─── Sort options ─────────────────────────────────────────────────────────────
+// ─── Options de tri ───────────────────────────────────────────────────────────
 
 export type VideoSortField = "recent" | "popular" | "views";
 

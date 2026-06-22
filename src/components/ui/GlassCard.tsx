@@ -6,11 +6,7 @@ interface GlassCardProps {
   hover?: boolean;
 }
 
-export default function GlassCard({
-  children,
-  className = "",
-  hover = false,
-}: GlassCardProps) {
+export default function GlassCard({ children, className = "", hover = false }: GlassCardProps) {
   return (
     <div
       className={[

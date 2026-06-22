@@ -5,15 +5,25 @@ import { INFO_ROWS, QUICK_STATS } from "@/lib/homeData";
 
 export const metadata: Metadata = {
   title: "Naruto Chronicles",
+  description:
+    "Plongez dans l'univers complet de Naruto Uzumaki — histoire, personnages, sagas et bien plus.",
+  openGraph: {
+    title: "Naruto Chronicles",
+    description: "L'encyclopédie fan de l'univers Naruto",
+    images: [
+      {
+        url: "https://m.media-amazon.com/images/M/MV5BZTNjOWI0ZTAtOGY1OS00ZGU0LWEyOWYtMjhkYjdlYmVjMDk2XkEyXkFqcGc@._V1_.jpg",
+      },
+    ],
+  },
 };
 
 export default function HomePage() {
   return (
     <div className="relative flex flex-col items-center w-full">
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="w-full max-w-6xl mx-auto px-6 pt-16 pb-10 fade-in-up">
         <div className="flex flex-col md:flex-row items-center gap-12">
-          {/* Text side */}
           <div className="flex-1 space-y-6">
             <span className="inline-block text-naruto-orange text-xs font-bold tracking-[0.2em] uppercase border border-[rgba(255,102,0,0.3)] rounded-full px-3 py-1 bg-[rgba(255,102,0,0.08)]">
               Univers Naruto
@@ -31,8 +41,6 @@ export default function HomePage() {
               l&rsquo;histoire d&rsquo;un ninja qui rêve de devenir Hokage et de
               conquérir le respect de son village.
             </p>
-
-            {/* Quick stats */}
             <div className="flex gap-6 pt-2">
               {QUICK_STATS.map(([val, lbl]) => (
                 <div key={lbl}>
@@ -43,7 +51,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Poster */}
           <div className="relative shrink-0 fade-in-up delay-200">
             <div className="absolute inset-0 rounded-2xl bg-naruto-orange opacity-10 blur-3xl scale-110" />
             <Image
@@ -54,12 +61,13 @@ export default function HomePage() {
               className="relative rounded-2xl object-cover shadow-2xl"
               data-umami-event="click-poster"
               priority
+              unoptimized
             />
           </div>
         </div>
       </section>
 
-      {/* ── Fiche technique ───────────────────────────────────── */}
+      {/* Fiche technique */}
       <section className="w-full max-w-6xl mx-auto px-6 pb-10 fade-in-up delay-200">
         <GlassCard className="p-6 md:p-8 overflow-hidden">
           <h2 className="text-xs font-bold tracking-[0.18em] uppercase text-naruto-orange mb-1">
@@ -81,7 +89,7 @@ export default function HomePage() {
         </GlassCard>
       </section>
 
-      {/* ── Résumé ────────────────────────────────────────────── */}
+      {/* Résumé */}
       <section className="w-full max-w-6xl mx-auto px-6 pb-10 fade-in-up delay-300">
         <GlassCard className="p-6 md:p-8">
           <h2 className="text-xs font-bold tracking-[0.18em] uppercase text-naruto-orange mb-1">
@@ -102,22 +110,21 @@ export default function HomePage() {
               Tout au long de son parcours, Naruto se lie d&rsquo;amitié avec
               d&rsquo;autres ninjas, dont{" "}
               <strong className="text-white">Sasuke Uchiwa</strong>, son rival
-              et ami, et <strong className="text-white">Sakura Haruno</strong>,
-              pour qui il a un faible. Sous la tutelle de{" "}
+              et ami, et <strong className="text-white">Sakura Haruno</strong>.
+              Sous la tutelle de{" "}
               <strong className="text-white">Kakashi Hatake</strong>, ils
-              forment l&rsquo;équipe 7, et ensemble, ils affrontent de nombreux
-              ennemis et découvrent les sombres secrets de leur monde.
+              forment l&rsquo;équipe 7.
             </p>
             <p>
               La série explore des thèmes comme l&rsquo;amitié, le sacrifice et
               la persévérance, tandis que Naruto grandit et gagne en puissance
-              pour défendre son village et réaliser son rêve de devenir Hokage.
+              pour défendre son village.
             </p>
           </div>
         </GlassCard>
       </section>
 
-      {/* ── Trailer ───────────────────────────────────────────── */}
+      {/* Trailer */}
       <section className="w-full max-w-6xl mx-auto px-6 pb-20 fade-in-up delay-400">
         <GlassCard className="p-4 md:p-6">
           <h2 className="text-xs font-bold tracking-[0.18em] uppercase text-naruto-orange mb-1 ml-2">

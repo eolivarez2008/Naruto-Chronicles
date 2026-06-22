@@ -21,14 +21,9 @@ export async function POST(
 
   try {
     const video = await prisma.video.findUnique({ where: { id: videoId } });
-    if (!video) {
-      return NextResponse.json({ error: "Video not found" }, { status: 404 });
-    }
+    if (!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
 
-    const existing = await prisma.videoLike.findFirst({
-      where: { videoId, userId },
-    });
-
+    const existing = await prisma.videoLike.findFirst({ where: { videoId, userId } });
     const ipHash = "auth_user";
 
     let liked: boolean;
@@ -37,38 +32,23 @@ export async function POST(
     if (existing) {
       await prisma.$transaction([
         prisma.videoLike.delete({ where: { id: existing.id } }),
-        prisma.video.update({
-          where: { id: videoId },
-          data: { likesCount: { decrement: 1 } },
-        }),
+        prisma.video.update({ where: { id: videoId }, data: { likesCount: { decrement: 1 } } }),
       ]);
       liked = false;
       finalLikesCount = Math.max(0, video.likesCount - 1);
     } else {
       await prisma.$transaction([
-        prisma.videoLike.create({
-          data: { videoId, userId, ipHash },
-        }),
-        prisma.video.update({
-          where: { id: videoId },
-          data: { likesCount: { increment: 1 } },
-        }),
+        prisma.videoLike.create({ data: { videoId, userId, ipHash } }),
+        prisma.video.update({ where: { id: videoId }, data: { likesCount: { increment: 1 } } }),
       ]);
       liked = true;
       finalLikesCount = video.likesCount + 1;
     }
 
-    const response: VideoLikeResponse = {
-      liked,
-      likesCount: finalLikesCount,
-    };
-
+    const response: VideoLikeResponse = { liked, likesCount: finalLikesCount };
     return NextResponse.json(response);
-  } catch (error) {
-    console.error("Like API Error:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+  } catch (err) {
+    console.error("Like API error:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

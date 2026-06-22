@@ -43,13 +43,13 @@ export default function LoginPromptModal({
               <div className="flex flex-col gap-3">
                 <Link
                   href="/profile"
-                  className="w-full rounded-xl bg-orange-500 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full rounded-xl bg-orange-500 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] text-center block"
                 >
                   Se connecter
                 </Link>
                 <button
                   onClick={onClose}
-                  className="text-xs text-white/30 hover:text-white/50 transition-colors"
+                  className="text-xs text-white/30 hover:text-white/50 transition-colors cursor-pointer"
                 >
                   Plus tard
                 </button>

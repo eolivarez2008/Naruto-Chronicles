@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import LoginPromptModal from "./LoginPromptModal";
+import { useLike } from "@/hooks/useLike";
+import LoginPromptModal from "@/components/ui/LoginPromptModal";
 
 interface VideoPageLikeButtonProps {
   videoId: string;
@@ -10,46 +10,21 @@ interface VideoPageLikeButtonProps {
   color: string;
 }
 
-export default function VideoPageLikeButton({
-  videoId,
-  initialLikesCount,
-  color,
-}: VideoPageLikeButtonProps) {
-  const { data: session } = useSession();
-  const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(initialLikesCount);
-  const [liking, setLiking] = useState(false);
+export default function VideoPageLikeButton({ videoId, initialLikesCount, color }: VideoPageLikeButtonProps) {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
-  const handleLike = async () => {
-    if (!session) {
-      setShowLoginPrompt(true);
-      return;
-    }
-
-    if (liking) return;
-    setLiking(true);
-    try {
-      const res = await fetch(`/api/videos/${videoId}/like`, {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setLiked(data.liked);
-        setLikesCount(data.likesCount);
-      }
-    } catch {
-    } finally {
-      setLiking(false);
-    }
-  };
+  const { liked, likesCount, liking, handleLike } = useLike({
+    videoId,
+    initialCount: initialLikesCount,
+    onUnauthenticated: () => setShowLoginPrompt(true),
+  });
 
   return (
     <>
       <button
         onClick={handleLike}
         disabled={liking}
-        className="flex items-center gap-2.5 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-200 shrink-0"
+        className="flex items-center gap-2.5 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-200 shrink-0 cursor-pointer"
         style={{
           background: liked ? `${color}22` : "rgba(255,255,255,0.06)",
           color: liked ? color : "rgba(255,255,255,0.6)",
@@ -57,18 +32,13 @@ export default function VideoPageLikeButton({
           boxShadow: liked ? `0 0 20px ${color}22` : "none",
         }}
       >
-        <span
-          className={`text-lg transition-transform duration-200 ${liking ? "scale-75" : liked ? "scale-125" : ""}`}
-        >
+        <span className={`text-lg transition-transform duration-200 ${liking ? "scale-75" : liked ? "scale-125" : ""}`}>
           {liked ? "❤️" : "🤍"}
         </span>
         <span>{likesCount > 0 ? `${likesCount} j'aime` : "J'aime"}</span>
       </button>
 
-      <LoginPromptModal
-        isOpen={showLoginPrompt}
-        onClose={() => setShowLoginPrompt(false)}
-      />
+      <LoginPromptModal isOpen={showLoginPrompt} onClose={() => setShowLoginPrompt(false)} />
     </>
   );
 }

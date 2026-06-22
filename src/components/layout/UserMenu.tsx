@@ -4,12 +4,16 @@ import { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 export default function UserMenu() {
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const hasConsented = (session?.user as any)?.consentGiven === true;
+
+  const hasConsented =
+    (session?.user as { consentGiven?: boolean } | undefined)?.consentGiven ===
+    true;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -138,6 +142,7 @@ export default function UserMenu() {
               <button
                 onClick={() => {
                   setOpen(false);
+                  trackEvent(EVENTS.AUTH_LOGOUT);
                   signOut({ callbackUrl: "/" });
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-400/65 hover:text-red-400 hover:bg-red-500/8 transition-all cursor-pointer"

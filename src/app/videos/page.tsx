@@ -3,7 +3,7 @@ import Image from "next/image";
 import VideoListClient from "@/components/videos/VideoListClient";
 
 export const metadata: Metadata = {
-  title: "Fan-Hub Vidéo",
+  title: "Vidéos",
   description:
     "Théories, edits, réactions, fanarts et OST — le meilleur contenu Naruto de la communauté.",
 };
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 export default function VideosPage() {
   return (
     <main className="min-h-screen bg-[#050505] text-white -mt-16">
-      {/* ── Hero ── */}
       <div className="relative overflow-hidden" style={{ minHeight: "260px" }}>
         <div className="absolute inset-0">
           <Image
@@ -33,7 +32,6 @@ export default function VideosPage() {
             }}
           />
         </div>
-
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <p className="text-naruto-orange text-sm font-bold uppercase tracking-[0.3em] mb-3">
             Fan-Hub
@@ -47,8 +45,6 @@ export default function VideosPage() {
           </p>
         </div>
       </div>
-
-      {/* ── Contenu principal ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <VideoListClient />
       </div>

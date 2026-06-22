@@ -1,12 +1,19 @@
 {
   "name": "naruto-chronicles",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx prisma/seed.ts",
+    "cron:daily": "tsx scripts/cron/index.ts",
+    "cron:videos": "tsx scripts/cron/update-videos.ts",
+    "cron:sagas": "tsx scripts/cron/update-sagas.ts",
+    "cron:characters": "tsx scripts/cron/update-characters.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

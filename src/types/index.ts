@@ -1,21 +1,7 @@
-// ─── Saga types ───────────────────────────────────────────────────────────────
-
-export interface Saga {
-  id: string;
-  title: string;
-  shortTitle?: string;
-  description: string;
-  image: string;
-  imageAlt: string;
-  externalUrl: string;
-  umamiSaga: string;
-  underlineWidth: string;
-}
-
-// ─── Navigation types ─────────────────────────────────────────────────────────
+// ─── Navigation ───────────────────────────────────────────────────────────────
 
 export interface NavLink {
   label: string;
   href: string;
-  umamiPage: string;
+  exact?: boolean;
 }

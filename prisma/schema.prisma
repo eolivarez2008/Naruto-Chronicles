@@ -44,23 +44,20 @@ model Character {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-
+  id             String     @id @default(cuid())
+  name           String?
+  email          String?    @unique
+  emailVerified  DateTime?
   avatarSnapshot String?
-  image         String?
+  image          String?
+  consentGiven   Boolean    @default(false)
+  consentAt      DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
-  consentGiven  Boolean  @default(false)
-  consentAt     DateTime?
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  accounts      Account[]
-  sessions      Session[]
-  videoLikes    VideoLike[]
+  accounts   Account[]
+  sessions   Session[]
+  videoLikes VideoLike[]
 }
 
 model Account {
@@ -100,19 +97,19 @@ model VerificationToken {
 }
 
 model Video {
-  id           String      @id
+  id           String   @id
   title        String
   thumbnail    String
   channelTitle String
   publishedAt  DateTime
   category     String
   keyword      String
-  viewCount    BigInt      @default(0)
-  likesCount   Int         @default(0)
-  fetchedAt    DateTime    @default(now())
-  lastUpdated  DateTime    @default(now())
+  viewCount    BigInt   @default(0)
+  likesCount   Int      @default(0)
+  fetchedAt    DateTime @default(now())
+  lastUpdated  DateTime @default(now())
 
-  likes        VideoLike[]
+  likes VideoLike[]
 
   @@index([category])
   @@index([publishedAt])
@@ -126,8 +123,8 @@ model VideoLike {
   ipHash    String
   createdAt DateTime @default(now())
 
-  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  video Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@unique([videoId, ipHash])
   @@index([userId])

@@ -23,8 +23,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, user }) {
       if (session.user && user) {
         session.user.id = user.id;
-        session.user.avatarSnapshot = (user as any).avatarSnapshot ?? null;
-        session.user.consentGiven = (user as any).consentGiven ?? false;
+        session.user.avatarSnapshot =
+          (user as { avatarSnapshot?: string | null }).avatarSnapshot ?? null;
+        session.user.consentGiven =
+          (user as { consentGiven?: boolean }).consentGiven ?? false;
       }
       return session;
     },
@@ -51,15 +53,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const buffer = await res.arrayBuffer();
         const base64 = Buffer.from(buffer).toString("base64");
         const dataUri = `data:${contentType};base64,${base64}`;
-
         if (dataUri.length > 400_000) return;
 
         await prisma.user.update({
           where: { id: user.id },
-          data: {
-            avatarSnapshot: dataUri,
-            image: user.image,
-          },
+          data: { avatarSnapshot: dataUri, image: user.image },
         });
       } catch {}
     },

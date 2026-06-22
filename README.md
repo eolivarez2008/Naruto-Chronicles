@@ -84,10 +84,13 @@ cp .env.example .env
 
 ```bash
 # Générer le client Prisma et créer la base SQLite
-npx prisma db push
+npm run db:push
+
+# Régénération du client Prisma
+npm run db:generate
 
 # Peupler la base (sources + api)
-npx tsx prisma/seed.ts
+npm run db:seed
 ```
 
 ### 4 — Lancer en développement
@@ -107,8 +110,13 @@ npm run dev                    # Serveur de développement
 npm run build                  # Build production
 npm run start                  # Serveur production
 npm run lint                   # Vérification ESLint
-npx tsx prisma/seed.ts         # Initialisation complète de la base de données
-npx tsx prisma/update.ts       # Synchronisation quotidienne (popularité + sagas)
+npm run db:push                # Synchronisation du schéma Prisma avec la DB
+npm run db:generate            # Régénération du client Prisma
+npm run db:seed                # Initialisation complète de la base de données
+npm run cron:daily             # Synchronisation quotidienne (personnages + sagas + vidéos)
+npm run cron:sagas             # Mise à jour des statistiques des sagas
+npm run cron:videos            # Mise à jour et récupération des vidéos YouTube
+npm run cron:characters        # Mise à jour des popularités des personnages
 ```
 
 ---

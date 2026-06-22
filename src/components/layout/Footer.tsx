@@ -23,18 +23,11 @@ export default function Footer() {
             GitHub
           </a>
           <span className="text-white/20">|</span>
-          <Link
-            href="/contact"
-            data-umami-event="footer-contact-click"
-            className="hover:text-naruto-orange transition-colors"
-          >
+          <Link href="/contact" data-umami-event="footer-contact-click" className="hover:text-naruto-orange transition-colors">
             Contact
           </Link>
           <span className="text-white/20">|</span>
-          <Link
-            href="/legal"
-            className="hover:text-naruto-orange transition-colors"
-          >
+          <Link href="/legal" className="hover:text-naruto-orange transition-colors">
             Légal
           </Link>
         </div>

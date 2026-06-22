@@ -1,0 +1,108 @@
+"use client";
+
+import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface BaseModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  maxWidth?: string;
+}
+
+// Modal de base partagé
+export default function BaseModal({
+  isOpen,
+  onClose,
+  children,
+  maxWidth = "sm:max-w-2xl",
+}: BaseModalProps) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      {/* Backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-9999 bg-black/75 backdrop-blur-sm"
+            onClick={onClose}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Panneau */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="modal-panel"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 60 }}
+            transition={{ type: "spring", stiffness: 320, damping: 32 }}
+            className={[
+              "fixed z-10000",
+              "inset-x-2 sm:inset-x-auto",
+              "bottom-1 sm:bottom-auto",
+              "sm:left-1/2 sm:-translate-x-1/2",
+              "top-[15vh] sm:top-[13vh]",
+              "max-h-[85dvh] sm:max-h-[84dvh]",
+              `sm:w-full ${maxWidth}`,
+              "bg-naruto-surface rounded-2xl border border-white/10 shadow-2xl",
+              "flex flex-col overflow-hidden",
+            ].join(" ")}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Bouton fermer */}
+            <div className="absolute right-4 top-4 z-10001">
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors cursor-pointer"
+                aria-label="Fermer"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Contenu scrollable */}
+            <div className="flex-1 overflow-y-auto overscroll-contain">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

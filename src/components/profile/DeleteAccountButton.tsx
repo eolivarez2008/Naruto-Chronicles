@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 export default function DeleteAccountButton() {
   const [step, setStep] = useState<"idle" | "confirm" | "loading">("idle");
@@ -13,14 +13,13 @@ export default function DeleteAccountButton() {
 
     try {
       const res = await fetch("/api/auth/profile", { method: "DELETE" });
-
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json() as { error?: string };
         setError(data.error ?? "Erreur lors de la suppression.");
         setStep("confirm");
         return;
       }
-
+      trackEvent(EVENTS.AUTH_DELETE);
       window.location.href = "/?deleted=1";
     } catch {
       setError("Erreur réseau. Réessaie.");
@@ -34,18 +33,9 @@ export default function DeleteAccountButton() {
         onClick={() => setStep("confirm")}
         className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-red-400/70 border border-red-500/20 hover:bg-red-500/8 hover:text-red-400 transition-all cursor-pointer"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
         </svg>
         Supprimer mon compte
       </button>
@@ -55,20 +45,14 @@ export default function DeleteAccountButton() {
   if (step === "confirm") {
     return (
       <div className="rounded-xl border border-red-500/25 bg-red-500/6 p-4 space-y-3 w-full">
-        <p className="text-red-400/90 text-sm font-semibold">
-          Confirmer la suppression ?
-        </p>
+        <p className="text-red-400/90 text-sm font-semibold">Confirmer la suppression ?</p>
         <p className="text-white/40 text-xs leading-relaxed">
-          Toutes tes données (compte, likes) seront supprimées immédiatement et
-          de façon irréversible.
+          Toutes tes données (compte, likes) seront supprimées immédiatement et de façon irréversible.
         </p>
         {error && <p className="text-red-400 text-xs">{error}</p>}
         <div className="flex gap-2">
           <button
-            onClick={() => {
-              setStep("idle");
-              setError(null);
-            }}
+            onClick={() => { setStep("idle"); setError(null); }}
             className="flex-1 py-2 rounded-lg text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/8 transition-all cursor-pointer"
           >
             Annuler
