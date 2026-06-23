@@ -1,0 +1,36 @@
+/* TEAM */
+Developer: Emilien Olivarez
+Role: Développeur Full-Stack
+School: Lycée Louis de Cormontaigne, Metz (57000)
+Formation: Bac Pro CIEL (Cybersécurité, Informatique et réseaux, Électronique)
+GitHub: https://github.com/eolivarez2008
+Portfolio: https://eolivarez.site
+Location: Metz, Grand Est, France
+
+/* SITE */
+Name: Naruto Chronicles
+Version: 2.0.0
+Language: French
+Charset: UTF-8
+Last update: 2026/04
+
+/* STACK */
+Framework: Next.js 16 (App Router, Server Components)
+Language: TypeScript (Strict typing)
+Styling: Tailwind CSS (Native responsive)
+Animations: Framer Motion & Lucide React
+Database: SQLite + Prisma 6 ORM
+Auth: NextAuth.js + Google OAuth 2.0
+Security: Cloudflare Tunnel (Zero Trust) & Cloudflare Turnstile
+Infrastructure: Docker & Docker Compose (Self-hosted on Debian VM)
+Analytics: Umami (Self-hosted, Privacy-focused)
+Monitoring: Discord Webhooks
+
+/* SOURCES DE DONNÉES */
+Jikan API (MyAnimeList): https://jikan.moe/
+Dattebayo API: https://dattebayo-api.onrender.com/
+YouTube Data API v3: https://developers.google.com/youtube/v3
+
+/* DISCLAIMER */
+Naruto est une propriété de Masashi Kishimoto / Shueisha / Studio Pierrot.
+Ce site est un projet fan non commercial, sans affiliation officielle.

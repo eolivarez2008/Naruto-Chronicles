@@ -1,0 +1,6 @@
+Contact: https://naruto.eolivarez.site/contact
+Preferred-Languages: fr, en
+Canonical: https://naruto.eolivarez.site/.well-known/security.txt
+Policy: Ce site est un projet personnel non commercial.
+         Merci de signaler tout problème de sécurité via le formulaire de contact.
+Expires: 2027-04-20T00:00:00.000Z

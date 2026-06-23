@@ -19,7 +19,6 @@ export default function CharactersPage() {
             fill
             className="object-cover object-center"
             priority
-            unoptimized
           />
           <div className="absolute inset-0 backdrop-blur-sm" />
           <div className="absolute inset-0 bg-[#050505]/60" />

@@ -3,7 +3,7 @@ import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import prisma from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Sagas",
@@ -37,8 +37,9 @@ export default async function SagaPage() {
                   src={saga.image}
                   alt={saga.label}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                   unoptimized
-                  className="object-cover group-hover:scale-105 transition-transform duration-1000"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent lg:hidden" />
                 <div className="absolute bottom-6 left-6 lg:hidden z-20">
@@ -54,7 +55,7 @@ export default async function SagaPage() {
 
             <div className="flex-1 space-y-6 w-full z-20">
               <div className="hidden lg:flex justify-between items-end border-b border-white/10 pb-4">
-                <h2 className="text-4xl font-bold text-white font-syne italic">
+                <h2 className="text-4xl font-bold text-naruto-orange font-syne italic">
                   {saga.label}
                 </h2>
                 <span className="text-white/10 text-7xl font-black select-none">

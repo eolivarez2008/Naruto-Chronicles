@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "dattebayo-api.onrender.com" },
       { protocol: "https", hostname: "cdn.myanimelist.net" },
+      { protocol: "https", hostname: "myanimelist.net" },
       { protocol: "https", hostname: "raw.githubusercontent.com" },
       { protocol: "https", hostname: "naruto-official.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
