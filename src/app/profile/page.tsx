@@ -9,7 +9,7 @@ import ProfileTierLists from "@/components/profile/ProfileTierLists";
 import type { TierListCard, TierRank } from "@/types/tierlist";
 
 export const metadata: Metadata = {
-  title: "Mon Profil | Naruto Chronicles",
+  title: "Mon Profil",
   description: "Gère tes tier lists et tes favoris sur Naruto Chronicles.",
 };
 

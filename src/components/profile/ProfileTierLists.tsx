@@ -48,20 +48,21 @@ export default function ProfileTierLists({
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`
-              relative cursor-pointer flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300
-              ${tab === t.id ? "text-white bg-white/10 shadow-lg" : "text-white/40 hover:text-white/60"}
-            `}
+            className={`relative cursor-pointer flex items-center gap-2 px-4 sm:px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${tab === t.id ? "text-white bg-white/10 shadow-lg" : "text-white/40 hover:text-white/60"}`}
           >
             <t.icon
-              className={`w-4 h-4 ${tab === t.id ? "text-naruto-orange" : ""}`}
+              className={`w-6 h-6 ${tab === t.id ? "text-naruto-orange" : ""}`}
             />
-            {t.label}
-            {t.count > 0 && (
-              <span className="text-[10px] opacity-50 font-normal">
-                ({t.count})
-              </span>
-            )}
+            <span className="hidden sm:inline-flex items-center gap-1.5 leading-none">
+              {t.label}
+            </span>
+            <span>
+              {t.count > 0 && (
+                <span className="text-[13px] opacity-50 font-normal tabular-nums">
+                  ({t.count})
+                </span>
+              )}
+            </span>
           </button>
         ))}
       </div>
