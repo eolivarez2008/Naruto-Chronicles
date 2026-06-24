@@ -12,8 +12,9 @@ const LINKS: NavLink[] = [
   { label: "Accueil", href: "/", exact: true },
   { label: "Histoire", href: "/story" },
   { label: "Personnages", href: "/characters" },
-  { label: "Saga", href: "/saga" },
   { label: "Vidéos", href: "/videos" },
+  { label: "Tier List", href: "/tier-list" },
+  { label: "Saga", href: "/saga" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -23,9 +24,13 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   const isActive = (href: string, exact?: boolean) =>
-    exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
+    exact
+      ? pathname === href
+      : pathname === href || pathname.startsWith(href + "/");
 
-  const hasConsented = session?.user && (session.user as { consentGiven?: boolean }).consentGiven === true;
+  const hasConsented =
+    session?.user &&
+    (session.user as { consentGiven?: boolean }).consentGiven === true;
 
   return (
     <nav
@@ -71,9 +76,18 @@ export default function Navbar() {
               href="/profile"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
               </svg>
               <span className="hidden sm:inline">Connexion</span>
             </Link>
@@ -86,9 +100,15 @@ export default function Navbar() {
           onClick={() => setMenuOpen((p) => !p)}
           aria-label="Menu"
         >
-          <span className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "bg-naruto-orange rotate-45 translate-y-2" : "bg-white/70"}`} />
-          <span className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "opacity-0" : "bg-white/70"}`} />
-          <span className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "bg-naruto-orange -rotate-45 -translate-y-2" : "bg-white/70"}`} />
+          <span
+            className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "bg-naruto-orange rotate-45 translate-y-2" : "bg-white/70"}`}
+          />
+          <span
+            className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "opacity-0" : "bg-white/70"}`}
+          />
+          <span
+            className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "bg-naruto-orange -rotate-45 -translate-y-2" : "bg-white/70"}`}
+          />
         </button>
       </div>
 
@@ -96,7 +116,9 @@ export default function Navbar() {
       <div
         className={[
           "md:hidden absolute top-[calc(100%+10px)] left-0 right-0 rounded-2xl border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden transition-all duration-300",
-          menuOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none",
+          menuOpen
+            ? "opacity-100 scale-100"
+            : "opacity-0 scale-95 pointer-events-none",
         ].join(" ")}
         style={{ background: "rgba(5,5,5,0.97)" }}
       >
@@ -107,10 +129,15 @@ export default function Navbar() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  onClick={() => { setMenuOpen(false); trackEvent(EVENTS.NAV_CLICK, { page: l.href }); }}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    trackEvent(EVENTS.NAV_CLICK, { page: l.href });
+                  }}
                   className={[
                     "flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all",
-                    active ? "text-naruto-orange bg-[rgba(255,102,0,0.12)]" : "text-white/60 hover:text-white hover:bg-white/5",
+                    active
+                      ? "text-naruto-orange bg-[rgba(255,102,0,0.12)]"
+                      : "text-white/60 hover:text-white hover:bg-white/5",
                   ].join(" ")}
                 >
                   {l.label}

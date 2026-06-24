@@ -58,6 +58,8 @@ model User {
   accounts   Account[]
   sessions   Session[]
   videoLikes VideoLike[]
+  tierLists      TierList[]
+  tierListLikes  TierListLike[]
 }
 
 model Account {
@@ -129,4 +131,42 @@ model VideoLike {
   @@unique([videoId, ipHash])
   @@index([userId])
   @@index([videoId])
+}
+
+model TierList {
+  id          String   @id @default(cuid())
+  title       String
+  isPublic    Boolean  @default(true)
+
+  tiersData   String
+
+  packUsed    String   @default("all")
+
+  previewImage String?
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  likes       TierListLike[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([createdAt])
+}
+
+model TierListLike {
+  id         String   @id @default(cuid())
+  tierListId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  tierList   TierList @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tierListId, userId])
+  @@index([userId])
+  @@index([tierListId])
 }

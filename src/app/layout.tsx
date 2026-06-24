@@ -8,6 +8,7 @@ import { DM_Sans, Syne } from "next/font/google";
 
 export const metadata: Metadata = {
   title: { default: "Naruto Chronicles", template: "%s | Naruto Chronicles" },
+  metadataBase: new URL("https://naruto.eolivarez.site"),
   description:
     "Site dédié à l'univers de Naruto — histoire, personnages, sagas et bien plus.",
   icons: { icon: "/logo/favicon-naruto.png" },
@@ -48,11 +49,6 @@ export default function RootLayout({
         className={`${dmSans.variable} ${syne.variable} noise-bg flex min-h-screen flex-col pt-16 bg-black text-white`}
       >
         <SessionProvider>
-          <div
-            className="orb"
-            style={{ top: "-200px", right: "-200px" }}
-            aria-hidden="true"
-          />
           <Navbar />
           <main className="relative z-10 flex flex-1 flex-col">{children}</main>
           <Footer />

@@ -1,0 +1,144 @@
+"use client";
+
+import { useState } from "react";
+import { LayoutGrid, Heart, Video, Sparkles } from "lucide-react";
+import TierListCardItem from "@/components/tier-list/TierListCard";
+import type { TierListCard } from "@/types/tierlist";
+import { VideoCategory, CATEGORY_ICONS, CATEGORY_COLORS } from "@/types/videos";
+import Link from "next/link";
+
+type Tab = "created" | "liked" | "videos";
+
+export default function ProfileTierLists({
+  myCreatedLists,
+  myLikedLists,
+  likedVideos,
+}: {
+  myCreatedLists: Array<TierListCard & { tiersData: string }>;
+  myLikedLists: Array<TierListCard & { tiersData: string }>;
+  likedVideos: any[];
+}) {
+  const [tab, setTab] = useState<Tab>("created");
+
+  const tabs = [
+    {
+      id: "created",
+      label: "Tier Lists créées",
+      icon: LayoutGrid,
+      count: myCreatedLists.length,
+    },
+    {
+      id: "liked",
+      label: "Tier Lists favorites",
+      icon: Heart,
+      count: myLikedLists.length,
+    },
+    {
+      id: "videos",
+      label: "Vidéos aimées",
+      icon: Video,
+      count: likedVideos.length,
+    },
+  ] as const;
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-center p-1 bg-white/5 rounded-2xl w-fit mx-auto border border-white/5">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={`
+              relative cursor-pointer flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300
+              ${tab === t.id ? "text-white bg-white/10 shadow-lg" : "text-white/40 hover:text-white/60"}
+            `}
+          >
+            <t.icon
+              className={`w-4 h-4 ${tab === t.id ? "text-naruto-orange" : ""}`}
+            />
+            {t.label}
+            {t.count > 0 && (
+              <span className="text-[10px] opacity-50 font-normal">
+                ({t.count})
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="min-h-75 transition-all duration-500">
+        {tab === "created" && (
+          <Grid
+            items={myCreatedLists}
+            emptyText="Tu n'as pas encore créé de Tier List."
+          />
+        )}
+        {tab === "liked" && (
+          <Grid
+            items={myLikedLists}
+            emptyText="Tes Tier Lists favorites apparaîtront ici."
+          />
+        )}
+        {tab === "videos" && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {likedVideos.map(({ video }) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+            {likedVideos.length === 0 && (
+              <EmptyState text="Aucune vidéo aimées." />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Grid({ items, emptyText }: { items: any[]; emptyText: string }) {
+  if (items.length === 0) return <EmptyState text={emptyText} />;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {items.map((l, i) => (
+        <TierListCardItem key={l.id} list={l} index={i} />
+      ))}
+    </div>
+  );
+}
+
+function VideoCard({ video }: any) {
+  const color = CATEGORY_COLORS[video.category as VideoCategory] ?? "#ff6600";
+  return (
+    <Link href={`/videos/${video.id}`} className="group space-y-3">
+      <div className="aspect-video relative rounded-2xl overflow-hidden ring-1 ring-white/10 transition-transform group-hover:scale-[1.02] duration-300">
+        <img
+          src={video.thumbnail}
+          className="w-full h-full object-cover"
+          alt=""
+        />
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+        <span
+          className="absolute top-2 left-2 text-[10px] font-bold px-2 py-1 rounded-lg backdrop-blur-md shadow-xl"
+          style={{ background: `${color}cc`, border: `1px solid ${color}` }}
+        >
+          {CATEGORY_ICONS[video.category as VideoCategory]} {video.category}
+        </span>
+      </div>
+      <p className="text-sm font-medium text-white/80 line-clamp-2 px-1 group-hover:text-naruto-orange transition-colors">
+        {video.title}
+      </p>
+    </Link>
+  );
+}
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-4 rounded-4xl border border-dashed border-white/10 bg-white/2">
+      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white/20">
+        <Sparkles />
+      </div>
+      <p className="text-white/30 text-sm max-w-50 font-medium leading-relaxed">
+        {text}
+      </p>
+    </div>
+  );
+}
