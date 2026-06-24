@@ -5,8 +5,13 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { trackEvent, EVENTS } from "@/lib/analytics";
+import { User, LogOut } from "lucide-react";
 
-export default function UserMenu() {
+interface UserMenuProps {
+  isMobile?: boolean;
+}
+
+export default function UserMenu({ isMobile = false }: UserMenuProps) {
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -24,6 +29,22 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  if (status === "loading") {
+    return <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />;
+  }
+
+  if (!session || !hasConsented) {
+    return (
+      <Link
+        href="/profile"
+        className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
+      >
+        <User size={16} />
+        <span>Connexion</span>
+      </Link>
+    );
+  }
+
   const avatarSrc =
     session?.user?.avatarSnapshot ?? session?.user?.image ?? null;
   const initials =
@@ -34,46 +55,68 @@ export default function UserMenu() {
       .slice(0, 2)
       .toUpperCase() ?? "?";
 
-  if (status === "loading") {
-    return <div className="w-7 h-7 rounded-full bg-white/10 animate-pulse" />;
-  }
-
-  if (!session || !hasConsented) {
+  // VERSION MOBILE
+  if (isMobile) {
     return (
-      <Link
-        href="/profile"
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
-      >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
-        </svg>
-        <span className="hidden sm:inline">Connexion</span>
-      </Link>
+      <div className="flex items-center justify-between w-full p-2 bg-white/3 border border-white/5 rounded-3xl">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-full overflow-hidden border border-naruto-orange/30 shrink-0 shadow-lg shadow-naruto-orange/5">
+            {avatarSrc ? (
+              <img
+                src={avatarSrc}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-naruto-orange/20 flex items-center justify-center text-[10px] font-bold text-naruto-orange">
+                {initials}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[13px] font-bold text-white truncate">
+              {session.user?.name?.split(" ")[0]}
+            </span>
+            <span className="text-[10px] text-white/30 truncate font-medium">
+              {session.user?.email}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <Link
+            href="/profile"
+            className="p-2.5 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+          >
+            <User size={18} />
+          </Link>
+          <button
+            onClick={() => {
+              trackEvent(EVENTS.AUTH_LOGOUT);
+              signOut({ callbackUrl: "/" });
+            }}
+            className="p-2.5 rounded-xl bg-red-500/5 text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-all active:scale-90"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
+      </div>
     );
   }
 
+  // VERSION DESKTOP
   return (
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-xl p-1 hover:bg-white/5 transition-all cursor-pointer"
+        className="p-1 hover:bg-white/5 rounded-xl transition-all cursor-pointer"
         aria-label="Menu utilisateur"
       >
-        <div className="w-7 h-7 rounded-full overflow-hidden border border-naruto-orange/35 shrink-0">
+        <div className="w-8 h-8 rounded-full overflow-hidden border border-naruto-orange/35 shrink-0 shadow-lg shadow-naruto-orange/10">
           {avatarSrc ? (
             <img
               src={avatarSrc}
-              alt={session.user?.name ?? "avatar"}
+              alt="avatar"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
@@ -83,22 +126,6 @@ export default function UserMenu() {
             </div>
           )}
         </div>
-        <span className="hidden sm:block text-[13px] font-semibold text-white/75 max-w-20 truncate">
-          {session.user?.name?.split(" ")[0]}
-        </span>
-        <svg
-          className={`w-3 h-3 text-white/25 transition-transform hidden sm:block ${open ? "rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
       </button>
 
       <AnimatePresence>
@@ -107,36 +134,27 @@ export default function UserMenu() {
             initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
-            transition={{ duration: 0.13 }}
-            className="absolute top-full right-0 mt-2 w-48 bg-[#111] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-120"
+            transition={{ duration: 0.15 }}
+            className="absolute top-full right-0 mt-2 w-52 bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
           >
-            <div className="px-4 py-3 border-b border-white/8">
-              <p className="text-sm font-semibold text-white truncate">
+            <div className="px-4 py-3 border-b border-white/5 bg-white/2">
+              <p className="text-sm font-bold text-white truncate">
                 {session.user?.name}
               </p>
-              <p className="text-xs text-white/30 truncate">
+              <p className="text-[11px] text-white/30 truncate font-medium">
                 {session.user?.email}
               </p>
             </div>
-            <div className="p-1.5">
+            <div className="p-1.5 space-y-0.5">
               <Link
                 href="/profile"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-white/65 hover:text-white hover:bg-white/6 transition-all"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all group"
               >
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+                <User
+                  size={16}
+                  className="group-hover:text-naruto-orange transition-colors"
+                />
                 Mon profil
               </Link>
               <button
@@ -145,22 +163,13 @@ export default function UserMenu() {
                   trackEvent(EVENTS.AUTH_LOGOUT);
                   signOut({ callbackUrl: "/" });
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-400/65 hover:text-red-400 hover:bg-red-500/8 transition-all cursor-pointer"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400/60 hover:text-red-400 hover:bg-red-500/5 transition-all cursor-pointer group"
               >
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                Se déconnecter
+                <LogOut
+                  size={16}
+                  className="group-hover:rotate-12 transition-transform"
+                />
+                Déconnexion
               </button>
             </div>
           </motion.div>

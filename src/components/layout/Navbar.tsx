@@ -1,153 +1,131 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 import UserMenu from "@/components/layout/UserMenu";
 import { useSession } from "next-auth/react";
-import { trackEvent, EVENTS } from "@/lib/analytics";
-import type { NavLink } from "@/types";
-
-const LINKS: NavLink[] = [
-  { label: "Accueil", href: "/", exact: true },
-  { label: "Histoire", href: "/story" },
-  { label: "Personnages", href: "/characters" },
-  { label: "Vidéos", href: "/videos" },
-  { label: "Tier List", href: "/tier-list" },
-  { label: "Saga", href: "/saga" },
-  { label: "Contact", href: "/contact" },
-];
+import {
+  Home,
+  BookOpen,
+  Users,
+  PlayCircle,
+  ListOrdered,
+  Map,
+  Mail,
+  Menu,
+  X,
+  User,
+} from "lucide-react";
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
 
-  const isActive = (href: string, exact?: boolean) =>
-    exact
-      ? pathname === href
-      : pathname === href || pathname.startsWith(href + "/");
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setIsOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  const navLinks = [
+    { name: "ACCUEIL", href: "/", icon: <Home size={20} /> },
+    { name: "HISTOIRE", href: "/story", icon: <BookOpen size={20} /> },
+    { name: "PERSONNAGES", href: "/characters", icon: <Users size={20} /> },
+    { name: "VIDEOS", href: "/videos", icon: <PlayCircle size={20} /> },
+    { name: "TIER LIST", href: "/tier-list", icon: <ListOrdered size={20} /> },
+    { name: "SAGA", href: "/saga", icon: <Map size={20} /> },
+    { name: "CONTACT", href: "/contact", icon: <Mail size={20} /> },
+  ];
 
   const hasConsented =
-    session?.user &&
-    (session.user as { consentGiven?: boolean }).consentGiven === true;
+    session?.user && (session.user as any).consentGiven === true;
 
   return (
-    <nav
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
-      style={{ width: "min(95vw, 780px)" }}
-    >
-      <div
-        className="relative flex items-center justify-between px-4 h-14 rounded-2xl border border-white/10 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)]"
-        style={{ background: "rgba(10,10,10,0.80)" }}
-      >
-        {/* Liens desktop */}
-        <ul className="hidden md:flex items-center gap-1 flex-1 justify-center">
-          {LINKS.map((l) => {
-            const active = isActive(l.href, l.exact);
-            return (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  onClick={() => trackEvent(EVENTS.NAV_CLICK, { page: l.href })}
-                  className={[
-                    "relative px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200",
-                    active
-                      ? "text-naruto-orange bg-[rgba(255,102,0,0.12)]"
-                      : "text-white/55 hover:text-white hover:bg-white/5",
-                  ].join(" ")}
-                >
-                  {active && (
-                    <span className="absolute inset-x-3 bottom-1 h-px bg-linear-to-r from-naruto-orange to-transparent rounded-full" />
-                  )}
-                  {l.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-1000 w-[92%] max-w-225 pointer-events-none font-sans">
+      <div className="flex flex-col items-center justify-center w-full">
+        <div className="relative w-full bg-[#050505]/80 backdrop-blur-2xl border border-white/10 pointer-events-auto rounded-4xl p-2 shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
+          <div className="flex items-center justify-between w-full h-11 px-4">
+            <span className="lg:hidden text-white font-black tracking-tighter text-xs uppercase italic opacity-90">
+              Naruto <span className="text-naruto-orange">Chronicles</span>
+            </span>
 
-        {/* Espace utilisateur desktop */}
-        <div className="hidden md:flex items-center pl-2 border-l border-white/8 ml-2">
-          {hasConsented ? (
-            <UserMenu />
-          ) : (
-            <Link
-              href="/profile"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="hidden lg:flex items-center gap-1">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() =>
+                      trackEvent(EVENTS.NAV_CLICK, { page: link.href })
+                    }
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold transition-all duration-300 whitespace-nowrap ${isActive ? "bg-naruto-orange/10 text-naruto-orange" : "text-zinc-400 hover:bg-white/5"}`}
+                  >
+                    {link.icon}
+                    <span>{link.name}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="hidden lg:flex items-center pl-2 border-l border-white/10 ml-2 shrink-0">
+                {hasConsented ? (
+                  <UserMenu />
+                ) : (
+                  <Link
+                    href="/profile"
+                    className="p-2 rounded-full bg-white/5 text-white/55 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    <User size={20} />
+                  </Link>
+                )}
+              </div>
+
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="lg:hidden text-white p-2 hover:bg-white/5 rounded-full transition-colors active:scale-95"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-              <span className="hidden sm:inline">Connexion</span>
-            </Link>
-          )}
-        </div>
+                {isOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
+          </div>
 
-        {/* Hamburger mobile */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 ml-auto cursor-pointer"
-          onClick={() => setMenuOpen((p) => !p)}
-          aria-label="Menu"
-        >
-          <span
-            className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "bg-naruto-orange rotate-45 translate-y-2" : "bg-white/70"}`}
-          />
-          <span
-            className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "opacity-0" : "bg-white/70"}`}
-          />
-          <span
-            className={`block w-5 h-0.5 transition-all duration-300 ${menuOpen ? "bg-naruto-orange -rotate-45 -translate-y-2" : "bg-white/70"}`}
-          />
-        </button>
-      </div>
-
-      {/* Menu mobile */}
-      <div
-        className={[
-          "md:hidden absolute top-[calc(100%+10px)] left-0 right-0 rounded-2xl border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden transition-all duration-300",
-          menuOpen
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none",
-        ].join(" ")}
-        style={{ background: "rgba(5,5,5,0.97)" }}
-      >
-        <ul className="p-3 space-y-1">
-          {LINKS.map((l) => {
-            const active = isActive(l.href, l.exact);
-            return (
-              <li key={l.href}>
+          <div
+            className={`lg:hidden flex flex-col gap-1 overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-150 opacity-100 mt-4 pb-2" : "max-h-0 opacity-0"}`}
+          >
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
                 <Link
-                  href={l.href}
-                  onClick={() => {
-                    setMenuOpen(false);
-                    trackEvent(EVENTS.NAV_CLICK, { page: l.href });
-                  }}
-                  className={[
-                    "flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all",
-                    active
-                      ? "text-naruto-orange bg-[rgba(255,102,0,0.12)]"
-                      : "text-white/60 hover:text-white hover:bg-white/5",
-                  ].join(" ")}
+                  key={link.name}
+                  href={link.href}
+                  className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all duration-300 ${isActive ? "bg-naruto-orange/10 text-naruto-orange" : "text-zinc-400 hover:bg-white/5"}`}
                 >
-                  {l.label}
+                  <span
+                    className={
+                      isActive ? "text-naruto-orange" : "text-zinc-500"
+                    }
+                  >
+                    {link.icon}
+                  </span>
+                  {link.name}
                 </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="px-4 pb-4 pt-2 border-t border-white/8">
-          <UserMenu />
+              );
+            })}
+            <div className="mt-2 pt-2 border-t border-white/5">
+              <UserMenu isMobile />
+            </div>
+          </div>
         </div>
       </div>
     </nav>
