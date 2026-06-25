@@ -58,7 +58,6 @@ async function mapList(l: {
   id: string;
   title: string;
   isPublic: boolean;
-  previewImage: string | null;
   packUsed: string;
   tiersData: string;
   createdAt: Date;
@@ -79,7 +78,6 @@ async function mapList(l: {
     id: l.id,
     title: l.title,
     isPublic: l.isPublic,
-    previewImage: l.previewImage,
     packUsed: l.packUsed,
     likesCount: l._count.likes,
     hasLiked: Array.isArray(l.likes) && l.likes.length > 0,
@@ -99,7 +97,6 @@ export default async function TierListPage() {
     id: string;
     title: string;
     isPublic: boolean;
-    previewImage: string | null;
     packUsed: string;
     tiersData: string;
     createdAt: Date;

@@ -72,7 +72,6 @@ async function mapTierList(
     id: l.id,
     title: l.title,
     isPublic: l.isPublic,
-    previewImage: l.previewImage,
     packUsed: l.packUsed,
     likesCount: l._count.likes,
     hasLiked: Array.isArray(l.likes) && l.likes.length > 0,

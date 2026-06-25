@@ -15,17 +15,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const list = await prisma.tierList.findUnique({
     where: { id },
-    select: { title: true, previewImage: true },
+    select: { title: true },
   });
   if (!list) return { title: "Tier List introuvable" };
 
   return {
     title: list.title,
     description: `Tier list Naruto — ${list.title}`,
-    openGraph: {
-      title: list.title,
-      images: list.previewImage ? [{ url: list.previewImage }] : [],
-    },
   };
 }
 

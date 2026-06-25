@@ -143,8 +143,6 @@ model TierList {
 
   packUsed    String   @default("all")
 
-  previewImage String?
-
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

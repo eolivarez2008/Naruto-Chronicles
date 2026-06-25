@@ -102,7 +102,6 @@ export interface TierListCard {
   id: string;
   title: string;
   isPublic: boolean;
-  previewImage: string | null;
   packUsed: string;
   likesCount: number;
   hasLiked?: boolean;
@@ -158,5 +157,4 @@ export interface SaveTierListPayload {
   isPublic: boolean;
   packUsed: string;
   tiers: TierRank[];
-  previewImage?: string;
 }

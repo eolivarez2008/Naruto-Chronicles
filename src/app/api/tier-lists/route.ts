@@ -158,7 +158,6 @@ export async function GET(req: NextRequest) {
       id: l.id,
       title: l.title,
       isPublic: l.isPublic,
-      previewImage: l.previewImage,
       packUsed: l.packUsed,
       likesCount: l._count.likes,
       hasLiked: Array.isArray(l.likes) && l.likes.length > 0,
@@ -199,7 +198,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { title, isPublic, packUsed, tiers, previewImage } = body;
+  const { title, isPublic, packUsed, tiers } = body;
 
   if (!title?.trim())
     return NextResponse.json(
@@ -229,7 +228,6 @@ export async function POST(req: NextRequest) {
         isPublic: isPublic ?? true,
         packUsed: packUsed ?? "random10",
         tiersData: JSON.stringify(tiers.map(normalizeTier)),
-        previewImage: previewImage ?? null,
         userId: session.user.id,
       },
     });

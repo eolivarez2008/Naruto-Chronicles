@@ -117,7 +117,6 @@ export async function GET(
       id: list.id,
       title: list.title,
       isPublic: list.isPublic,
-      previewImage: list.previewImage,
       packUsed: list.packUsed,
       likesCount: list._count.likes,
       hasLiked: Array.isArray(list.likes) && list.likes.length > 0,
@@ -166,7 +165,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Corps invalide." }, { status: 400 });
   }
 
-  const { title, isPublic, tiers, previewImage } = body;
+  const { title, isPublic, tiers } = body;
 
   if (title !== undefined && (!title?.trim() || title.length > 100)) {
     return NextResponse.json({ error: "Titre invalide." }, { status: 400 });
@@ -195,7 +194,6 @@ export async function PATCH(
         ...(normalizedTiersData !== undefined && {
           tiersData: normalizedTiersData,
         }),
-        ...(previewImage !== undefined && { previewImage }),
       },
     });
 
