@@ -43,5 +43,6 @@ next-env.d.ts
 # Prisma Client
 /prisma/*.db
 /prisma/*.db-journal
+/prisma/*.db.bak
 prisma/SQLite.db
 *.db
