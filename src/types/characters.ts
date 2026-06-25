@@ -1,3 +1,21 @@
+import {
+  Flame,
+  Wind,
+  Zap,
+  Mountain,
+  Droplets,
+  Leaf,
+  Snowflake,
+  MountainSnow,
+  CloudLightning,
+  ThermometerSnowflake,
+  Magnet,
+  CircleSlash,
+  LucideIcon,
+  Sun,
+  Moon,
+} from "lucide-react";
+
 // ─── Carte personnage (grille) ────────────────────────────────────────────────
 
 export interface CharacterCard {
@@ -71,19 +89,19 @@ export const NATURE_COLORS: Record<string, string> = {
   "Yin–Yang": "#9ca3af",
 };
 
-export const NATURE_ICONS: Record<string, string> = {
-  Fire: "🔥",
-  Wind: "🌀",
-  Lightning: "⚡",
-  Earth: "🪨",
-  Water: "💧",
-  Wood: "🌿",
-  Ice: "❄️",
-  Lava: "🌋",
-  Storm: "⛈️",
-  Boil: "♨️",
-  Magnet: "🧲",
-  Yin: "☯️",
-  Yang: "☯️",
-  "Yin–Yang": "☯️",
+export const NATURE_ICONS: Record<string, LucideIcon> = {
+  Fire: Flame,
+  Wind: Wind,
+  Lightning: Zap,
+  Earth: Mountain,
+  Water: Droplets,
+  Wood: Leaf,
+  Ice: Snowflake,
+  Lava: MountainSnow,
+  Storm: CloudLightning,
+  Boil: ThermometerSnowflake,
+  Magnet: Magnet,
+  Yin: Moon,
+  Yang: Sun,
+  "Yin–Yang": CircleSlash,
 };

@@ -22,6 +22,13 @@ import {
   SORT_OPTIONS,
   VIDEO_CATEGORIES,
 } from "@/types/videos";
+import {
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+  Check,
+  Clapperboard,
+} from "lucide-react";
 import { trackEvent, EVENTS } from "@/lib/analytics";
 import VideoCardItem from "@/components/videos/VideoCard";
 import VideoModal from "@/components/videos/VideoModal";
@@ -177,19 +184,10 @@ export default function VideoListClient() {
       {/* Barre de filtres */}
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
         <div className="relative flex-1 min-w-40">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+          />
           <input
             type="text"
             placeholder="Rechercher une vidéo..."
@@ -209,33 +207,12 @@ export default function VideoListClient() {
             onClick={() => setIsSortOpen((v) => !v)}
             className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
-            <svg
-              className="w-4 h-4 text-white/50"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 7h18M6 12h12M9 17h6"
-              />
-            </svg>
+            <SlidersHorizontal size={16} className="text-white/50" />
             <span className="hidden sm:inline">{currentSortLabel}</span>
-            <svg
-              className={`w-3 h-3 text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <ChevronDown
+              size={12}
+              className={`text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+            />
           </button>
           <AnimatePresence>
             {isSortOpen && (
@@ -255,19 +232,7 @@ export default function VideoListClient() {
                       className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-naruto-orange bg-[rgba(255,102,0,0.1)]" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
                       {opt.label}
-                      {sort === opt.value && (
-                        <svg
-                          className="w-3.5 h-3.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
+                      {sort === opt.value && <Check size={14} />}
                     </button>
                   </li>
                 ))}
@@ -282,6 +247,8 @@ export default function VideoListClient() {
         {(["all", ...VIDEO_CATEGORIES] as const).map((cat) => {
           const active = category === cat;
           const color = CATEGORY_COLORS[cat];
+          const Icon = CATEGORY_ICONS[cat];
+
           return (
             <button
               key={cat}
@@ -297,7 +264,7 @@ export default function VideoListClient() {
                 boxShadow: active ? `0 0 12px ${color}22` : "none",
               }}
             >
-              <span>{CATEGORY_ICONS[cat]}</span>
+              <Icon size={10} />
               {CATEGORY_LABELS[cat]}
             </button>
           );
@@ -372,7 +339,7 @@ function VideoSkeletonGrid() {
 function VideoEmpty() {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
-      <p className="text-5xl mb-4">🎬</p>
+      <Clapperboard size={48} className="mb-4 text-white/20" />
       <p className="text-white/40 text-sm">Aucune vidéo trouvée</p>
       <p className="text-white/20 text-xs mt-1">
         Essaie un autre filtre ou un autre mot-clé

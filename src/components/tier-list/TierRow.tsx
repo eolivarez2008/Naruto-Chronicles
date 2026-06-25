@@ -10,6 +10,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import type { TierRank, TierListCharacter } from "@/types/tierlist";
 import SafeImage from "@/components/ui/SafeImage";
+import { X, Trash2, Pencil } from "lucide-react";
 
 function SortableChar({
   chrId,
@@ -58,19 +59,7 @@ function SortableChar({
           }}
           className="opacity-0 group-hover/card:opacity-100 transition-opacity cursor-pointer p-1 rounded-full bg-white/10 hover:bg-red-500/30"
         >
-          <svg
-            className="w-3.5 h-3.5 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <X size={14} />
         </button>
       </div>
     </div>
@@ -157,19 +146,10 @@ export default function TierRowComponent({
             >
               {tier.label}
             </span>
-            <svg
-              className="w-2.5 h-2.5 text-white/15 group-hover/lbl:text-white/40 transition-colors"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15.232 5.232l3.536 3.536M16.732 3.732a2.5 2.5 0 013.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              />
-            </svg>
+            <Pencil
+              size={10}
+              className="text-white/15 group-hover/lbl:text-white/40 transition-colors"
+            />
           </button>
         )}
       </div>
@@ -230,19 +210,7 @@ export default function TierRowComponent({
           onClick={() => onDelete(tier.id)}
           className="w-5 h-5 rounded flex items-center justify-center text-white/15 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
         >
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
+          <Trash2 size={14} />
         </button>
       </div>
     </div>

@@ -50,7 +50,7 @@ export default function Navbar() {
     session?.user && (session.user as any).consentGiven === true;
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-1000 w-[92%] max-w-225 pointer-events-none font-sans">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-1000 w-[92%] max-w-225 pointer-events-none font-sans">
       <div className="flex flex-col items-center justify-center w-full">
         <div className="relative w-full bg-[#050505]/80 backdrop-blur-2xl border border-white/10 pointer-events-auto rounded-4xl p-2 shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
           <div className="flex items-center justify-between w-full h-11 px-4">
@@ -60,7 +60,10 @@ export default function Navbar() {
 
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => {
-                const isActive = pathname === link.href;
+                const isActive =
+                  link.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.name}

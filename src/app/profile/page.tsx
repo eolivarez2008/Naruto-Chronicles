@@ -7,6 +7,7 @@ import DeleteAccountButton from "@/components/profile/DeleteAccountButton";
 import ConsentButtons from "@/components/profile/ConsentButtons";
 import ProfileTierLists from "@/components/profile/ProfileTierLists";
 import type { TierListCard, TierRank } from "@/types/tierlist";
+import { Scroll, User as UserIcon, ImageIcon } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Mon Profil",
@@ -267,8 +268,16 @@ function ConsentPage({ userId }: { userId: string }) {
           </p>
           <ul className="space-y-3">
             {[
-              { t: "Identité", d: "Nom et adresse e-mail Google", i: "👤" },
-              { t: "Apparence", d: "Photo de profil", i: "🖼️" },
+              {
+                t: "Identité",
+                d: "Nom et adresse e-mail Google",
+                i: "<UserIcon size={16} />",
+              },
+              {
+                t: "Apparence",
+                d: "Photo de profil",
+                i: "<ImageIcon size={16} />",
+              },
             ].map((item, idx) => (
               <li key={idx} className="flex items-center gap-4">
                 <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-sm">
@@ -292,9 +301,7 @@ function LoginPage({ error }: { error?: string }) {
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-24">
       <div className="w-full max-w-sm space-y-8 text-center">
-        <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl mx-auto">
-          🍥
-        </div>
+        <Scroll size={32} />
         <div className="space-y-3">
           <h1 className="text-2xl font-black text-naruto-orange">
             Connexion - Inscription

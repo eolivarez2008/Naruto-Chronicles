@@ -22,6 +22,14 @@ import {
 import { trackEvent, EVENTS } from "@/lib/analytics";
 import BaseModal from "@/components/ui/BaseModal";
 import { normalizeString } from "@/lib/network";
+import {
+  ChevronDown,
+  SlidersHorizontal,
+  Leaf,
+  Search,
+  Check,
+  Filter,
+} from "lucide-react";
 
 const LIMIT = 40;
 const FALLBACK = "/logo/favicon-naruto.png";
@@ -188,19 +196,10 @@ export default function CharacterListClient() {
       {/* Barre de filtres */}
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
         <div className="relative flex-1 min-w-35">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+          />
           <input
             type="text"
             placeholder="Rechercher un ninja..."
@@ -220,33 +219,12 @@ export default function CharacterListClient() {
             onClick={() => setIsSortOpen((v) => !v)}
             className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
-            <svg
-              className="w-4 h-4 text-white/50"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 7h18M6 12h12M9 17h6"
-              />
-            </svg>
+            <SlidersHorizontal size={16} className="text-white/50" />
             <span className="hidden sm:inline">{currentSortLabel}</span>
-            <svg
-              className={`w-3 h-3 text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <ChevronDown
+              size={12}
+              className={`text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+            />
           </button>
           <AnimatePresence>
             {isSortOpen && (
@@ -266,19 +244,7 @@ export default function CharacterListClient() {
                       className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
                       {opt.label}
-                      {sort === opt.value && (
-                        <svg
-                          className="w-3.5 h-3.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
+                      {sort === opt.value && <Check size={14} />}
                     </button>
                   </li>
                 ))}
@@ -293,33 +259,12 @@ export default function CharacterListClient() {
             onClick={() => setIsRankOpen((v) => !v)}
             className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
-            <svg
-              className="w-4 h-4 text-white/50"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-              />
-            </svg>
+            <Filter size={16} className="text-white/50" />
             <span className="hidden sm:inline">{currentRankLabel}</span>
-            <svg
-              className={`w-3 h-3 text-white/30 transition-transform ${isRankOpen ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <ChevronDown
+              size={12}
+              className={`text-white/30 transition-transform ${isRankOpen ? "rotate-180" : ""}`}
+            />
           </button>
           <AnimatePresence>
             {isRankOpen && (
@@ -350,19 +295,7 @@ export default function CharacterListClient() {
                       className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${rank === opt ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
                       {opt}
-                      {rank === opt && (
-                        <svg
-                          className="w-3.5 h-3.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
+                      {rank === opt && <Check size={14} />}
                     </button>
                   </li>
                 ))}
@@ -556,7 +489,13 @@ function DrawerContent({
                       border: `1px solid ${color}44`,
                     }}
                   >
-                    {icon} {rawName}
+                    {(() => {
+                      const IconComponent = NATURE_ICONS[rawName];
+                      return IconComponent ? (
+                        <IconComponent size={14} className="shrink-0" />
+                      ) : null;
+                    })()}
+                    {rawName}
                   </span>
                 );
               })}
@@ -736,7 +675,7 @@ function SkeletonGrid() {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
-      <p className="text-5xl mb-4">🍃</p>
+      <Leaf size={48} className="mb-4 text-white/20" />
       <p className="text-white/40 text-sm">Aucun personnage trouvé</p>
     </div>
   );

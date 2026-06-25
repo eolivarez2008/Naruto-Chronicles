@@ -20,6 +20,7 @@ import type {
   TierListCharacter,
   SaveTierListPayload,
 } from "@/types/tierlist";
+import { X, Trash2, Check as CheckIcon, Plus } from "lucide-react";
 import { DEFAULT_TIERS } from "@/types/tierlist";
 import TierRowComponent from "@/components/tier-list/TierRow";
 import CharacterPool from "@/components/tier-list/CharacterPool";
@@ -341,19 +342,7 @@ export default function TierListEditor({
                 onClick={() => router.push("/tier-list")}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/40 hover:text-white border border-white/8 hover:bg-white/5 transition-all cursor-pointer"
               >
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <X size={14} />
                 <span className="hidden sm:inline">Annuler</span>
               </button>
             )}
@@ -363,19 +352,7 @@ export default function TierListEditor({
                 onClick={() => setShowDeleteModal(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-red-400/70 hover:text-red-400 border border-red-500/15 hover:border-red-500/30 hover:bg-red-500/5 transition-all cursor-pointer"
               >
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+                <Trash2 size={14} />
                 <span className="hidden sm:inline">Supprimer</span>
               </button>
             )}
@@ -388,19 +365,7 @@ export default function TierListEditor({
               {saving ? (
                 <div className="w-3 h-3 rounded-full border border-white border-t-transparent animate-spin" />
               ) : (
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <CheckIcon size={14} />
               )}
               {mode === "edit" ? "Mettre à jour" : "Publier"}
             </button>
@@ -456,19 +421,7 @@ export default function TierListEditor({
               onClick={addTier}
               className="mt-3 w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-dashed border-white/8 text-white/20 hover:text-white/40 hover:border-white/15 text-xs transition-all cursor-pointer"
             >
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <Plus size={14} />
               Ajouter un rang
             </button>
           </div>

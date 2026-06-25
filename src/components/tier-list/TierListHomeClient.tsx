@@ -8,7 +8,20 @@ import TierListCardItem from "@/components/tier-list/TierListCard";
 import BaseModal from "@/components/ui/BaseModal";
 import type { TierListCard, TierListsApiResponse } from "@/types/tierlist";
 import { TIER_LIST_PACKS } from "@/types/tierlist";
-import { Globe, User } from "lucide-react";
+import {
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+  Check,
+  Plus,
+  Globe,
+  User,
+  X,
+  Pencil,
+  List,
+  Heart,
+  Lock,
+} from "lucide-react";
 
 type Tab = "mes-listes" | "decouvrir";
 type SortOption = "popular" | "recent" | "oldest" | "az" | "za";
@@ -82,17 +95,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
                       animate={{ scale: 1 }}
                       className="absolute top-2 right-2 w-4 h-4 rounded-full bg-naruto-orange flex items-center justify-center shadow-lg shadow-naruto-orange/20"
                     >
-                      <svg
-                        className="w-2.5 h-2.5 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      <Check size={14} />
                     </motion.div>
                   )}
                 </motion.button>
@@ -134,19 +137,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
                 : "bg-white/5 text-white/20 cursor-not-allowed",
             ].join(" ")}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
+            <Plus size={16} />
             Créer
           </button>
         </div>
@@ -268,19 +259,10 @@ function DiscoverSection() {
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
         {/* Recherche */}
         <div className="relative flex-1">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"
+          />
           <input
             type="text"
             value={searchRaw}
@@ -293,19 +275,7 @@ function DiscoverSection() {
               onClick={() => setSearchRaw("")}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 cursor-pointer"
             >
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <X size={14} />
             </button>
           )}
         </div>
@@ -316,33 +286,12 @@ function DiscoverSection() {
             onClick={() => setIsSortOpen((v) => !v)}
             className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
           >
-            <svg
-              className="w-4 h-4 text-white/50"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 7h18M6 12h12M9 17h6"
-              />
-            </svg>
+            <SlidersHorizontal size={16} className="text-white/50" />
             <span className="hidden sm:inline">{currentSortLabel}</span>
-            <svg
-              className={`w-3 h-3 text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <ChevronDown
+              size={12}
+              className={`text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+            />
           </button>
           <AnimatePresence>
             {isSortOpen && (
@@ -366,19 +315,7 @@ function DiscoverSection() {
                       }`}
                     >
                       {opt.label}
-                      {sort === opt.value && (
-                        <svg
-                          className="w-3.5 h-3.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
+                      {sort === opt.value && <Check size={14} />}
                     </button>
                   </li>
                 ))}
@@ -398,7 +335,7 @@ function DiscoverSection() {
         <GridSkeleton />
       ) : lists.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
-          <p className="text-4xl mb-3">📊</p>
+          <List size={48} className="mb-3 text-white/20" />
           <p className="text-white/30 text-sm">
             {searchRaw
               ? `Aucune tier list pour "${searchRaw}"`
@@ -448,7 +385,6 @@ function MyListsSection({
   const [createdLocal, setCreatedLocal] = useState(createdLists);
   const [likedLocal, setLikedLocal] = useState(likedLists);
 
-  // Source de vérité unifiée : un like mis à jour se reflète dans les deux onglets
   const handleLike = (id: string, liked: boolean, count: number) => {
     setCreatedLocal((prev) =>
       prev.map((l) =>
@@ -458,7 +394,6 @@ function MyListsSection({
     setLikedLocal((prev) => {
       const exists = prev.some((l) => l.id === id);
       if (!exists) {
-        // Like d'une liste créée → on l'ajoute dans likées
         if (liked) {
           const fromCreated = createdLocal.find((l) => l.id === id);
           if (fromCreated)
@@ -469,7 +404,6 @@ function MyListsSection({
         }
         return prev;
       }
-      // Unlike → on retire de likées
       if (!liked) return prev.filter((l) => l.id !== id);
       return prev.map((l) =>
         l.id === id ? { ...l, hasLiked: liked, likesCount: count } : l,
@@ -477,11 +411,10 @@ function MyListsSection({
     });
   };
 
-  // Non connecté : message d'invitation
   if (!isLoggedIn) {
     return (
       <div className="flex flex-col items-center py-24 text-center">
-        <p className="text-5xl mb-4">🔐</p>
+        <Lock size={40} className="mb-3 text-white/20" />
         <p className="text-white/50 text-base font-semibold mb-2">
           Connecte-toi pour voir tes tier lists
         </p>
@@ -546,7 +479,10 @@ function MyListsSection({
 
       {current.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
-          <p className="text-5xl mb-4">{subTab === "creees" ? "📊" : "🤍"}</p>
+          <div className="mb-4 text-white/20">
+            {subTab === "creees" ? <List size={48} /> : <Heart size={48} />}
+          </div>
+
           <p className="text-white/40 text-sm mb-2">
             {subTab === "creees"
               ? "Tu n'as pas encore de tier list"
@@ -573,19 +509,7 @@ function MyListsSection({
                     className="w-7 h-7 rounded-full bg-black/80 backdrop-blur border border-white/15 flex items-center justify-center text-white/60 hover:text-white transition-colors"
                     title="Modifier"
                   >
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.232 5.232l3.536 3.536M16.732 3.732a2.5 2.5 0 013.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
+                    <Pencil size={12} />
                   </Link>
                 </div>
               )}
@@ -665,19 +589,7 @@ export default function TierListHomeClient({
               onClick={() => setShowCreate(true)}
               className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-naruto-orange hover:bg-[#e65500] text-white transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,102,0,0.25)] cursor-pointer shrink-0"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <Plus size={16} />
               Créer une Tier List
             </button>
           ) : (

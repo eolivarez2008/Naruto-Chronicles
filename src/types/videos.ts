@@ -1,3 +1,13 @@
+import {
+  Clapperboard,
+  Scissors,
+  Brain,
+  Eye,
+  Palette,
+  Music2,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
 // ─── Catégories ───────────────────────────────────────────────────────────────
 
 export const VIDEO_CATEGORIES = [
@@ -19,13 +29,13 @@ export const CATEGORY_LABELS: Record<VideoCategory | "all", string> = {
   ost: "OST",
 };
 
-export const CATEGORY_ICONS: Record<VideoCategory | "all", string> = {
-  all: "🎬",
-  edit: "✂️",
-  theorie: "🧠",
-  react: "👁",
-  fanart: "🎨",
-  ost: "🎵",
+export const CATEGORY_ICONS: Record<VideoCategory | "all", LucideIcon> = {
+  all: Clapperboard,
+  edit: Scissors,
+  theorie: Brain,
+  react: Eye,
+  fanart: Palette,
+  ost: Music2,
 };
 
 export const CATEGORY_COLORS: Record<VideoCategory | "all", string> = {

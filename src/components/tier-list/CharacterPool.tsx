@@ -3,6 +3,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import type { TierListCharacter } from "@/types/tierlist";
 import SafeImage from "@/components/ui/SafeImage";
+import { Leaf } from "lucide-react";
 
 function DraggableCard({ character }: { character: TierListCharacter }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
@@ -75,7 +76,7 @@ export default function CharacterPool({
           </div>
         ) : available.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center px-4">
-            <p className="text-2xl mb-2">🍃</p>
+            <Leaf size={48} className="mb-4 text-white/20" />
             <p className="text-white/25 text-xs">
               Tous les personnages sont placés !
             </p>

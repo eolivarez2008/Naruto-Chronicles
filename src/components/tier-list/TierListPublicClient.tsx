@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useTierListLike } from "@/hooks/useTierListLike";
 import LoginPromptModal from "@/components/ui/LoginPromptModal";
+import { Heart } from "lucide-react";
 
 export default function TierListPublicClient({
   tierListId,
@@ -36,7 +37,7 @@ export default function TierListPublicClient({
         <span
           className={`transition-transform ${liking ? "scale-75" : liked ? "scale-125" : ""}`}
         >
-          {liked ? "❤️" : "🤍"}
+          <Heart size={16} fill={liked ? "currentColor" : "none"} />
         </span>
         {likesCount > 0 ? `${likesCount} j'aime` : "J'aime"}
       </button>

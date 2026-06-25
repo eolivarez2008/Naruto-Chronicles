@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Play } from "lucide-react";
+import { Play, Eye, Heart } from "lucide-react";
 import type { VideoCard } from "@/types/videos";
-import { CATEGORY_LABELS, CATEGORY_ICONS, CATEGORY_COLORS } from "@/types/videos";
+import {
+  CATEGORY_LABELS,
+  CATEGORY_ICONS,
+  CATEGORY_COLORS,
+} from "@/types/videos";
 import { useLike } from "@/hooks/useLike";
 import LoginPromptModal from "@/components/ui/LoginPromptModal";
 import { trackEvent, EVENTS } from "@/lib/analytics";
@@ -24,12 +28,21 @@ function formatCount(n: string | number): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", { month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("fr-FR", {
+    month: "short",
+    year: "numeric",
+  });
 }
 
-export default function VideoCardItem({ video, index, onClick, onLikeToggle }: VideoCardProps) {
+export default function VideoCardItem({
+  video,
+  index,
+  onClick,
+  onLikeToggle,
+}: VideoCardProps) {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const color = CATEGORY_COLORS[video.category] ?? "#ff6600";
+  const Icon = CATEGORY_ICONS[video.category];
 
   const { liked, likesCount, liking, handleLike } = useLike({
     videoId: video.id,
@@ -49,7 +62,10 @@ export default function VideoCardItem({ video, index, onClick, onLikeToggle }: V
         transition={{ duration: 0.18, delay: Math.min(index % 12, 8) * 0.04 }}
         className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/4 cursor-pointer hover:border-white/15 transition-colors duration-300"
         onClick={() => {
-          trackEvent(EVENTS.VIDEO_OPEN, { videoId: video.id, category: video.category });
+          trackEvent(EVENTS.VIDEO_OPEN, {
+            videoId: video.id,
+            category: video.category,
+          });
           onClick();
         }}
       >
@@ -70,7 +86,7 @@ export default function VideoCardItem({ video, index, onClick, onLikeToggle }: V
             className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
             style={{ background: `${color}dd`, color: "#fff" }}
           >
-            {CATEGORY_ICONS[video.category]} {CATEGORY_LABELS[video.category]}
+            <Icon size={10} />
           </span>
         </div>
 
@@ -83,7 +99,10 @@ export default function VideoCardItem({ video, index, onClick, onLikeToggle }: V
 
           <div className="mt-auto flex items-center justify-between pt-2 border-t border-white/6">
             <div className="flex items-center gap-3 text-[11px] text-white/35">
-              <span>👁 {formatCount(video.viewCount)}</span>
+              <span className="flex items-center gap-1">
+                <Eye size={11} />
+                {formatCount(video.viewCount)}
+              </span>
               <span>{formatDate(video.publishedAt)}</span>
             </div>
             <button
@@ -96,8 +115,10 @@ export default function VideoCardItem({ video, index, onClick, onLikeToggle }: V
                 border: `1px solid ${liked ? color + "44" : "rgba(255,255,255,0.08)"}`,
               }}
             >
-              <span className={`transition-transform duration-150 ${liking ? "scale-75" : liked ? "scale-110" : ""}`}>
-                {liked ? "❤️" : "🤍"}
+              <span
+                className={`transition-transform duration-150 ${liking ? "scale-75" : liked ? "scale-110" : ""}`}
+              >
+                <Heart size={11} fill={liked ? "currentColor" : "none"} />
               </span>
               {likesCount > 0 && likesCount}
             </button>
@@ -106,11 +127,16 @@ export default function VideoCardItem({ video, index, onClick, onLikeToggle }: V
 
         <div
           className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
+          style={{
+            background: `linear-gradient(90deg, ${color}, transparent)`,
+          }}
         />
       </motion.div>
 
-      <LoginPromptModal isOpen={showLoginPrompt} onClose={() => setShowLoginPrompt(false)} />
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+      />
     </>
   );
 }

@@ -7,7 +7,12 @@ import LoginPromptModal from "@/components/ui/LoginPromptModal";
 import { useLike } from "@/hooks/useLike";
 import { trackEvent, EVENTS } from "@/lib/analytics";
 import type { VideoCard } from "@/types/videos";
-import { CATEGORY_LABELS, CATEGORY_ICONS, CATEGORY_COLORS } from "@/types/videos";
+import {
+  CATEGORY_LABELS,
+  CATEGORY_ICONS,
+  CATEGORY_COLORS,
+} from "@/types/videos";
+import { Heart, ExternalLink } from "lucide-react";
 
 interface VideoModalProps {
   videoId: string | null;
@@ -41,6 +46,7 @@ function ModalContent({
   const router = useRouter();
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const color = CATEGORY_COLORS[video.category] ?? "#ff6600";
+  const Icon = CATEGORY_ICONS[video.category];
 
   const { liked, likesCount, liking, handleLike } = useLike({
     videoId: video.id,
@@ -60,9 +66,11 @@ function ModalContent({
             className="shrink-0 flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold"
             style={{ background: `${color}22`, color }}
           >
-            {CATEGORY_ICONS[video.category]} {CATEGORY_LABELS[video.category]}
+            <Icon size={10} />
           </span>
-          <h2 className="text-base font-bold text-white leading-snug flex-1">{video.title}</h2>
+          <h2 className="text-base font-bold text-white leading-snug flex-1">
+            {video.title}
+          </h2>
         </div>
 
         <p className="text-sm text-white/40">{video.channelTitle}</p>
@@ -78,8 +86,10 @@ function ModalContent({
               border: `1px solid ${liked ? color + "44" : "rgba(255,255,255,0.1)"}`,
             }}
           >
-            <span className={`text-base transition-transform ${liking ? "scale-75" : liked ? "scale-125" : ""}`}>
-              {liked ? "❤️" : "🤍"}
+            <span
+              className={`text-base transition-transform ${liking ? "scale-75" : liked ? "scale-125" : ""}`}
+            >
+              <Heart size={16} fill={liked ? "currentColor" : "none"} />
             </span>
             {likesCount > 0 ? likesCount : "J'aime"}
           </button>
@@ -88,11 +98,7 @@ function ModalContent({
             onClick={() => router.push(`/videos/${video.id}`)}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-white/6 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            Ouvrir
+            <ExternalLink size={16} /> Ouvrir
           </button>
 
           <a
@@ -106,17 +112,27 @@ function ModalContent({
         </div>
       </div>
 
-      <LoginPromptModal isOpen={showLoginPrompt} onClose={() => setShowLoginPrompt(false)} />
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+      />
     </>
   );
 }
 
-export default function VideoModal({ videoId, onClose, onLikeToggle }: VideoModalProps) {
+export default function VideoModal({
+  videoId,
+  onClose,
+  onLikeToggle,
+}: VideoModalProps) {
   const [video, setVideo] = useState<VideoCard | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!videoId) { setVideo(null); return; }
+    if (!videoId) {
+      setVideo(null);
+      return;
+    }
     setLoading(true);
     setVideo(null);
     fetch(`/api/videos/${videoId}`)
@@ -131,14 +147,22 @@ export default function VideoModal({ videoId, onClose, onLikeToggle }: VideoModa
   }, [videoId]);
 
   return (
-    <BaseModal isOpen={videoId !== null} onClose={onClose} maxWidth="sm:max-w-3xl">
+    <BaseModal
+      isOpen={videoId !== null}
+      onClose={onClose}
+      maxWidth="sm:max-w-3xl"
+    >
       {loading && (
         <div className="flex items-center justify-center min-h-75">
           <div className="w-10 h-10 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
         </div>
       )}
       {!loading && videoId && video && (
-        <ModalContent video={video} videoId={videoId} onLikeToggle={onLikeToggle} />
+        <ModalContent
+          video={video}
+          videoId={videoId}
+          onLikeToggle={onLikeToggle}
+        />
       )}
     </BaseModal>
   );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLike } from "@/hooks/useLike";
 import LoginPromptModal from "@/components/ui/LoginPromptModal";
+import { Heart } from "lucide-react";
 
 interface VideoPageLikeButtonProps {
   videoId: string;
@@ -10,7 +11,11 @@ interface VideoPageLikeButtonProps {
   color: string;
 }
 
-export default function VideoPageLikeButton({ videoId, initialLikesCount, color }: VideoPageLikeButtonProps) {
+export default function VideoPageLikeButton({
+  videoId,
+  initialLikesCount,
+  color,
+}: VideoPageLikeButtonProps) {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const { liked, likesCount, liking, handleLike } = useLike({
@@ -32,13 +37,18 @@ export default function VideoPageLikeButton({ videoId, initialLikesCount, color 
           boxShadow: liked ? `0 0 20px ${color}22` : "none",
         }}
       >
-        <span className={`text-lg transition-transform duration-200 ${liking ? "scale-75" : liked ? "scale-125" : ""}`}>
-          {liked ? "❤️" : "🤍"}
+        <span
+          className={`text-lg transition-transform duration-200 ${liking ? "scale-75" : liked ? "scale-125" : ""}`}
+        >
+          <Heart size={16} fill={liked ? "currentColor" : "none"} />
         </span>
         <span>{likesCount > 0 ? `${likesCount} j'aime` : "J'aime"}</span>
       </button>
 
-      <LoginPromptModal isOpen={showLoginPrompt} onClose={() => setShowLoginPrompt(false)} />
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+      />
     </>
   );
 }

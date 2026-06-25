@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { Heart } from "lucide-react";
 
 interface LoginPromptModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export default function LoginPromptModal({
           >
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10 text-2xl">
-                ❤️
+                <Heart size={24} className="text-red-500 fill-current" />
               </div>
               <h3 className="mb-2 text-lg font-bold text-white">
                 Connecte-toi pour liker !

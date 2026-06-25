@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import prisma from "@/lib/prisma";
+import { Star } from "lucide-react";
 
 export const revalidate = 86400;
 
@@ -48,8 +49,13 @@ export default async function SagaPage() {
                   </h2>
                 </div>
               </div>
-              <div className="absolute top-2 right-6 lg:-top-4 lg:-right-4 bg-naruto-orange text-white font-black lg:p-4 rounded-xl shadow-xl z-30 group-hover:rotate-6 transition-transform duration-300 text-xs lg:text-base">
-                ⭐ {saga.score ?? "-"}
+              <div className="absolute top-2 right-6 lg:-top-4 lg:-right-4 bg-naruto-orange text-white font-black px-3 py-1.5 lg:p-4 rounded-xl shadow-xl z-30 group-hover:rotate-6 transition-transform duration-300 text-xs lg:text-base flex items-center gap-1.5">
+                <Star
+                  size={22}
+                  className="text-yellow-400"
+                  fill="currentColor"
+                />
+                <span>{saga.score ?? "-"}</span>
               </div>
             </div>
 
@@ -117,10 +123,12 @@ export default async function SagaPage() {
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
               <div className="absolute top-3 right-3 flex items-center gap-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 z-10">
-                <span className="text-naruto-orange text-xs">⭐</span>
-                <span className="text-white font-black text-xs">
-                  {saga.score ?? "-"}
-                </span>
+                <Star
+                  size={16}
+                  className="text-naruto-orange"
+                  fill="currentColor"
+                />{" "}
+                {saga.score ?? "-"}
               </div>
               <div className="absolute top-3 left-3 z-10">
                 <span

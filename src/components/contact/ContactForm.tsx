@@ -4,6 +4,7 @@ import { useState, type ChangeEvent } from "react";
 import InputField from "@/components/ui/InputField";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { trackEvent, EVENTS } from "@/lib/analytics";
+import { CheckCircle2 } from "lucide-react";
 
 interface FormState {
   nom: string;
@@ -21,8 +22,9 @@ export default function ContactForm() {
   const [isSent, setIsSent] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm((p) => ({ ...p, [e.target.id]: e.target.value }));
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => setForm((p) => ({ ...p, [e.target.id]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +43,7 @@ export default function ContactForm() {
         }),
       });
 
-      const data = await res.json() as { error?: string };
+      const data = (await res.json()) as { error?: string };
 
       if (res.ok) {
         trackEvent(EVENTS.CONTACT_SUBMIT);
@@ -60,10 +62,15 @@ export default function ContactForm() {
   if (isSent) {
     return (
       <div className="w-full max-w-3xl rounded-2xl border border-white/8 bg-white/5 backdrop-blur-md p-10 text-center flex flex-col items-center gap-4">
-        <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center text-3xl">✓</div>
+        <CheckCircle2 size={48} className="text-green-500" />
         <h2 className="text-2xl font-bold text-white">Message envoyé !</h2>
-        <p className="text-white/60">Merci pour votre message, nous vous répondrons dès que possible.</p>
-        <button onClick={() => setIsSent(false)} className="mt-4 text-naruto-orange text-sm font-medium hover:underline cursor-pointer">
+        <p className="text-white/60">
+          Merci pour votre message, nous vous répondrons dès que possible.
+        </p>
+        <button
+          onClick={() => setIsSent(false)}
+          className="mt-4 text-naruto-orange text-sm font-medium hover:underline cursor-pointer"
+        >
           Envoyer un autre message
         </button>
       </div>
@@ -76,23 +83,60 @@ export default function ContactForm() {
       className="w-full max-w-3xl rounded-2xl border border-white/8 bg-linear-to-b from-white/5 to-transparent backdrop-blur-md p-6 md:p-10 flex flex-col gap-6"
     >
       <div>
-        <span className="text-naruto-orange text-xs font-bold tracking-[0.2em] uppercase">Message</span>
-        <h1 className="text-3xl font-bold tracking-tight text-white mt-1" style={{ fontFamily: "'Syne', sans-serif" }}>
+        <span className="text-naruto-orange text-xs font-bold tracking-[0.2em] uppercase">
+          Message
+        </span>
+        <h1
+          className="text-3xl font-bold tracking-tight text-white mt-1"
+          style={{ fontFamily: "'Syne', sans-serif" }}
+        >
           Contactez-nous
         </h1>
         <div className="accent-line w-28" />
-        <p className="text-white/50 text-sm">N&rsquo;hésitez pas à nous envoyer vos questions via ce formulaire.</p>
+        <p className="text-white/50 text-sm">
+          N&rsquo;hésitez pas à nous envoyer vos questions via ce formulaire.
+        </p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-5">
         <div className="flex-1 flex flex-col gap-4">
-          <InputField id="nom" label="Nom" placeholder="Votre nom" value={form.nom} onChange={handleChange as (e: ChangeEvent<HTMLInputElement>) => void} />
-          <InputField id="email" label="Email" type="email" placeholder="Votre email" value={form.email} onChange={handleChange as (e: ChangeEvent<HTMLInputElement>) => void} />
-          <InputField id="objet" label="Objet" placeholder="L'objet du message" value={form.objet} onChange={handleChange as (e: ChangeEvent<HTMLInputElement>) => void} />
+          <InputField
+            id="nom"
+            label="Nom"
+            placeholder="Votre nom"
+            value={form.nom}
+            onChange={
+              handleChange as (e: ChangeEvent<HTMLInputElement>) => void
+            }
+          />
+          <InputField
+            id="email"
+            label="Email"
+            type="email"
+            placeholder="Votre email"
+            value={form.email}
+            onChange={
+              handleChange as (e: ChangeEvent<HTMLInputElement>) => void
+            }
+          />
+          <InputField
+            id="objet"
+            label="Objet"
+            placeholder="L'objet du message"
+            value={form.objet}
+            onChange={
+              handleChange as (e: ChangeEvent<HTMLInputElement>) => void
+            }
+          />
         </div>
 
         <div className="flex-[1.4] flex flex-col gap-1.5">
-          <label htmlFor="message" className="text-white/60 text-sm font-medium">Message</label>
+          <label
+            htmlFor="message"
+            className="text-white/60 text-sm font-medium"
+          >
+            Message
+          </label>
           <textarea
             id="message"
             required

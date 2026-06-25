@@ -7,6 +7,7 @@ import { useTierListLike } from "@/hooks/useTierListLike";
 import LoginPromptModal from "@/components/ui/LoginPromptModal";
 import SafeImage from "@/components/ui/SafeImage";
 import type { TierListCard, TierRank } from "@/types/tierlist";
+import { Heart } from "lucide-react";
 
 interface TierListCardProps {
   list: TierListCard & { tiersData?: string };
@@ -208,7 +209,7 @@ export default function TierListCardItem({
             <span
               className={`transition-transform text-xs ${liking ? "scale-75" : liked ? "scale-110" : ""}`}
             >
-              {liked ? "❤️" : "🤍"}
+              <Heart size={12} fill={liked ? "currentColor" : "none"} />
             </span>
             {likesCount > 0 && <span>{likesCount}</span>}
           </button>

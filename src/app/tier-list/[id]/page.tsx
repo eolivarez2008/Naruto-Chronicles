@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import type { TierRank, TierListCharacter } from "@/types/tierlist";
 import TierListPublicClient from "@/components/tier-list/TierListPublicClient";
+import { Pencil, ChevronLeft, LayoutList } from "lucide-react";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -102,12 +103,23 @@ export default async function TierListPage({ params }: Props) {
       <nav className="flex items-center gap-2 text-xs text-white/30 mb-6">
         <Link
           href="/tier-list"
-          className="hover:text-naruto-orange transition-colors"
+          className="group flex items-center gap-1.5 hover:text-naruto-orange transition-colors shrink-0"
         >
-          ← Tier Lists
+          <ChevronLeft
+            size={14}
+            className="group-hover:-translate-x-0.5 transition-transform"
+          />
+          <span>Tier Lists</span>
         </Link>
-        <span>/</span>
-        <span className="text-white/50 truncate max-w-48">{list.title}</span>
+
+        <ChevronLeft size={14} className="shrink-0" />
+
+        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold bg-white/5 border border-white/10 text-white/70 w-fit whitespace-nowrap">
+          <LayoutList size={14} className="shrink-0 text-naruto-orange" />
+          <span className="truncate max-w-37.5 lg:max-w-none">
+            {list.title}
+          </span>
+        </span>
       </nav>
 
       {/* En-tête */}
@@ -155,19 +167,7 @@ export default async function TierListPage({ params }: Props) {
               href={`/tier-list/${id}/edit`}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-white/6 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white transition-all"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                />
-              </svg>
+              <Pencil size={16} />
               Modifier
             </Link>
           )}
