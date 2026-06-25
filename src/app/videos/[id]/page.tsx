@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 import {
   CATEGORY_LABELS,
   CATEGORY_ICONS,
@@ -33,8 +34,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function VideoPage({ params }: Props) {
   const { id } = await params;
-  const video = await prisma.video.findUnique({ where: { id } });
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const video = await prisma.video.findUnique({
+    where: { id },
+    include: {
+      likes: userId ? { where: { userId }, select: { id: true } } : false,
+    },
+  });
   if (!video) notFound();
+
+  const hasLiked = Array.isArray(video.likes) && video.likes.length > 0;
 
   const color = CATEGORY_COLORS[video.category as VideoCategory] ?? "#ff6600";
 
@@ -109,6 +120,7 @@ export default async function VideoPage({ params }: Props) {
         <VideoPageLikeButton
           videoId={video.id}
           initialLikesCount={video.likesCount}
+          initialLiked={hasLiked}
           color={color}
         />
       </div>

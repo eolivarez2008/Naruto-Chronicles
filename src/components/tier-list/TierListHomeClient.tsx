@@ -194,8 +194,6 @@ function DiscoverSection() {
       currentSearch: string,
       reset = false,
     ) => {
-      if (pageNum === 1 || reset) setLoading(true);
-      else setLoadingMore(true);
       try {
         const params = new URLSearchParams({
           page: String(pageNum),
@@ -220,13 +218,11 @@ function DiscoverSection() {
   );
 
   useEffect(() => {
-    setLists([]);
     void fetchPage(1, sort, searchRaw, true);
   }, [sort, fetchPage]);
 
   useEffect(() => {
     const t = setTimeout(() => {
-      setLists([]);
       void fetchPage(1, sort, searchRaw, true);
     }, 400);
     return () => clearTimeout(t);
@@ -331,7 +327,7 @@ function DiscoverSection() {
         </p>
       )}
 
-      {loading ? (
+      {loading && lists.length === 0 ? (
         <GridSkeleton />
       ) : lists.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
@@ -548,12 +544,14 @@ function GridSkeleton() {
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function TierListHomeClient({
-  myCreatedLists,
-  myLikedLists,
+  myCreatedLists: initialMyCreatedLists,
+  myLikedLists: initialMyLikedLists,
   isLoggedIn,
 }: Props) {
   const [tab, setTab] = useState<Tab>("decouvrir");
   const [showCreate, setShowCreate] = useState(false);
+  const [myCreatedLists, setMyCreatedLists] = useState(initialMyCreatedLists);
+  const [myLikedLists, setMyLikedLists] = useState(initialMyLikedLists);
 
   const TABS: Array<{ id: Tab; label: string; icon: React.ElementType }> = [
     { id: "mes-listes", label: "Mes Listes", icon: User },

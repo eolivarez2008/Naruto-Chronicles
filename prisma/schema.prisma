@@ -128,6 +128,7 @@ model VideoLike {
   video Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
   user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@unique([videoId, userId])
   @@unique([videoId, ipHash])
   @@index([userId])
   @@index([videoId])

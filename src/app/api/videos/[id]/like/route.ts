@@ -21,10 +21,12 @@ export async function POST(
 
   try {
     const video = await prisma.video.findUnique({ where: { id: videoId } });
-    if (!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
+    if (!video)
+      return NextResponse.json({ error: "Video not found" }, { status: 404 });
 
-    const existing = await prisma.videoLike.findFirst({ where: { videoId, userId } });
-    const ipHash = "auth_user";
+    const existing = await prisma.videoLike.findFirst({
+      where: { videoId, userId },
+    });
 
     let liked: boolean;
     let finalLikesCount: number;
@@ -32,23 +34,34 @@ export async function POST(
     if (existing) {
       await prisma.$transaction([
         prisma.videoLike.delete({ where: { id: existing.id } }),
-        prisma.video.update({ where: { id: videoId }, data: { likesCount: { decrement: 1 } } }),
+        prisma.video.update({
+          where: { id: videoId },
+          data: { likesCount: { decrement: 1 } },
+        }),
       ]);
       liked = false;
-      finalLikesCount = Math.max(0, video.likesCount - 1);
     } else {
       await prisma.$transaction([
-        prisma.videoLike.create({ data: { videoId, userId, ipHash } }),
-        prisma.video.update({ where: { id: videoId }, data: { likesCount: { increment: 1 } } }),
+        prisma.videoLike.create({
+          data: { videoId, userId, ipHash: `auth_${userId}` },
+        }),
+        prisma.video.update({
+          where: { id: videoId },
+          data: { likesCount: { increment: 1 } },
+        }),
       ]);
       liked = true;
-      finalLikesCount = video.likesCount + 1;
     }
+
+    finalLikesCount = await prisma.videoLike.count({ where: { videoId } });
 
     const response: VideoLikeResponse = { liked, likesCount: finalLikesCount };
     return NextResponse.json(response);
   } catch (err) {
     console.error("Like API error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

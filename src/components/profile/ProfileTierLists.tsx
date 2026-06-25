@@ -86,7 +86,10 @@ export default function ProfileTierLists({
               <VideoCard key={video.id} video={video} />
             ))}
             {likedVideos.length === 0 && (
-              <EmptyState text="Aucune vidéo aimées." />
+              <div className="col-span-full">
+                {" "}
+                <EmptyState text="Aucune vidéo aimée." />
+              </div>
             )}
           </div>
         )}
@@ -108,6 +111,7 @@ function Grid({ items, emptyText }: { items: any[]; emptyText: string }) {
 
 function VideoCard({ video }: any) {
   const color = CATEGORY_COLORS[video.category as VideoCategory] ?? "#ff6600";
+  const CategoryIcon = CATEGORY_ICONS[video.category as VideoCategory];
   return (
     <Link href={`/videos/${video.id}`} className="group space-y-3">
       <div className="aspect-video relative rounded-2xl overflow-hidden ring-1 ring-white/10 transition-transform group-hover:scale-[1.02] duration-300">
@@ -118,10 +122,11 @@ function VideoCard({ video }: any) {
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
         <span
-          className="absolute top-2 left-2 text-[10px] font-bold px-2 py-1 rounded-lg backdrop-blur-md shadow-xl"
+          className="absolute top-2 left-2 flex items-center gap-1.5 text-[10px] font-bold px-2 py-1 rounded-lg backdrop-blur-md shadow-xl text-white"
           style={{ background: `${color}cc`, border: `1px solid ${color}` }}
         >
-          {CATEGORY_ICONS[video.category as VideoCategory]} {video.category}
+          {CategoryIcon && <CategoryIcon size={12} />}
+          <span className="uppercase tracking-wider">{video.category}</span>
         </span>
       </div>
       <p className="text-sm font-medium text-white/80 line-clamp-2 px-1 group-hover:text-naruto-orange transition-colors">

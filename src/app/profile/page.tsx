@@ -7,7 +7,7 @@ import DeleteAccountButton from "@/components/profile/DeleteAccountButton";
 import ConsentButtons from "@/components/profile/ConsentButtons";
 import ProfileTierLists from "@/components/profile/ProfileTierLists";
 import type { TierListCard, TierRank } from "@/types/tierlist";
-import { Scroll, User as UserIcon, ImageIcon } from "lucide-react";
+import { Scroll, User, ImageIcon, CheckCircle2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Mon Profil",
@@ -250,48 +250,60 @@ export default async function ProfilePage({
 // --- Pages Secondaires (Consentement / Login) ---
 
 function ConsentPage({ userId }: { userId: string }) {
+  const permissions = [
+    {
+      t: "Identité",
+      d: "Nom et adresse e-mail Google",
+      i: User,
+    },
+    {
+      t: "Apparence",
+      d: "Photo de profil",
+      i: ImageIcon,
+    },
+  ];
+
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-24">
-      <div className="w-full max-w-md space-y-8 text-center">
-        <div className="w-20 h-20 rounded-4xl bg-linear-to-tr from-naruto-orange to-orange-400 flex items-center justify-center text-4xl shadow-2xl shadow-naruto-orange/20 mx-auto transform -rotate-6">
-          🍥
+    <div className="flex flex-1 items-center justify-center px-4 py-12 lg:py-24">
+      <div className="w-full max-w-sm space-y-8 text-center">
+        <div className="w-20 h-20 rounded-3xl bg-linear-to-tr from-naruto-orange to-orange-400 flex items-center justify-center shadow-2xl shadow-naruto-orange/20 mx-auto">
+          <ShieldCheck size={40} className="text-white" strokeWidth={2.5} />
         </div>
-        <div className="space-y-2">
-          <h1 className="text-3xl font-black text-white">Presque là !</h1>
-          <p className="text-white/40 text-sm">
-            Nous avons besoin de valider tes parchemins avant de continuer.
+
+        <div className="space-y-3">
+          <h1 className="text-3xl font-black text-white tracking-tight">
+            Presque là !
+          </h1>
+          <p className="text-white/40 text-sm leading-relaxed">
+            Nous avons besoin de valider tes parchemins{" "}
+            <br className="hidden sm:block" /> avant de continuer ton aventure.
           </p>
         </div>
-        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 text-left space-y-4">
-          <p className="text-xs font-bold text-white/60 uppercase tracking-widest">
-            Accès requis :
+
+        <div className="bg-white/3 border border-white/10 rounded-4xl p-6 text-left space-y-5 backdrop-blur-sm">
+          <p className="text-[10px] font-black text-naruto-orange uppercase tracking-[0.2em] pl-1">
+            Accès requis
           </p>
-          <ul className="space-y-3">
-            {[
-              {
-                t: "Identité",
-                d: "Nom et adresse e-mail Google",
-                i: "<UserIcon size={16} />",
-              },
-              {
-                t: "Apparence",
-                d: "Photo de profil",
-                i: "<ImageIcon size={16} />",
-              },
-            ].map((item, idx) => (
-              <li key={idx} className="flex items-center gap-4">
-                <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-sm">
-                  {item.i}
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-white/80">{item.t}</p>
-                  <p className="text-xs text-white/40">{item.d}</p>
+
+          <ul className="space-y-4">
+            {permissions.map((item, idx) => (
+              <li key={idx} className="flex items-center gap-4 group">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center transition-colors group-hover:bg-white/10">
+                  <item.i size={18} className="text-white/60" />
                 </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-white/90">{item.t}</p>
+                  <p className="text-xs text-white/30">{item.d}</p>
+                </div>
+                <CheckCircle2 size={14} className="text-naruto-orange/40" />
               </li>
             ))}
           </ul>
         </div>
-        <ConsentButtons userId={userId} />
+
+        <div className="pt-2">
+          <ConsentButtons userId={userId} />
+        </div>
       </div>
     </div>
   );
@@ -301,7 +313,9 @@ function LoginPage({ error }: { error?: string }) {
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-24">
       <div className="w-full max-w-sm space-y-8 text-center">
-        <Scroll size={32} />
+        <div className="text-naruto-orange w-fit mx-auto">
+          <Scroll size={80} />
+        </div>
         <div className="space-y-3">
           <h1 className="text-2xl font-black text-naruto-orange">
             Connexion - Inscription

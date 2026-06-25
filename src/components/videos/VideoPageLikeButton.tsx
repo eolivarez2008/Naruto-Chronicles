@@ -8,18 +8,21 @@ import { Heart } from "lucide-react";
 interface VideoPageLikeButtonProps {
   videoId: string;
   initialLikesCount: number;
+  initialLiked?: boolean;
   color: string;
 }
 
 export default function VideoPageLikeButton({
   videoId,
   initialLikesCount,
+  initialLiked = false,
   color,
 }: VideoPageLikeButtonProps) {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const { liked, likesCount, liking, handleLike } = useLike({
     videoId,
+    initialLiked,
     initialCount: initialLikesCount,
     onUnauthenticated: () => setShowLoginPrompt(true),
   });
