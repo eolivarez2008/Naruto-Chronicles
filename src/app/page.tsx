@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import { INFO_ROWS, QUICK_STATS } from "@/lib/homeData";
+import HomeDynamic from "@/components/home/HomeDynamic";
 
 export const metadata: Metadata = {
   title: "Naruto Chronicles",
@@ -21,13 +22,10 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="relative flex flex-col items-center w-full">
-      {/* Hero */}
-      <section className="w-full max-w-6xl mx-auto px-6 pt-16 pb-10 fade-in-up">
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="w-full max-w-6xl mx-auto px-6 pt-18 pb-16 fade-in-up">
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 space-y-6">
-            <span className="inline-block text-naruto-orange text-xs font-bold tracking-[0.2em] uppercase border border-[rgba(255,102,0,0.3)] rounded-full px-3 py-1 bg-[rgba(255,102,0,0.08)]">
-              Univers Naruto
-            </span>
             <h1
               className="text-5xl md:text-6xl font-bold leading-tight tracking-tight"
               style={{ fontFamily: "'Syne', sans-serif" }}
@@ -51,7 +49,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative shrink-0 fade-in-up delay-200">
+          <div className="relative shrink-0 fade-in-up delay-200 hidden md:block">
             <div className="absolute inset-0 rounded-2xl bg-naruto-orange opacity-10 blur-3xl scale-110" />
             <Image
               src="https://m.media-amazon.com/images/M/MV5BZTNjOWI0ZTAtOGY1OS00ZGU0LWEyOWYtMjhkYjdlYmVjMDk2XkEyXkFqcGc@._V1_.jpg"
@@ -67,7 +65,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Fiche technique */}
+      {/* ── Fiche Technique ──────────────────────────────────────────── */}
       <section className="w-full max-w-6xl mx-auto px-6 pb-10 fade-in-up delay-200">
         <GlassCard className="p-6 md:p-8 overflow-hidden">
           <h2 className="text-xs font-bold tracking-[0.18em] uppercase text-naruto-orange mb-1">
@@ -89,60 +87,10 @@ export default function HomePage() {
         </GlassCard>
       </section>
 
-      {/* Résumé */}
-      <section className="w-full max-w-6xl mx-auto px-6 pb-10 fade-in-up delay-300">
-        <GlassCard className="p-6 md:p-8">
-          <h2 className="text-xs font-bold tracking-[0.18em] uppercase text-naruto-orange mb-1">
-            Résumé
-          </h2>
-          <span className="accent-line w-16" />
-          <div className="space-y-4 text-white/75 leading-relaxed text-[15px]">
-            <p>
-              C&rsquo;est l&rsquo;histoire de{" "}
-              <strong className="text-white">Naruto Uzumaki</strong>, un jeune
-              ninja du village de Konoha qui rêve de devenir Hokage. Orphelin et
-              rejeté par les autres habitants à cause du démon renard à neuf
-              queues, <strong className="text-white">Kyûbi</strong>, scellé en
-              lui, Naruto a dû surmonter la solitude et se battre pour être
-              accepté.
-            </p>
-            <p>
-              Tout au long de son parcours, Naruto se lie d&rsquo;amitié avec
-              d&rsquo;autres ninjas, dont{" "}
-              <strong className="text-white">Sasuke Uchiwa</strong>, son rival
-              et ami, et <strong className="text-white">Sakura Haruno</strong>.
-              Sous la tutelle de{" "}
-              <strong className="text-white">Kakashi Hatake</strong>, ils
-              forment l&rsquo;équipe 7.
-            </p>
-            <p>
-              La série explore des thèmes comme l&rsquo;amitié, le sacrifice et
-              la persévérance, tandis que Naruto grandit et gagne en puissance
-              pour défendre son village.
-            </p>
-          </div>
-        </GlassCard>
-      </section>
-
-      {/* Trailer */}
-      <section className="w-full max-w-6xl mx-auto px-6 pb-20 fade-in-up delay-400">
-        <GlassCard className="p-4 md:p-6">
-          <h2 className="text-xs font-bold tracking-[0.18em] uppercase text-naruto-orange mb-1 ml-2">
-            Trailer Officiel
-          </h2>
-          <span className="accent-line w-20 ml-2" />
-          <video
-            className="w-full rounded-xl max-w-4xl mx-auto block"
-            controls
-            autoPlay
-            muted
-            playsInline
-          >
-            <source src="/videos/trailer naruto.mp4" type="video/mp4" />
-            Votre navigateur ne supporte pas la balise vidéo.
-          </video>
-        </GlassCard>
-      </section>
+      {/* ── Dynamic Content (Videos, Tierlists, Characters) ───────────── */}
+      <div className="w-full fade-in-up delay-300 mt-5">
+        <HomeDynamic />
+      </div>
     </div>
   );
 }

@@ -1,187 +1,203 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
+import PageHero from "@/components/ui/PageHero";
 import prisma from "@/lib/prisma";
-import { Star } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Sagas",
   description:
-    "Découvrez toutes les sagas de l'univers Naruto — scores, statuts et synopsis en temps réel via MyAnimeList.",
+    "Découvrez toutes les sagas de l'univers Naruto — scores, statuts et synopsis en temps réel.",
 };
 
 export default async function SagaPage() {
   const validSagas = await prisma.saga.findMany({ orderBy: { year: "asc" } });
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 lg:px-6 py-8 lg:py-12 space-y-12 lg:space-y-16">
-      <div className="fade-in-up">
-        <h1 className="text-4xl lg:text-5xl font-bold text-white font-syne uppercase tracking-tighter mt-2">
-          Les <span className="text-naruto-orange">Sagas</span>
-        </h1>
-        <div className="accent-line w-16 lg:w-20 mt-4" />
-      </div>
+    <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-16">
+      <PageHero
+        eyebrow="Chronologie"
+        title="Les Sagas"
+        description="L'épopée complète à travers les différentes époques : de l'enfance de Naruto à l'avènement de Boruto."
+      />
 
-      {/* Desktop */}
-      <div className="hidden lg:grid grid-cols-1 gap-24">
-        {validSagas.map((saga, i) => (
-          <div
-            key={saga.key}
-            className="group flex flex-col lg:flex-row gap-12 items-center fade-in-up"
-            style={{ animationDelay: `${i * 150}ms` }}
-          >
-            <div className="w-full lg:w-1/3 relative shrink-0 px-4 lg:px-0">
-              <div className="aspect-video lg:aspect-3/4 rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        {/* --- DESKTOP --- */}
+        <div className="hidden lg:grid grid-cols-1 gap-20 lg:gap-32">
+          {validSagas.map((saga, i) => {
+            const isEven = i % 2 === 0;
+
+            return (
+              <section
+                key={saga.key}
+                className={`group flex flex-col gap-8 lg:gap-16 items-start fade-in-up ${
+                  isEven ? "lg:flex-row" : "lg:flex-row-reverse"
+                }`}
+                style={{ animationDelay: `${i * 150}ms` }}
+              >
+                {/* Image */}
+                <div className="w-full lg:w-1/4 relative shrink-0">
+                  <div className="aspect-3/4 rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
+                    <Image
+                      src={saga.image}
+                      alt={saga.label}
+                      fill
+                      sizes="25vw"
+                      unoptimized
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="absolute -top-4 -right-4 bg-naruto-orange text-white font-black p-4 rounded-xl shadow-xl z-30 group-hover:rotate-6 transition-transform duration-300 flex items-center gap-1.5">
+                    <Star
+                      size={22}
+                      className="text-yellow-400"
+                      fill="currentColor"
+                    />
+                    <span className="text-base">{saga.score ?? "-"}</span>
+                  </div>
+                </div>
+
+                {/* Infos / Contenu */}
+                <div className="flex-1 space-y-6 w-full">
+                  <div
+                    className={`flex justify-between items-end border-b border-white/10 pb-4 ${isEven ? "flex-row" : "flex-row-reverse"}`}
+                  >
+                    <h2 className="text-3xl lg:text-4xl font-bold text-naruto-orange font-syne italic leading-none">
+                      {saga.label}
+                    </h2>
+                    <span className="text-white/10 text-7xl font-black select-none leading-none -mb-2">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <p className="text-white/70 leading-relaxed text-sm md:text-base lg:text-lg font-dm-sans text-justify">
+                    {saga.synopsisFr}
+                  </p>
+
+                  <GlassCard className="p-5 lg:p-6 grid grid-cols-2 sm:grid-cols-4 gap-6 border-white/10 bg-white/5 backdrop-blur-sm">
+                    {[
+                      { label: "Auteur", value: saga.creator },
+                      {
+                        label: saga.type === "manga" ? "Chapitres" : "Épisodes",
+                        value: saga.total ?? "-",
+                      },
+                      { label: "Sortie", value: saga.year ?? "-" },
+                      {
+                        label: "Status",
+                        value: saga.status,
+                        highlight: saga.status === "En cours",
+                      },
+                    ].map(({ label, value, highlight }) => (
+                      <div key={label} className="space-y-1">
+                        <p className="text-[10px] uppercase text-white/30 font-black tracking-widest truncate">
+                          {label}
+                        </p>
+                        <p
+                          className={`font-bold text-sm lg:text-base truncate ${highlight ? "text-naruto-orange" : "text-white"}`}
+                        >
+                          {String(value)}
+                        </p>
+                      </div>
+                    ))}
+                  </GlassCard>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        {/* --- MOBILE --- */}
+        <div className="lg:hidden space-y-0">
+          {validSagas.map((saga, i) => (
+            <div
+              key={saga.key}
+              className="fade-in-up relative pb-10"
+              style={{ animationDelay: `${i * 120}ms` }}
+            >
+              <div
+                className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-0"
+                style={{ borderRadius: "1rem 1rem 0 0" }}
+              >
                 <Image
                   src={saga.image}
                   alt={saga.label}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 33vw"
                   unoptimized
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover object-center scale-[1.02]"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent lg:hidden" />
-                <div className="absolute bottom-6 left-6 lg:hidden z-20">
-                  <h2 className="text-3xl font-bold text-white font-syne italic leading-none">
+                <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
+                <div className="absolute top-3 right-3 flex items-center gap-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 z-10">
+                  <Star
+                    size={16}
+                    className="text-naruto-orange"
+                    fill="currentColor"
+                  />{" "}
+                  {saga.score ?? "-"}
+                </div>
+                <div className="absolute top-3 left-3 z-10">
+                  <span
+                    className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${saga.status === "En cours" ? "bg-naruto-orange/90 text-white" : "bg-green-500/80 text-white"}`}
+                  >
+                    {saga.status}
+                  </span>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 z-10">
+                  <h2 className="text-3xl font-bold text-white font-syne italic leading-tight drop-shadow-lg">
                     {saga.label}
                   </h2>
                 </div>
               </div>
-              <div className="absolute top-2 right-6 lg:-top-4 lg:-right-4 bg-naruto-orange text-white font-black px-3 py-1.5 lg:p-4 rounded-xl shadow-xl z-30 group-hover:rotate-6 transition-transform duration-300 text-xs lg:text-base flex items-center gap-1.5">
-                <Star
-                  size={22}
-                  className="text-yellow-400"
-                  fill="currentColor"
-                />
-                <span>{saga.score ?? "-"}</span>
-              </div>
-            </div>
 
-            <div className="flex-1 space-y-6 w-full z-20">
-              <div className="hidden lg:flex justify-between items-end border-b border-white/10 pb-4">
-                <h2 className="text-4xl font-bold text-naruto-orange font-syne italic">
-                  {saga.label}
-                </h2>
-                <span className="text-white/10 text-7xl font-black select-none">
-                  0{i + 1}
-                </span>
-              </div>
-              <p className="text-white/80 leading-relaxed text-sm lg:text-[17px] font-dm-sans italic lg:text-justify">
-                {saga.synopsisFr}
-              </p>
-              <GlassCard className="p-5 lg:p-8 grid grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 lg:gap-8 border-white/20 bg-white/5 backdrop-blur-2xl shadow-2xl ring-1 ring-white/10">
+              <div className="flex items-stretch rounded-b-2xl overflow-hidden border border-white/8 border-t-0 divide-x divide-white/8 bg-white/4 backdrop-blur-xl mb-5">
                 {[
-                  { label: "Auteur", value: saga.creator },
                   {
                     label: saga.type === "manga" ? "Chapitres" : "Épisodes",
                     value: saga.total ?? "-",
                   },
                   { label: "Sortie", value: saga.year ?? "-" },
-                  {
-                    label: "Status",
-                    value: saga.status,
-                    highlight: saga.status === "En cours",
-                  },
-                ].map(({ label, value, highlight }) => (
-                  <div key={label} className="space-y-1">
-                    <p className="text-[9px] uppercase text-white/30 font-black tracking-widest">
-                      {label}
+                  { label: "Auteur", value: saga.creator },
+                ].map((stat) => (
+                  <div key={stat.label} className="flex-1 px-3 py-4 min-w-0">
+                    <p className="text-[10px] uppercase tracking-widest text-white/30 font-black mb-0.5 truncate">
+                      {stat.label}
                     </p>
-                    <p
-                      className={`font-bold text-xs lg:text-sm ${highlight ? "text-naruto-orange" : highlight === false ? "text-green-400" : "text-white"}`}
-                    >
-                      {String(value)}
+                    <p className="text-white text-sm font-bold truncate">
+                      {String(stat.value)}
                     </p>
                   </div>
                 ))}
-              </GlassCard>
-            </div>
-          </div>
-        ))}
-      </div>
+              </div>
 
-      {/* Mobile */}
-      <div className="lg:hidden space-y-0">
-        {validSagas.map((saga, i) => (
-          <div
-            key={saga.key}
-            className="fade-in-up relative pb-10"
-            style={{ animationDelay: `${i * 120}ms` }}
-          >
-            <div
-              className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-0"
-              style={{ borderRadius: "1rem 1rem 0 0" }}
-            >
-              <Image
-                src={saga.image}
-                alt={saga.label}
-                fill
-                unoptimized
-                className="object-cover object-center scale-[1.02]"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
-              <div className="absolute top-3 right-3 flex items-center gap-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 z-10">
-                <Star
-                  size={16}
-                  className="text-naruto-orange"
+              <div className="relative pt-2">
+                <Quote
+                  className="absolute -top-2 -left-2 text-naruto-orange/20 rotate-180"
+                  size={30}
                   fill="currentColor"
-                />{" "}
-                {saga.score ?? "-"}
-              </div>
-              <div className="absolute top-3 left-3 z-10">
-                <span
-                  className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${saga.status === "En cours" ? "bg-naruto-orange/90 text-white" : "bg-green-500/80 text-white"}`}
-                >
-                  {saga.status}
-                </span>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 z-10">
-                <h2 className="text-3xl font-bold text-white font-syne italic leading-tight drop-shadow-lg">
-                  {saga.label}
-                </h2>
-              </div>
-            </div>
+                  aria-hidden
+                />
 
-            <div className="flex items-stretch rounded-b-2xl overflow-hidden border border-white/8 border-t-0 divide-x divide-white/8 bg-white/4 backdrop-blur-xl mb-5">
-              {[
-                {
-                  label: saga.type === "manga" ? "Chapitres" : "Épisodes",
-                  value: saga.total ?? "-",
-                },
-                { label: "Sortie", value: saga.year ?? "-" },
-                { label: "Auteur", value: saga.creator },
-              ].map((stat) => (
-                <div key={stat.label} className="flex-1 px-3 py-4 min-w-0">
-                  <p className="text-[10px] uppercase tracking-widest text-white/30 font-black mb-0.5 truncate">
-                    {stat.label}
-                  </p>
-                  <p className="text-white text-sm font-bold truncate">
-                    {String(stat.value)}
-                  </p>
-                </div>
-              ))}
-            </div>
+                <p className="text-white/65 leading-relaxed text-[14px] italic px-6 relative z-10 text-justify">
+                  {saga.synopsisFr}
+                </p>
 
-            <div className="relative">
-              <span
-                className="absolute -top-3 -left-1 text-5xl leading-none text-naruto-orange/20 font-black select-none pointer-events-none font-syne"
-                aria-hidden
-              >
-                &quot;
-              </span>
-              <p className="text-white/65 leading-relaxed text-[14px] italic pl-3 pr-1">
-                {saga.synopsisFr}
-              </p>
-            </div>
+                <Quote
+                  className="absolute -bottom-2 -right-1 text-naruto-orange/20"
+                  size={30}
+                  fill="currentColor"
+                  aria-hidden
+                />
+              </div>
 
-            {i < validSagas.length - 1 && (
-              <div className="ml-6 mt-8 h-px bg-linear-to-r from-naruto-orange/20 via-white/5 to-transparent" />
-            )}
-          </div>
-        ))}
+              {i < validSagas.length - 1 && (
+                <div className="ml-6 mt-8 h-px bg-linear-to-r from-naruto-orange/20 via-white/5 to-transparent" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

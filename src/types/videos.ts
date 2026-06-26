@@ -21,7 +21,7 @@ export const VIDEO_CATEGORIES = [
 export type VideoCategory = (typeof VIDEO_CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<VideoCategory | "all", string> = {
-  all: "Toutes",
+  all: "Toutes les vidéos",
   edit: "Edit",
   theorie: "Théorie",
   react: "React",
@@ -83,7 +83,7 @@ export interface VideoLikeResponse {
 export type VideoSortField = "recent" | "popular" | "views";
 
 export const SORT_OPTIONS: { value: VideoSortField; label: string }[] = [
-  { value: "popular", label: "Plus aimés" },
-  { value: "recent", label: "Plus récents" },
-  { value: "views", label: "Plus vus" },
+  { value: "popular", label: "Popularité" },
+  { value: "recent", label: "Nouveautés" },
+  { value: "views", label: "Vues" },
 ];

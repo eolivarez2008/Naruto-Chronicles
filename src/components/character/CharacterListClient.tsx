@@ -9,18 +9,9 @@ import {
 } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import type {
-  CharacterCard,
-  CharacterDetail,
-  CharactersApiResponse,
-} from "@/types/characters";
-import {
-  NATURE_COLORS,
-  NATURE_ICONS,
-  formatNatureName,
-} from "@/types/characters";
+import type { CharacterCard, CharactersApiResponse } from "@/types/characters";
 import { trackEvent, EVENTS } from "@/lib/analytics";
-import BaseModal from "@/components/ui/BaseModal";
+import CharacterModal from "@/components/character/CharacterModal";
 import { normalizeString } from "@/lib/network";
 import {
   ChevronDown,
@@ -29,6 +20,12 @@ import {
   Search,
   Check,
   Filter,
+  BookOpen,
+  Zap,
+  Shield,
+  Flame,
+  Crown,
+  type LucideIcon,
 } from "lucide-react";
 
 const LIMIT = 40;
@@ -44,11 +41,35 @@ const RANK_OPTIONS: RankType[] = [
   "Jōnin",
   "Kage",
 ];
+
+const RANK_COLORS: Record<RankType, string> = {
+  "": "#ffffff",
+  "Academy Student": "#10b981",
+  Genin: "#3b82f6",
+  Chūnin: "#eab308",
+  Jōnin: "#f97316",
+  Kage: "#ef4444",
+};
+
+const RANK_ICONS: Record<RankType, LucideIcon | null> = {
+  "": Filter,
+  "Academy Student": BookOpen,
+  Genin: Zap,
+  Chūnin: Shield,
+  Jōnin: Flame,
+  Kage: Crown,
+};
+
 const SORT_OPTIONS: { value: SortField; label: string }[] = [
   { value: "popularity", label: "Popularité" },
   { value: "name_asc", label: "Nom (A-Z)" },
   { value: "name_desc", label: "Nom (Z-A)" },
 ];
+
+const getRankColor = (rankVal: RankType | ""): string => {
+  if (!rankVal) return "#ffffff";
+  return RANK_COLORS[rankVal] ?? "#ffffff";
+};
 
 // ─── Hook chargement liste ────────────────────────────────────────────────────
 
@@ -119,29 +140,6 @@ function useCharacters(search: string, rank: RankType, sort: SortField) {
     hasMore: page < totalPages,
     total,
   };
-}
-
-// ─── Hook détail personnage ───────────────────────────────────────────────────
-
-function useCharacterDetail(id: number | null) {
-  const [data, setData] = useState<CharacterDetail | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!id) {
-      setData(null);
-      return;
-    }
-    setLoading(true);
-    setData(null);
-    fetch(`/api/characters/${id}`)
-      .then((r) => r.json())
-      .then((d: CharacterDetail) => setData(d))
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  return { data, loading };
 }
 
 // ─── Composant principal ──────────────────────────────────────────────────────
@@ -217,13 +215,15 @@ export default function CharacterListClient() {
         <div className="relative" ref={sortMenuRef}>
           <button
             onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-40"
           >
-            <SlidersHorizontal size={16} className="text-white/50" />
-            <span className="hidden sm:inline">{currentSortLabel}</span>
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={16} className="text-white/50 shrink-0" />
+              <span className="hidden sm:inline">{currentSortLabel}</span>
+            </div>
             <ChevronDown
               size={12}
-              className={`text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+              className={`text-white/30 transition-transform shrink-0 ${isSortOpen ? "rotate-180" : ""}`}
             />
           </button>
           <AnimatePresence>
@@ -232,7 +232,7 @@ export default function CharacterListClient() {
                 initial={{ opacity: 0, y: -6, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full left-0 mt-2 w-40 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
+                className="absolute top-full right-0 mt-2 w-40 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <li key={opt.value}>
@@ -257,13 +257,31 @@ export default function CharacterListClient() {
         <div className="relative" ref={rankMenuRef}>
           <button
             onClick={() => setIsRankOpen((v) => !v)}
-            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-50"
           >
-            <Filter size={16} className="text-white/50" />
-            <span className="hidden sm:inline">{currentRankLabel}</span>
+            <span className="flex items-center gap-2 overflow-hidden">
+              {(() => {
+                const Icon = RANK_ICONS[rank] || Filter;
+                const iconColor = getRankColor(rank);
+
+                return (
+                  <Icon
+                    size={14}
+                    className="shrink-0"
+                    style={{
+                      color:
+                        rank === "" ? "rgba(255, 255, 255, 0.5)" : iconColor,
+                    }}
+                  />
+                );
+              })()}
+              <span className="hidden sm:inline truncate">
+                {currentRankLabel}
+              </span>
+            </span>
             <ChevronDown
               size={12}
-              className={`text-white/30 transition-transform ${isRankOpen ? "rotate-180" : ""}`}
+              className={`text-white/30 transition-transform shrink-0 ${isRankOpen ? "rotate-180" : ""}`}
             />
           </button>
           <AnimatePresence>
@@ -272,7 +290,7 @@ export default function CharacterListClient() {
                 initial={{ opacity: 0, y: -6, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-44 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
+                className="absolute top-full right-0 mt-2 w-48 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
               >
                 <li>
                   <button
@@ -280,9 +298,13 @@ export default function CharacterListClient() {
                       setRank("");
                       setIsRankOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer ${rank === "" ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5"}`}
+                    className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${rank === "" ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                   >
-                    Tous les rangs
+                    <span className="flex items-center gap-2">
+                      <Filter size={14} className="text-white/70" />
+                      Tous les rangs
+                    </span>
+                    {rank === "" && <Check size={14} />}
                   </button>
                 </li>
                 {RANK_OPTIONS.map((opt) => (
@@ -292,9 +314,20 @@ export default function CharacterListClient() {
                         setRank(opt);
                         setIsRankOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${rank === opt ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
+                      className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${rank === opt ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
-                      {opt}
+                      <span className="flex items-center gap-2">
+                        {(() => {
+                          const Icon = RANK_ICONS[opt];
+                          return Icon ? (
+                            <Icon
+                              size={14}
+                              style={{ color: getRankColor(opt) }}
+                            />
+                          ) : null;
+                        })()}
+                        {opt}
+                      </span>
                       {rank === opt && <Check size={14} />}
                     </button>
                   </li>
@@ -361,7 +394,7 @@ export default function CharacterListClient() {
 
 // ─── Carte personnage ─────────────────────────────────────────────────────────
 
-function CharacterCardItem({
+export function CharacterCardItem({
   character,
   index,
   onClick,
@@ -404,256 +437,6 @@ function CharacterCardItem({
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-naruto-orange" />
     </motion.button>
-  );
-}
-
-// ─── Modal personnage (via BaseModal) ─────────────────────────────────────────
-
-function CharacterModal({
-  characterId,
-  onClose,
-}: {
-  characterId: number | null;
-  onClose: () => void;
-}) {
-  const { data, loading } = useCharacterDetail(characterId);
-  const accent = data?.natureType?.[0]
-    ? (NATURE_COLORS[formatNatureName(data.natureType[0])] ?? "#e5c97e")
-    : "#e5c97e";
-
-  return (
-    <BaseModal isOpen={characterId !== null} onClose={onClose}>
-      {loading && (
-        <div className="flex items-center justify-center min-h-50">
-          <div
-            className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin"
-            style={{
-              borderColor: `${accent} transparent transparent transparent`,
-            }}
-          />
-        </div>
-      )}
-      {!loading && data && <DrawerContent data={data} accent={accent} />}
-    </BaseModal>
-  );
-}
-
-// ─── Contenu drawer personnage ────────────────────────────────────────────────
-
-function DrawerContent({
-  data,
-  accent,
-}: {
-  data: CharacterDetail;
-  accent: string;
-}) {
-  return (
-    <div className="flex flex-col pb-8">
-      <div className="relative w-full aspect-video overflow-hidden">
-        <Image
-          src={data.image ?? FALLBACK}
-          alt={data.name}
-          fill
-          className="object-cover object-top"
-          unoptimized
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = FALLBACK;
-          }}
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-naruto-surface via-naruto-surface/30 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-5">
-          <h2
-            className="text-2xl sm:text-3xl font-black text-white leading-none"
-            style={{ textShadow: `0 0 40px ${accent}66` }}
-          >
-            {data.name}
-          </h2>
-        </div>
-      </div>
-
-      <div className="p-5 flex flex-col gap-5">
-        {data.natureType?.length > 0 && (
-          <DrawerSection title="Affinités chakra" accent={accent}>
-            <div className="flex flex-wrap gap-2">
-              {data.natureType.map((rawName) => {
-                const clean = formatNatureName(rawName);
-                const color = NATURE_COLORS[clean] ?? "#888";
-                const icon = NATURE_ICONS[clean] ?? "✨";
-                return (
-                  <span
-                    key={rawName}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
-                    style={{
-                      background: `${color}1a`,
-                      color,
-                      border: `1px solid ${color}44`,
-                    }}
-                  >
-                    {(() => {
-                      const IconComponent = NATURE_ICONS[rawName];
-                      return IconComponent ? (
-                        <IconComponent size={14} className="shrink-0" />
-                      ) : null;
-                    })()}
-                    {rawName}
-                  </span>
-                );
-              })}
-            </div>
-          </DrawerSection>
-        )}
-
-        {(data.sex || data.birthdate) && (
-          <DrawerSection title="Informations" accent={accent}>
-            <div className="grid grid-cols-2 gap-3">
-              {data.sex && <InfoPair label="Sexe" value={data.sex} />}
-              {data.birthdate && (
-                <InfoPair label="Anniversaire" value={data.birthdate} />
-              )}
-            </div>
-            {data.height && Object.keys(data.height).length > 0 && (
-              <div className="mt-3">
-                <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                  Taille
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {Object.entries(data.height).map(([arc, h]) => (
-                    <span
-                      key={arc}
-                      className="text-xs bg-white/5 rounded px-2 py-1"
-                    >
-                      <span className="text-white/35">{arc}: </span>
-                      <span className="text-white/80">{h}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {data.age && Object.keys(data.age).length > 0 && (
-              <div className="mt-3">
-                <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                  Âge
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {Object.entries(data.age).map(([arc, a]) => (
-                    <span
-                      key={arc}
-                      className="text-xs bg-white/5 rounded px-2 py-1"
-                    >
-                      <span className="text-white/35">{arc}: </span>
-                      <span className="text-white/80">{a}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </DrawerSection>
-        )}
-
-        {data.rank && Object.keys(data.rank).length > 0 && (
-          <DrawerSection title="Rang ninja" accent={accent}>
-            <div className="grid grid-cols-2 gap-3">
-              {Object.entries(data.rank as Record<string, string>).map(
-                ([arc, r]) => (
-                  <InfoPair key={arc} label={arc} value={r} />
-                ),
-              )}
-            </div>
-          </DrawerSection>
-        )}
-
-        {data.family && Object.keys(data.family).length > 0 && (
-          <DrawerSection title="Famille" accent={accent}>
-            <div className="grid grid-cols-2 gap-3">
-              {Object.entries(data.family).map(([rel, member]) => (
-                <InfoPair key={rel} label={rel} value={member} />
-              ))}
-            </div>
-          </DrawerSection>
-        )}
-
-        {data.jutsu?.length > 0 && (
-          <DrawerSection
-            title={`Jutsus · ${data.jutsu.length}`}
-            accent={accent}
-          >
-            <ul className="max-h-48 overflow-y-auto flex flex-col divide-y divide-white/5 pr-1">
-              {data.jutsu.map((j) => (
-                <li
-                  key={j}
-                  className="py-1.5 text-sm text-white/65 hover:text-white/90 transition-colors"
-                >
-                  {j}
-                </li>
-              ))}
-            </ul>
-          </DrawerSection>
-        )}
-
-        {(data.debut?.anime ||
-          data.debut?.manga ||
-          data.debut?.movie ||
-          data.debut?.game) && (
-          <DrawerSection title="Premières apparitions" accent={accent}>
-            <div className="flex flex-col gap-2">
-              {data.debut.anime && (
-                <InfoPair label="Anime" value={data.debut.anime} full />
-              )}
-              {data.debut.manga && (
-                <InfoPair label="Manga" value={data.debut.manga} full />
-              )}
-              {data.debut.movie && (
-                <InfoPair label="Film" value={data.debut.movie} full />
-              )}
-              {data.debut.game && (
-                <InfoPair label="Jeu" value={data.debut.game} full />
-              )}
-            </div>
-          </DrawerSection>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DrawerSection({
-  title,
-  accent,
-  children,
-}: {
-  title: string;
-  accent: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <h3
-        className="text-[10px] font-bold uppercase tracking-widest mb-3 pb-2 border-b"
-        style={{ color: accent, borderColor: `${accent}30` }}
-      >
-        {title}
-      </h3>
-      {children}
-    </div>
-  );
-}
-
-function InfoPair({
-  label,
-  value,
-  full = false,
-}: {
-  label: string;
-  value: string;
-  full?: boolean;
-}) {
-  return (
-    <div className={full ? "col-span-2" : ""}>
-      <dt className="text-[10px] text-white/35 uppercase tracking-wider">
-        {label}
-      </dt>
-      <dd className="text-sm text-white/80 font-medium mt-0.5">{value}</dd>
-    </div>
   );
 }
 

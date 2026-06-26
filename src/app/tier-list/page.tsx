@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     "Crée et partage tes classements de personnages Naruto. Découvre les tier lists de la communauté.",
 };
 
+// ─── Enrichissement des tiers avec images personnages ──────────────────────────
+
 async function enrichTiersData(tiersData: string): Promise<string> {
   let tiers: TierRank[] = [];
   try {
@@ -54,6 +56,8 @@ async function enrichTiersData(tiersData: string): Promise<string> {
   }
 }
 
+// ─── Mapping liste tier ───────────────────────────────────────────────────────
+
 async function mapList(l: {
   id: string;
   title: string;
@@ -87,6 +91,8 @@ async function mapList(l: {
     tiersData: enrichedTiersData,
   };
 }
+
+// ─── Page principale ──────────────────────────────────────────────────────────
 
 export default async function TierListPage() {
   const session = await auth();
@@ -160,10 +166,12 @@ export default async function TierListPage() {
   ]);
 
   return (
-    <TierListHomeClient
-      myCreatedLists={myCreatedLists}
-      myLikedLists={myLikedLists}
-      isLoggedIn={isLoggedIn}
-    />
+    <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-16">
+      <TierListHomeClient
+        myCreatedLists={myCreatedLists}
+        myLikedLists={myLikedLists}
+        isLoggedIn={isLoggedIn}
+      />
+    </main>
   );
 }

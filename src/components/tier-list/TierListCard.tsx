@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTierListLike } from "@/hooks/useTierListLike";
 import LoginPromptModal from "@/components/ui/LoginPromptModal";
 import SafeImage from "@/components/ui/SafeImage";
+import { TIER_LIST_PACKS } from "@/types/tierlist";
 import type { TierListCard, TierRank } from "@/types/tierlist";
 import { Heart } from "lucide-react";
 
@@ -164,6 +165,28 @@ export default function TierListCardItem({
           <div className="relative h-36 overflow-hidden bg-[#0d0d0d] border-b border-white/5">
             <TierMiniPreview tiersData={list.tiersData} />
             <div className="absolute inset-x-0 bottom-0 h-6 bg-linear-to-t from-[#0d0d0d] to-transparent pointer-events-none" />
+            {(() => {
+              const pack = TIER_LIST_PACKS.find((p) => p.id === list.packUsed);
+              if (!pack) return null;
+              const PackIcon = pack.icon;
+              const badgeColor =
+                pack.filter.type === "random"
+                  ? "#d97706"
+                  : pack.filter.type === "popular"
+                    ? "#8b5cf6"
+                    : pack.filter.type === "kage"
+                      ? "#06b6d4"
+                      : "#ffffff";
+              return (
+                <div
+                  className="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold shadow-lg shadow-black/20"
+                  style={{ background: `${badgeColor}dd`, color: "#fff" }}
+                >
+                  {PackIcon && <PackIcon size={12} />}
+                  <span className="max-w-[90px] truncate">{pack.label}</span>
+                </div>
+              );
+            })()}
           </div>
         </Link>
 

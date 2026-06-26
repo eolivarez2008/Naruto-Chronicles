@@ -93,6 +93,7 @@ export async function GET(req: NextRequest) {
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"));
   const limit = Math.min(24, parseInt(searchParams.get("limit") ?? "12"));
   const sort = searchParams.get("sort") ?? "recent";
+  const pack = searchParams.get("pack") ?? "all";
   const userId = searchParams.get("userId") ?? "";
   const search = searchParams.get("search") ?? "";
   const skip = (page - 1) * limit;
@@ -110,6 +111,10 @@ export async function GET(req: NextRequest) {
 
   if (search.trim()) {
     where.title = { contains: search.trim() };
+  }
+
+  if (pack !== "all" && pack.trim()) {
+    where.packUsed = pack;
   }
 
   let orderBy: Prisma.TierListOrderByWithRelationInput;

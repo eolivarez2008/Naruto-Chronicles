@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/contact/ContactForm";
+import PageHero from "@/components/ui/PageHero";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -9,8 +10,14 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="flex flex-1 justify-center items-start md:items-center py-12 px-4 fade-in-up">
+    <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-16">
+      <PageHero
+        eyebrow="Contact"
+        title="Me Joindre"
+        description="Une question sur l'univers Naruto, une suggestionn un report de bugs ou juste envie de discuter ? Mon parchemin est ouvert."
+      />
+
       <ContactForm />
-    </div>
+    </main>
   );
 }

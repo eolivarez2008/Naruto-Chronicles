@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -11,7 +12,6 @@ interface BaseModalProps {
   maxWidth?: string;
 }
 
-// Modal de base partagé
 export default function BaseModal({
   isOpen,
   onClose,
@@ -35,9 +35,10 @@ export default function BaseModal({
     };
   }, [isOpen]);
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  const modal = (
     <>
-      {/* Backdrop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -46,13 +47,13 @@ export default function BaseModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-9999 bg-black/75 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            style={{ zIndex: 10000 }}
             onClick={onClose}
           />
         )}
       </AnimatePresence>
 
-      {/* Panneau */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -62,7 +63,7 @@ export default function BaseModal({
             exit={{ opacity: 0, y: 60 }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
             className={[
-              "fixed z-10000",
+              "fixed",
               "inset-x-2 sm:inset-x-auto",
               "bottom-1 sm:bottom-auto",
               "sm:left-1/2 sm:-translate-x-1/2",
@@ -72,10 +73,10 @@ export default function BaseModal({
               "bg-naruto-surface rounded-2xl border border-white/10 shadow-2xl",
               "flex flex-col overflow-hidden",
             ].join(" ")}
+            style={{ zIndex: 10001 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Bouton fermer */}
-            <div className="absolute right-4 top-4 z-10001">
+            <div className="absolute right-4 top-4" style={{ zIndex: 10002 }}>
               <button
                 onClick={onClose}
                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors cursor-pointer"
@@ -85,7 +86,6 @@ export default function BaseModal({
               </button>
             </div>
 
-            {/* Contenu scrollable */}
             <div className="flex-1 overflow-y-auto overscroll-contain">
               {children}
             </div>
@@ -94,4 +94,6 @@ export default function BaseModal({
       </AnimatePresence>
     </>
   );
+
+  return createPortal(modal, document.body);
 }

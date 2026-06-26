@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Heart } from "lucide-react";
@@ -13,7 +14,9 @@ export default function LoginPromptModal({
   isOpen,
   onClose,
 }: LoginPromptModalProps) {
-  return (
+  if (typeof document === "undefined") return null;
+
+  const modal = (
     <AnimatePresence>
       {isOpen && (
         <>
@@ -22,13 +25,15 @@ export default function LoginPromptModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-11000 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            style={{ zIndex: 10000 }}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed left-1/2 top-1/2 z-11001 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#141414] p-6 shadow-2xl"
+            className="fixed left-1/2 top-1/2 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#141414] p-6 shadow-2xl"
+            style={{ zIndex: 10001 }}
           >
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10 text-2xl">
@@ -61,4 +66,6 @@ export default function LoginPromptModal({
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modal, document.body);
 }

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function LegalPage() {
-  const lastUpdated = "15 avril 2026";
+  const lastUpdated = "25 avril 2026";
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-12 fade-in-up">
@@ -74,37 +74,39 @@ export default function LegalPage() {
                     Donnée
                   </th>
                   <th className="px-4 py-2.5 text-left font-semibold">
-                    Finalité
+                    Source / Finalité
                   </th>
-                  <th className="px-4 py-2.5 text-left font-semibold">Durée</th>
+                  <th className="px-4 py-2.5 text-left font-semibold">
+                    Rétention
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/6">
                 {[
                   [
-                    "Nom Google",
-                    "Identifier le compte",
-                    "Jusqu'à suppression du compte",
+                    "Email, Nom et Avatar",
+                    "Google Auth / Identification du compte",
+                    "Durée du compte",
                   ],
                   [
-                    "Adresse e-mail",
-                    "Authentification unique",
-                    "Jusqu'à suppression du compte",
+                    "Tier-Lists",
+                    "Prisma / Sauvegarde de vos créations",
+                    "Jusqu'à suppression",
                   ],
                   [
-                    "Photo de profil",
-                    "Affichage dans l'interface",
-                    "Jusqu'à suppression du compte",
+                    "Likes (Vidéos/Tier-lists)",
+                    "Prisma / Fonctionnalités communautaires",
+                    "Jusqu'au retrait",
                   ],
                   [
-                    "Likes de vidéos",
-                    "Fonctionnalité communautaire",
-                    "Jusqu'à suppression du compte",
+                    "Email (Contact)",
+                    "Formulaire / Répondre à vos demandes",
+                    "1 an après l'échange",
                   ],
                   [
-                    "Hash d'adresse IP",
-                    "Anti-spam likes (anonymisée)",
-                    "Jusqu'à suppression du like",
+                    "Hash IP",
+                    "Sécurité / Anti-spam (Likes & Turnstile)",
+                    "Jusqu'au retrait",
                   ],
                 ].map(([donnee, finalite, duree]) => (
                   <tr key={donnee}>

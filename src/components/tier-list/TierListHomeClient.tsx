@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import TierListCardItem from "@/components/tier-list/TierListCard";
 import BaseModal from "@/components/ui/BaseModal";
+import PageHero from "@/components/ui/PageHero";
 import type { TierListCard, TierListsApiResponse } from "@/types/tierlist";
 import { TIER_LIST_PACKS } from "@/types/tierlist";
 import {
@@ -21,7 +22,9 @@ import {
   List,
   Heart,
   Lock,
+  Filter,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 type Tab = "mes-listes" | "decouvrir";
 type SortOption = "popular" | "recent" | "oldest" | "az" | "za";
@@ -61,7 +64,6 @@ function CreateModal({ onClose }: { onClose: () => void }) {
             {TIER_LIST_PACKS.map((pack) => {
               const isSelected = selected === pack.id;
               const Icon = pack.icon;
-
               return (
                 <motion.button
                   key={pack.id}
@@ -74,13 +76,10 @@ function CreateModal({ onClose }: { onClose: () => void }) {
                       : "border-white/7 bg-white/3 hover:border-white/12 hover:bg-white/5",
                   ].join(" ")}
                 >
-                  <Icon className={`w-5 h-5 text-naruto-orange`} />
-
+                  <Icon className="w-5 h-5 text-naruto-orange" />
                   <div>
                     <p
-                      className={`text-xs font-bold leading-tight transition-colors ${
-                        isSelected ? "text-naruto-orange" : "text-white/80"
-                      }`}
+                      className={`text-xs font-bold leading-tight transition-colors ${isSelected ? "text-naruto-orange" : "text-white/80"}`}
                     >
                       {pack.label}
                     </p>
@@ -88,7 +87,6 @@ function CreateModal({ onClose }: { onClose: () => void }) {
                       {pack.description}
                     </p>
                   </div>
-
                   {isSelected && (
                     <motion.div
                       initial={{ scale: 0 }}
@@ -149,12 +147,42 @@ function CreateModal({ onClose }: { onClose: () => void }) {
 // ─── Section Découvrir ────────────────────────────────────────────────────────
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: "popular", label: "Populaires" },
-  { value: "recent", label: "Récentes" },
-  { value: "oldest", label: "Anciennes" },
-  { value: "az", label: "A → Z" },
-  { value: "za", label: "Z → A" },
+  { value: "popular", label: "Popularité" },
+  { value: "recent", label: "Nouveautés" },
+  { value: "oldest", label: "Anciennetés" },
+  { value: "az", label: "Nom (A-Z)" },
+  { value: "za", label: "Nom (Z-A)" },
 ];
+
+type PackFilterOption = {
+  id: string;
+  label: string;
+  icon?: LucideIcon;
+};
+
+const PACK_FILTER_OPTIONS: PackFilterOption[] = [
+  { id: "all", label: "Tous les packs" },
+  ...TIER_LIST_PACKS.map((pack) => ({
+    id: pack.id,
+    label: pack.label,
+    icon: pack.icon,
+  })),
+];
+
+const getPackColor = (packId: string) => {
+  const pack = TIER_LIST_PACKS.find((item) => item.id === packId);
+  if (!pack) return "bg-white/10";
+  switch (pack.filter.type) {
+    case "random":
+      return "#d97706";
+    case "popular":
+      return "#8b5cf6";
+    case "kage":
+      return "#06b6d4";
+    default:
+      return "bg-white/10";
+  }
+};
 
 function DiscoverSection() {
   const [lists, setLists] = useState<
@@ -166,9 +194,12 @@ function DiscoverSection() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [sort, setSort] = useState<SortOption>("popular");
+  const [pack, setPack] = useState<string>("all");
   const [searchRaw, setSearchRaw] = useState("");
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [isPackOpen, setIsPackOpen] = useState(false);
   const sortMenuRef = useRef<HTMLDivElement>(null);
+  const packMenuRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const currentSortLabel =
@@ -179,9 +210,13 @@ function DiscoverSection() {
       if (
         sortMenuRef.current &&
         !sortMenuRef.current.contains(e.target as Node)
-      ) {
+      )
         setIsSortOpen(false);
-      }
+      if (
+        packMenuRef.current &&
+        !packMenuRef.current.contains(e.target as Node)
+      )
+        setIsPackOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -192,6 +227,7 @@ function DiscoverSection() {
       pageNum: number,
       currentSort: SortOption,
       currentSearch: string,
+      currentPack: string,
       reset = false,
     ) => {
       try {
@@ -200,6 +236,7 @@ function DiscoverSection() {
           limit: "12",
           sort: currentSort,
           ...(currentSearch.trim() && { search: currentSearch.trim() }),
+          ...(currentPack !== "all" && { pack: currentPack }),
         });
         const res = await fetch(`/api/tier-lists?${params}`);
         const json = (await res.json()) as TierListsApiResponse;
@@ -218,15 +255,15 @@ function DiscoverSection() {
   );
 
   useEffect(() => {
-    void fetchPage(1, sort, searchRaw, true);
-  }, [sort, fetchPage]);
+    void fetchPage(1, sort, searchRaw, pack, true);
+  }, [sort, pack, fetchPage]);
 
   useEffect(() => {
     const t = setTimeout(() => {
-      void fetchPage(1, sort, searchRaw, true);
+      void fetchPage(1, sort, searchRaw, pack, true);
     }, 400);
     return () => clearTimeout(t);
-  }, [searchRaw]);
+  }, [searchRaw, pack]);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -234,13 +271,13 @@ function DiscoverSection() {
     const obs = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting && hasMore && !loadingMore)
-          void fetchPage(page + 1, sort, searchRaw);
+          void fetchPage(page + 1, sort, searchRaw, pack);
       },
       { rootMargin: "300px" },
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [fetchPage, hasMore, loadingMore, page, sort, searchRaw]);
+  }, [fetchPage, hasMore, loadingMore, page, sort, searchRaw, pack]);
 
   const handleLike = (id: string, liked: boolean, newCount: number) => {
     setLists((prev) =>
@@ -253,7 +290,6 @@ function DiscoverSection() {
   return (
     <div>
       <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        {/* Recherche */}
         <div className="relative flex-1">
           <Search
             size={16}
@@ -276,17 +312,20 @@ function DiscoverSection() {
           )}
         </div>
 
-        {/* Menu tri déroulant */}
         <div className="relative" ref={sortMenuRef}>
           <button
             onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-40"
           >
-            <SlidersHorizontal size={16} className="text-white/50" />
-            <span className="hidden sm:inline">{currentSortLabel}</span>
+            <span className="flex items-center gap-2 overflow-hidden text-left">
+              <SlidersHorizontal size={16} className="text-white/50 shrink-0" />
+              <span className="hidden sm:inline truncate">
+                {currentSortLabel}
+              </span>
+            </span>
             <ChevronDown
               size={12}
-              className={`text-white/30 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+              className={`text-white/30 transition-transform shrink-0 ${isSortOpen ? "rotate-180" : ""}`}
             />
           </button>
           <AnimatePresence>
@@ -304,17 +343,88 @@ function DiscoverSection() {
                         setSort(opt.value);
                         setIsSortOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${
-                        sort === opt.value
-                          ? "text-naruto-orange bg-naruto-orange/10"
-                          : "text-white/70 hover:bg-white/5 hover:text-white"
-                      }`}
+                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
                     >
                       {opt.label}
                       {sort === opt.value && <Check size={14} />}
                     </button>
                   </li>
                 ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <div className="relative" ref={packMenuRef}>
+          <button
+            onClick={() => setIsPackOpen((v) => !v)}
+            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-50"
+          >
+            <span className="flex items-center gap-2 overflow-hidden text-left">
+              {pack === "all" ? (
+                <Filter size={14} className="text-white/50 shrink-0" />
+              ) : (
+                (() => {
+                  const packOption = PACK_FILTER_OPTIONS.find(
+                    (opt) => opt.id === pack,
+                  );
+                  const PackIcon = packOption?.icon;
+                  const packColor = getPackColor(pack);
+                  return PackIcon ? (
+                    <PackIcon
+                      size={14}
+                      className="shrink-0"
+                      style={{ color: packColor }}
+                    />
+                  ) : null;
+                })()
+              )}
+              <span className="hidden sm:inline truncate">
+                {PACK_FILTER_OPTIONS.find((opt) => opt.id === pack)?.label ??
+                  "Tous les packs"}
+              </span>
+            </span>
+            <ChevronDown
+              size={12}
+              className={`text-white/30 transition-transform shrink-0 ${isPackOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+          <AnimatePresence>
+            {isPackOpen && (
+              <motion.ul
+                initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                className="absolute top-full right-0 mt-2 w-48 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
+              >
+                {PACK_FILTER_OPTIONS.map((opt) => {
+                  const isDefault = opt.id === "all";
+                  const Icon = isDefault ? Filter : opt.icon;
+                  const optionColor = getPackColor(opt.id);
+                  return (
+                    <li key={opt.id}>
+                      <button
+                        onClick={() => {
+                          setPack(opt.id);
+                          setIsPackOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${pack === opt.id ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {Icon ? (
+                            <Icon
+                              size={14}
+                              className={!isDefault ? "" : "text-white/70"}
+                              style={!isDefault ? { color: optionColor } : {}}
+                            />
+                          ) : null}
+                          {opt.label}
+                        </span>
+                        {pack === opt.id && <Check size={14} />}
+                      </button>
+                    </li>
+                  );
+                })}
               </motion.ul>
             )}
           </AnimatePresence>
@@ -478,7 +588,6 @@ function MyListsSection({
           <div className="mb-4 text-white/20">
             {subTab === "creees" ? <List size={48} /> : <Heart size={48} />}
           </div>
-
           <p className="text-white/40 text-sm mb-2">
             {subTab === "creees"
               ? "Tu n'as pas encore de tier list"
@@ -550,59 +659,44 @@ export default function TierListHomeClient({
 }: Props) {
   const [tab, setTab] = useState<Tab>("decouvrir");
   const [showCreate, setShowCreate] = useState(false);
-  const [myCreatedLists, setMyCreatedLists] = useState(initialMyCreatedLists);
-  const [myLikedLists, setMyLikedLists] = useState(initialMyLikedLists);
 
   const TABS: Array<{ id: Tab; label: string; icon: React.ElementType }> = [
     { id: "mes-listes", label: "Mes Listes", icon: User },
     { id: "decouvrir", label: "Découvrir", icon: Globe },
   ];
 
+  // Bouton CTA rendu ici côté client — accès direct au state showCreate
+  const createButton = isLoggedIn ? (
+    <button
+      onClick={() => setShowCreate(true)}
+      className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-naruto-orange hover:bg-[#e65500] text-white transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,102,0,0.25)] cursor-pointer shrink-0"
+    >
+      <Plus size={16} />
+      Créer une Tier List
+    </button>
+  ) : (
+    <Link
+      href="/profile"
+      className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border border-naruto-orange/30 bg-naruto-orange/8 text-naruto-orange hover:bg-naruto-orange/15 transition-all shrink-0"
+    >
+      Connexion pour créer
+    </Link>
+  );
+
   return (
     <div className="w-full">
-      {/* Hero */}
-      <div
-        className="relative border-b border-white/6 overflow-hidden"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 80% at 50% -20%, rgba(255,102,0,0.09) 0%, transparent 70%)",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="text-naruto-orange text-xs font-bold tracking-[0.3em] uppercase mb-2">
-              Communauté
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-black text-white leading-none">
-              Tier Lists
-            </h1>
-            <div className="accent-line w-16" />
-            <p className="text-white/40 text-sm">
-              Classe les ninjas, partage tes opinions.
-            </p>
-          </div>
+      {/* Hero unifié via PageHero — action = bouton client qui ouvre la modal */}
+      <PageHero
+        eyebrow="Communauté"
+        title="Tier Lists"
+        description="Classe les ninjas, partage tes opinions. Découvre les classements de la communauté ou crée le tien."
+        action={createButton}
+      />
 
-          {isLoggedIn ? (
-            <button
-              onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-naruto-orange hover:bg-[#e65500] text-white transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,102,0,0.25)] cursor-pointer shrink-0"
-            >
-              <Plus size={16} />
-              Créer une Tier List
-            </button>
-          ) : (
-            <Link
-              href="/profile"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border border-naruto-orange/30 bg-naruto-orange/8 text-naruto-orange hover:bg-naruto-orange/15 transition-all shrink-0"
-            >
-              Connexion pour créer
-            </Link>
-          )}
-        </div>
-
-        {/* Tabs */}
+      {/* Onglets */}
+      <div className="border-b border-white/6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex border-b border-white/6">
+          <div className="flex">
             {TABS.map((t) => (
               <button
                 key={t.id}
@@ -622,9 +716,7 @@ export default function TierListHomeClient({
                     />
                   );
                 })()}
-
                 <span className="hidden sm:inline">{t.label}</span>
-
                 {tab === t.id && (
                   <motion.div
                     layoutId="tab-underline"
@@ -648,14 +740,13 @@ export default function TierListHomeClient({
               exit={{ opacity: 0 }}
             >
               <MyListsSection
-                createdLists={myCreatedLists}
-                likedLists={myLikedLists}
+                createdLists={initialMyCreatedLists}
+                likedLists={initialMyLikedLists}
                 isLoggedIn={isLoggedIn}
                 onShowCreate={() => setShowCreate(true)}
               />
             </motion.div>
           )}
-
           {tab === "decouvrir" && (
             <motion.div
               key="decouvrir"
