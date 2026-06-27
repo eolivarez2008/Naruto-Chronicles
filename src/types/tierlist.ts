@@ -158,3 +158,33 @@ export interface SaveTierListPayload {
   packUsed: string;
   tiers: TierRank[];
 }
+
+// ─── Toolbar ─────────────────────────────────────────────────────
+
+export type TierListSortOption = "popular" | "recent" | "old" | "az" | "za";
+
+export const TIER_LIST_SORT_OPTIONS: {
+  value: TierListSortOption;
+  label: string;
+}[] = [
+  { value: "popular", label: "Populaire" },
+  { value: "recent", label: "Récent" },
+  { value: "old", label: "Ancien" },
+  { value: "az", label: "A → Z" },
+  { value: "za", label: "Z → A" },
+];
+
+export interface EditorInitialData {
+  title: string;
+  isPublic: boolean;
+  tiers: TierRank[];
+}
+
+// ─── Props de l'éditeur ─────────────────────────────────────────────────────
+
+export interface EditorProps {
+  mode: "create" | "edit";
+  tierListId?: string;
+  packId: string;
+  initialData?: EditorInitialData;
+}

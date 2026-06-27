@@ -183,7 +183,7 @@ export default function TierListCardItem({
                   style={{ background: `${badgeColor}dd`, color: "#fff" }}
                 >
                   {PackIcon && <PackIcon size={12} />}
-                  <span className="max-w-[90px] truncate">{pack.label}</span>
+                  <span className="max-w-22.5 truncate">{pack.label}</span>
                 </div>
               );
             })()}

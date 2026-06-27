@@ -21,27 +21,14 @@ import type {
   SaveTierListPayload,
 } from "@/types/tierlist";
 import { X, Trash2, Check as CheckIcon, Plus } from "lucide-react";
-import { DEFAULT_TIERS } from "@/types/tierlist";
+import { DEFAULT_TIERS, EditorProps } from "@/types/tierlist";
 import TierRowComponent from "@/components/tier-list/TierRow";
 import CharacterPool from "@/components/tier-list/CharacterPool";
 import SafeImage from "@/components/ui/SafeImage";
 
-interface EditorProps {
-  mode: "create" | "edit";
-  tierListId?: string;
-  packId: string;
-  initialData?: {
-    title: string;
-    isPublic: boolean;
-    tiers: TierRank[];
-  };
-}
-
 function uid() {
   return Math.random().toString(36).slice(2, 9);
 }
-
-// ─── Modal confirmation suppression ──────────────────────────────────────────
 
 function DeleteModal({
   onConfirm,
@@ -94,8 +81,6 @@ function DeleteModal({
     </div>
   );
 }
-
-// ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function TierListEditor({
   mode,
@@ -251,8 +236,10 @@ export default function TierListEditor({
 
   const deleteTier = (id: string) =>
     setTiers((prev) => prev.filter((t) => t.id !== id));
+
   const updateTierLabel = (id: string, label: string) =>
     setTiers((prev) => prev.map((t) => (t.id === id ? { ...t, label } : t)));
+
   const updateTierColor = (id: string, color: string) =>
     setTiers((prev) => prev.map((t) => (t.id === id ? { ...t, color } : t)));
 
@@ -324,7 +311,6 @@ export default function TierListEditor({
 
   return (
     <div className="w-full min-h-screen">
-      {/* Barre top*/}
       <div className="border-b border-white/8 bg-black/92 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-3">
           <input
@@ -336,7 +322,6 @@ export default function TierListEditor({
             className="flex-1 bg-transparent text-white font-bold text-sm focus:outline-none placeholder:text-white/20 min-w-0"
           />
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Annuler — create */}
             {mode === "create" && (
               <button
                 onClick={() => router.push("/tier-list")}
@@ -346,7 +331,6 @@ export default function TierListEditor({
                 <span className="hidden sm:inline">Annuler</span>
               </button>
             )}
-            {/* Supprimer — edit */}
             {mode === "edit" && tierListId && (
               <button
                 onClick={() => setShowDeleteModal(true)}
@@ -356,7 +340,6 @@ export default function TierListEditor({
                 <span className="hidden sm:inline">Supprimer</span>
               </button>
             )}
-            {/* Publier / Mettre à jour */}
             <button
               onClick={handleSave}
               disabled={saving}

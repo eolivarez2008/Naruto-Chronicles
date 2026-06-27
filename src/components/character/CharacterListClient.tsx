@@ -10,70 +10,29 @@ import {
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CharacterCard, CharactersApiResponse } from "@/types/characters";
+import {
+  CharacterSortField,
+  RankType,
+  RANK_OPTIONS,
+  RANK_COLORS,
+  RANK_ICONS,
+  CHARACTER_SORT_OPTIONS,
+} from "@/types/characters";
 import { trackEvent, EVENTS } from "@/lib/analytics";
 import CharacterModal from "@/components/character/CharacterModal";
 import { normalizeString } from "@/lib/network";
-import {
-  ChevronDown,
-  SlidersHorizontal,
-  Leaf,
-  Search,
-  Check,
-  Filter,
-  BookOpen,
-  Zap,
-  Shield,
-  Flame,
-  Crown,
-  type LucideIcon,
-} from "lucide-react";
+import { Leaf } from "lucide-react";
+import FilterToolbar from "@/components/ui/FilterToolbar";
+import type { FilterOption } from "@/components/ui/FilterToolbar";
 
 const LIMIT = 40;
 const FALLBACK = "/logo/favicon-naruto.png";
 
-type SortField = "popularity" | "name_asc" | "name_desc";
-type RankType = "" | "Academy Student" | "Genin" | "Chūnin" | "Jōnin" | "Kage";
-
-const RANK_OPTIONS: RankType[] = [
-  "Academy Student",
-  "Genin",
-  "Chūnin",
-  "Jōnin",
-  "Kage",
-];
-
-const RANK_COLORS: Record<RankType, string> = {
-  "": "#ffffff",
-  "Academy Student": "#10b981",
-  Genin: "#3b82f6",
-  Chūnin: "#eab308",
-  Jōnin: "#f97316",
-  Kage: "#ef4444",
-};
-
-const RANK_ICONS: Record<RankType, LucideIcon | null> = {
-  "": Filter,
-  "Academy Student": BookOpen,
-  Genin: Zap,
-  Chūnin: Shield,
-  Jōnin: Flame,
-  Kage: Crown,
-};
-
-const SORT_OPTIONS: { value: SortField; label: string }[] = [
-  { value: "popularity", label: "Popularité" },
-  { value: "name_asc", label: "Nom (A-Z)" },
-  { value: "name_desc", label: "Nom (Z-A)" },
-];
-
-const getRankColor = (rankVal: RankType | ""): string => {
-  if (!rankVal) return "#ffffff";
-  return RANK_COLORS[rankVal] ?? "#ffffff";
-};
-
-// ─── Hook chargement liste ────────────────────────────────────────────────────
-
-function useCharacters(search: string, rank: RankType, sort: SortField) {
+function useCharacters(
+  search: string,
+  rank: RankType,
+  sort: CharacterSortField,
+) {
   const [characters, setCharacters] = useState<CharacterCard[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -142,35 +101,17 @@ function useCharacters(search: string, rank: RankType, sort: SortField) {
   };
 }
 
-// ─── Composant principal ──────────────────────────────────────────────────────
-
 export default function CharacterListClient() {
   const [searchRaw, setSearchRaw] = useState("");
   const [rank, setRank] = useState<RankType>("");
-  const [sort, setSort] = useState<SortField>("popularity");
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isRankOpen, setIsRankOpen] = useState(false);
+  const [sort, setSort] = useState<CharacterSortField>("popularity");
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const search = useDeferredValue(normalizeString(searchRaw));
-  const sortMenuRef = useRef<HTMLDivElement>(null);
-  const rankMenuRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const { characters, loading, loadingMore, loadMore, hasMore, total } =
     useCharacters(search, rank, sort);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (sortMenuRef.current && !sortMenuRef.current.contains(target))
-        setIsSortOpen(false);
-      if (rankMenuRef.current && !rankMenuRef.current.contains(target))
-        setIsRankOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -185,160 +126,33 @@ export default function CharacterListClient() {
     return () => observer.disconnect();
   }, [loadMore]);
 
-  const currentSortLabel =
-    SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Trier";
-  const currentRankLabel = rank || "Tous les rangs";
+  const rankFilterOptions: FilterOption[] = [
+    { id: "", label: "Tous les rangs" },
+    ...RANK_OPTIONS.map((r) => ({
+      id: r,
+      label: r,
+      icon: RANK_ICONS[r] ?? undefined,
+      color: RANK_COLORS[r],
+    })),
+  ];
 
   return (
     <>
-      {/* Barre de filtres */}
-      <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        <div className="relative flex-1 min-w-35">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
-          />
-          <input
-            type="text"
-            placeholder="Rechercher un ninja..."
-            value={searchRaw}
-            onChange={(e) => {
-              setSearchRaw(e.target.value);
-              if (e.target.value.length > 2)
-                trackEvent(EVENTS.CHARACTER_SEARCH, { query: e.target.value });
-            }}
-            className="w-full bg-white/5 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
-          />
-        </div>
+      <FilterToolbar
+        searchValue={searchRaw}
+        onSearchChange={(v) => {
+          setSearchRaw(v);
+          if (v.length > 2) trackEvent(EVENTS.CHARACTER_SEARCH, { query: v });
+        }}
+        searchPlaceholder="Rechercher un ninja..."
+        sortOptions={CHARACTER_SORT_OPTIONS}
+        sortValue={sort}
+        onSortChange={(v) => setSort(v as CharacterSortField)}
+        filterOptions={rankFilterOptions}
+        filterValue={rank}
+        onFilterChange={(v) => setRank(v as RankType)}
+      />
 
-        {/* Menu tri */}
-        <div className="relative" ref={sortMenuRef}>
-          <button
-            onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-40"
-          >
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal size={16} className="text-white/50 shrink-0" />
-              <span className="hidden sm:inline">{currentSortLabel}</span>
-            </div>
-            <ChevronDown
-              size={12}
-              className={`text-white/30 transition-transform shrink-0 ${isSortOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          <AnimatePresence>
-            {isSortOpen && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-40 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <li key={opt.value}>
-                    <button
-                      onClick={() => {
-                        setSort(opt.value);
-                        setIsSortOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-orange-400 bg-orange-500/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                    >
-                      {opt.label}
-                      {sort === opt.value && <Check size={14} />}
-                    </button>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Menu rang */}
-        <div className="relative" ref={rankMenuRef}>
-          <button
-            onClick={() => setIsRankOpen((v) => !v)}
-            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-50"
-          >
-            <span className="flex items-center gap-2 overflow-hidden">
-              {(() => {
-                const Icon = RANK_ICONS[rank] || Filter;
-                const iconColor = getRankColor(rank);
-
-                return (
-                  <Icon
-                    size={14}
-                    className="shrink-0"
-                    style={{
-                      color:
-                        rank === "" ? "rgba(255, 255, 255, 0.5)" : iconColor,
-                    }}
-                  />
-                );
-              })()}
-              <span className="hidden sm:inline truncate">
-                {currentRankLabel}
-              </span>
-            </span>
-            <ChevronDown
-              size={12}
-              className={`text-white/30 transition-transform shrink-0 ${isRankOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          <AnimatePresence>
-            {isRankOpen && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-48 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
-              >
-                <li>
-                  <button
-                    onClick={() => {
-                      setRank("");
-                      setIsRankOpen(false);
-                    }}
-                    className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${rank === "" ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <Filter size={14} className="text-white/70" />
-                      Tous les rangs
-                    </span>
-                    {rank === "" && <Check size={14} />}
-                  </button>
-                </li>
-                {RANK_OPTIONS.map((opt) => (
-                  <li key={opt}>
-                    <button
-                      onClick={() => {
-                        setRank(opt);
-                        setIsRankOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${rank === opt ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                    >
-                      <span className="flex items-center gap-2">
-                        {(() => {
-                          const Icon = RANK_ICONS[opt];
-                          return Icon ? (
-                            <Icon
-                              size={14}
-                              style={{ color: getRankColor(opt) }}
-                            />
-                          ) : null;
-                        })()}
-                        {opt}
-                      </span>
-                      {rank === opt && <Check size={14} />}
-                    </button>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Grille */}
       {loading ? (
         <SkeletonGrid />
       ) : characters.length === 0 ? (
@@ -383,7 +197,6 @@ export default function CharacterListClient() {
         </>
       )}
 
-      {/* Modal personnage */}
       <CharacterModal
         characterId={selectedId}
         onClose={() => setSelectedId(null)}
@@ -391,8 +204,6 @@ export default function CharacterListClient() {
     </>
   );
 }
-
-// ─── Carte personnage ─────────────────────────────────────────────────────────
 
 export function CharacterCardItem({
   character,

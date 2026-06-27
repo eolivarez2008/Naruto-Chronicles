@@ -4,29 +4,16 @@ import React, { useState, useRef, useEffect, useDeferredValue } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { StoryArc, SagaKey } from "@/types/story";
-import { SAGA_CONFIG, SAGA_ORDER } from "@/types/story";
-import { getArcText } from "@/lib/arcLang";
 import {
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-  Check,
-  X,
-  ArrowRight,
-  Filter,
-  Leaf,
-  Flame,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
-
-type SortOption = "chronologique" | "alpha_asc" | "alpha_desc";
-
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: "chronologique", label: "Ordre chronologique" },
-  { value: "alpha_asc", label: "Nom (A–Z)" },
-  { value: "alpha_desc", label: "Nom (Z–A)" },
-];
+  SAGA_CONFIG,
+  SAGA_ORDER,
+  StorySortOption,
+  STORY_SORT_OPTIONS,
+} from "@/types/story";
+import { getArcText } from "@/lib/arcLang";
+import { ArrowRight, Leaf, Flame, Zap, type LucideIcon } from "lucide-react";
+import FilterToolbar from "@/components/ui/FilterToolbar";
+import type { FilterOption } from "@/components/ui/FilterToolbar";
 
 const SAGA_ICONS: Record<SagaKey, LucideIcon> = {
   naruto: Leaf,
@@ -124,34 +111,10 @@ function SagaDivider({ sagaKey, count }: { sagaKey: SagaKey; count: number }) {
 
 export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
   const [searchRaw, setSearchRaw] = useState("");
-  const [sort, setSort] = useState<SortOption>("chronologique");
+  const [sort, setSort] = useState<StorySortOption>("chronologique");
   const [activeSaga, setActiveSaga] = useState<SagaKey | "all">("all");
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isSagaOpen, setIsSagaOpen] = useState(false);
 
-  const sortMenuRef = useRef<HTMLDivElement>(null);
-  const sagaMenuRef = useRef<HTMLDivElement>(null);
   const search = useDeferredValue(searchRaw.toLowerCase().trim());
-  const currentSortLabel =
-    SORT_OPTIONS.find((opt) => opt.value === sort)?.label ??
-    "Ordre chronologique";
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        sortMenuRef.current &&
-        !sortMenuRef.current.contains(e.target as Node)
-      )
-        setIsSortOpen(false);
-      if (
-        sagaMenuRef.current &&
-        !sagaMenuRef.current.contains(e.target as Node)
-      )
-        setIsSagaOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -161,32 +124,38 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const sagaFilterOptions: FilterOption[] = [
+    { id: "all", label: "Toutes les sagas" },
+    ...SAGA_ORDER.map((key) => ({
+      id: key,
+      label: SAGA_CONFIG[key].label,
+      icon: SAGA_ICONS[key],
+      color: SAGA_CONFIG[key].color,
+    })),
+  ];
+
   const filtered = arcs
     .filter((arc) => {
       if (activeSaga !== "all" && arc.sagaKey !== activeSaga) return false;
-
       if (search) {
         const t = getArcText(arc, "fr");
-
-        const matches =
+        return (
           t.title.toLowerCase().includes(search) ||
-          t.summary.toLowerCase().includes(search);
-
-        if (!matches) return false;
+          t.summary.toLowerCase().includes(search)
+        );
       }
-
       return true;
     })
     .sort((a, b) => {
       if (sort === "alpha_asc") {
-        const aTitle = getArcText(a, "fr").title;
-        const bTitle = getArcText(b, "fr").title;
-        return aTitle.localeCompare(bTitle);
+        return getArcText(a, "fr").title.localeCompare(
+          getArcText(b, "fr").title,
+        );
       }
       if (sort === "alpha_desc") {
-        const aTitle = getArcText(a, "fr").title;
-        const bTitle = getArcText(b, "fr").title;
-        return bTitle.localeCompare(aTitle);
+        return getArcText(b, "fr").title.localeCompare(
+          getArcText(a, "fr").title,
+        );
       }
       const sagaDiff =
         SAGA_ORDER.indexOf(a.sagaKey) - SAGA_ORDER.indexOf(b.sagaKey);
@@ -200,166 +169,17 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-3">
-      <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        <div className="relative flex-1">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"
-          />
-          <input
-            type="text"
-            value={searchRaw}
-            onChange={(e) => setSearchRaw(e.target.value)}
-            placeholder="Rechercher un arc…"
-            className="w-full bg-white/5 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
-          />
-          {searchRaw && (
-            <button
-              onClick={() => setSearchRaw("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 cursor-pointer"
-            >
-              <X size={14} />
-            </button>
-          )}
-        </div>
-
-        <div className="relative" ref={sortMenuRef}>
-          <button
-            onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-55"
-          >
-            <span className="flex items-center gap-2 overflow-hidden text-left">
-              <SlidersHorizontal size={16} className="text-white/50 shrink-0" />
-              <span className="hidden sm:inline truncate">
-                {currentSortLabel}
-              </span>
-            </span>
-            <ChevronDown
-              size={12}
-              className={`text-white/30 transition-transform shrink-0 ${isSortOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          <AnimatePresence>
-            {isSortOpen && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-55 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <li key={opt.value}>
-                    <button
-                      onClick={() => {
-                        setSort(opt.value);
-                        setIsSortOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                    >
-                      {opt.label}
-                      {sort === opt.value && <Check size={14} />}
-                    </button>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="relative" ref={sagaMenuRef}>
-          <button
-            onClick={() => setIsSagaOpen((v) => !v)}
-            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-60"
-          >
-            <span className="flex items-center gap-2 overflow-hidden text-left">
-              {activeSaga === "all" ? (
-                <Filter size={16} className="text-white/50 shrink-0" />
-              ) : (
-                (() => {
-                  const SagaIcon = SAGA_ICONS[activeSaga];
-                  const sagaColor = SAGA_CONFIG[activeSaga]?.color ?? "#fff";
-                  return SagaIcon ? (
-                    <SagaIcon
-                      size={16}
-                      className="shrink-0"
-                      style={{ color: sagaColor }}
-                    />
-                  ) : null;
-                })()
-              )}
-              <span className="hidden sm:inline truncate">
-                {activeSaga === "all"
-                  ? "Toutes les sagas"
-                  : (SAGA_CONFIG[activeSaga]?.label ?? "Toutes les sagas")}
-              </span>
-            </span>
-            <ChevronDown
-              size={12}
-              className={`text-white/30 transition-transform shrink-0 ${isSagaOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          <AnimatePresence>
-            {isSagaOpen && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-60 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
-              >
-                <li>
-                  <button
-                    onClick={() => {
-                      setActiveSaga("all");
-                      setIsSagaOpen(false);
-                    }}
-                    className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${activeSaga === "all" ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <Filter
-                        size={14}
-                        className={
-                          activeSaga === "all"
-                            ? "text-naruto-orange"
-                            : "text-white/70"
-                        }
-                      />
-                      Toutes les sagas
-                    </span>
-                    {activeSaga === "all" && <Check size={14} />}
-                  </button>
-                </li>
-                {SAGA_ORDER.map((key) => {
-                  const config = SAGA_CONFIG[key];
-                  const SagaIcon = SAGA_ICONS[key];
-                  return (
-                    <li key={key}>
-                      <button
-                        onClick={() => {
-                          setActiveSaga(key);
-                          setIsSagaOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${activeSaga === key ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                      >
-                        <span className="flex items-center gap-2">
-                          {SagaIcon && (
-                            <SagaIcon
-                              size={14}
-                              className="shrink-0"
-                              style={{ color: config.color }}
-                            />
-                          )}
-                          {config.label}
-                        </span>
-                        {activeSaga === key && <Check size={14} />}
-                      </button>
-                    </li>
-                  );
-                })}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      <FilterToolbar
+        searchValue={searchRaw}
+        onSearchChange={setSearchRaw}
+        searchPlaceholder="Rechercher un arc…"
+        sortOptions={STORY_SORT_OPTIONS}
+        sortValue={sort}
+        onSortChange={(v) => setSort(v as StorySortOption)}
+        filterOptions={sagaFilterOptions}
+        filterValue={activeSaga}
+        onFilterChange={(v) => setActiveSaga(v as SagaKey | "all")}
+      />
 
       {filtered.length === 0 ? (
         <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">

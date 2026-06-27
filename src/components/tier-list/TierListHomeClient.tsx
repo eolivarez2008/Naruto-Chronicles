@@ -9,25 +9,22 @@ import BaseModal from "@/components/ui/BaseModal";
 import PageHero from "@/components/ui/PageHero";
 import type { TierListCard, TierListsApiResponse } from "@/types/tierlist";
 import { TIER_LIST_PACKS } from "@/types/tierlist";
+import type { TierListSortOption } from "@/types/tierlist";
+import { TIER_LIST_SORT_OPTIONS } from "@/types/tierlist";
 import {
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-  Check,
   Plus,
   Globe,
   User,
-  X,
   Pencil,
   List,
   Heart,
   Lock,
-  Filter,
+  Check,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import FilterToolbar from "@/components/ui/FilterToolbar";
+import type { FilterOption } from "@/components/ui/FilterToolbar";
 
 type Tab = "mes-listes" | "decouvrir";
-type SortOption = "popular" | "recent" | "oldest" | "az" | "za";
 
 interface Props {
   myCreatedLists: Array<TierListCard & { tiersData: string }>;
@@ -35,7 +32,20 @@ interface Props {
   isLoggedIn: boolean;
 }
 
-// ─── Modal création ───────────────────────────────────────────────────────────
+function getPackColor(packId: string): string {
+  const pack = TIER_LIST_PACKS.find((item) => item.id === packId);
+  if (!pack) return "#ffffff";
+  switch (pack.filter.type) {
+    case "random":
+      return "#d97706";
+    case "popular":
+      return "#8b5cf6";
+    case "kage":
+      return "#06b6d4";
+    default:
+      return "#ffffff";
+  }
+}
 
 function CreateModal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
@@ -144,46 +154,6 @@ function CreateModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-// ─── Section Découvrir ────────────────────────────────────────────────────────
-
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: "popular", label: "Popularité" },
-  { value: "recent", label: "Nouveautés" },
-  { value: "oldest", label: "Anciennetés" },
-  { value: "az", label: "Nom (A-Z)" },
-  { value: "za", label: "Nom (Z-A)" },
-];
-
-type PackFilterOption = {
-  id: string;
-  label: string;
-  icon?: LucideIcon;
-};
-
-const PACK_FILTER_OPTIONS: PackFilterOption[] = [
-  { id: "all", label: "Tous les packs" },
-  ...TIER_LIST_PACKS.map((pack) => ({
-    id: pack.id,
-    label: pack.label,
-    icon: pack.icon,
-  })),
-];
-
-const getPackColor = (packId: string) => {
-  const pack = TIER_LIST_PACKS.find((item) => item.id === packId);
-  if (!pack) return "bg-white/10";
-  switch (pack.filter.type) {
-    case "random":
-      return "#d97706";
-    case "popular":
-      return "#8b5cf6";
-    case "kage":
-      return "#06b6d4";
-    default:
-      return "bg-white/10";
-  }
-};
-
 function DiscoverSection() {
   const [lists, setLists] = useState<
     Array<TierListCard & { tiersData?: string }>
@@ -193,39 +163,25 @@ function DiscoverSection() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [sort, setSort] = useState<SortOption>("popular");
+  const [sort, setSort] = useState<TierListSortOption>("popular");
   const [pack, setPack] = useState<string>("all");
   const [searchRaw, setSearchRaw] = useState("");
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isPackOpen, setIsPackOpen] = useState(false);
-  const sortMenuRef = useRef<HTMLDivElement>(null);
-  const packMenuRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const currentSortLabel =
-    SORT_OPTIONS.find((s) => s.value === sort)?.label ?? "Trier";
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        sortMenuRef.current &&
-        !sortMenuRef.current.contains(e.target as Node)
-      )
-        setIsSortOpen(false);
-      if (
-        packMenuRef.current &&
-        !packMenuRef.current.contains(e.target as Node)
-      )
-        setIsPackOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  const packFilterOptions: FilterOption[] = [
+    { id: "all", label: "Tous les packs" },
+    ...TIER_LIST_PACKS.map((p) => ({
+      id: p.id,
+      label: p.label,
+      icon: p.icon,
+      color: getPackColor(p.id),
+    })),
+  ];
 
   const fetchPage = useCallback(
     async (
       pageNum: number,
-      currentSort: SortOption,
+      currentSort: TierListSortOption,
       currentSearch: string,
       currentPack: string,
       reset = false,
@@ -289,147 +245,17 @@ function DiscoverSection() {
 
   return (
     <div>
-      <div className="relative z-110 mb-8 flex flex-wrap gap-2 sm:gap-3 items-center bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        <div className="relative flex-1">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"
-          />
-          <input
-            type="text"
-            value={searchRaw}
-            onChange={(e) => setSearchRaw(e.target.value)}
-            placeholder="Rechercher une tier list…"
-            className="w-full bg-white/5 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
-          />
-          {searchRaw && (
-            <button
-              onClick={() => setSearchRaw("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 cursor-pointer"
-            >
-              <X size={14} />
-            </button>
-          )}
-        </div>
-
-        <div className="relative" ref={sortMenuRef}>
-          <button
-            onClick={() => setIsSortOpen((v) => !v)}
-            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-40"
-          >
-            <span className="flex items-center gap-2 overflow-hidden text-left">
-              <SlidersHorizontal size={16} className="text-white/50 shrink-0" />
-              <span className="hidden sm:inline truncate">
-                {currentSortLabel}
-              </span>
-            </span>
-            <ChevronDown
-              size={12}
-              className={`text-white/30 transition-transform shrink-0 ${isSortOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          <AnimatePresence>
-            {isSortOpen && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-40 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <li key={opt.value}>
-                    <button
-                      onClick={() => {
-                        setSort(opt.value);
-                        setIsSortOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                    >
-                      {opt.label}
-                      {sort === opt.value && <Check size={14} />}
-                    </button>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="relative" ref={packMenuRef}>
-          <button
-            onClick={() => setIsPackOpen((v) => !v)}
-            className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-50"
-          >
-            <span className="flex items-center gap-2 overflow-hidden text-left">
-              {pack === "all" ? (
-                <Filter size={14} className="text-white/50 shrink-0" />
-              ) : (
-                (() => {
-                  const packOption = PACK_FILTER_OPTIONS.find(
-                    (opt) => opt.id === pack,
-                  );
-                  const PackIcon = packOption?.icon;
-                  const packColor = getPackColor(pack);
-                  return PackIcon ? (
-                    <PackIcon
-                      size={14}
-                      className="shrink-0"
-                      style={{ color: packColor }}
-                    />
-                  ) : null;
-                })()
-              )}
-              <span className="hidden sm:inline truncate">
-                {PACK_FILTER_OPTIONS.find((opt) => opt.id === pack)?.label ??
-                  "Tous les packs"}
-              </span>
-            </span>
-            <ChevronDown
-              size={12}
-              className={`text-white/30 transition-transform shrink-0 ${isPackOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          <AnimatePresence>
-            {isPackOpen && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                className="absolute top-full right-0 mt-2 w-48 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
-              >
-                {PACK_FILTER_OPTIONS.map((opt) => {
-                  const isDefault = opt.id === "all";
-                  const Icon = isDefault ? Filter : opt.icon;
-                  const optionColor = getPackColor(opt.id);
-                  return (
-                    <li key={opt.id}>
-                      <button
-                        onClick={() => {
-                          setPack(opt.id);
-                          setIsPackOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${pack === opt.id ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                      >
-                        <span className="flex items-center gap-2">
-                          {Icon ? (
-                            <Icon
-                              size={14}
-                              className={!isDefault ? "" : "text-white/70"}
-                              style={!isDefault ? { color: optionColor } : {}}
-                            />
-                          ) : null}
-                          {opt.label}
-                        </span>
-                        {pack === opt.id && <Check size={14} />}
-                      </button>
-                    </li>
-                  );
-                })}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      <FilterToolbar
+        searchValue={searchRaw}
+        onSearchChange={setSearchRaw}
+        searchPlaceholder="Rechercher une tier list…"
+        sortOptions={TIER_LIST_SORT_OPTIONS}
+        sortValue={sort}
+        onSortChange={(v) => setSort(v as TierListSortOption)}
+        filterOptions={packFilterOptions}
+        filterValue={pack}
+        onFilterChange={setPack}
+      />
 
       {total > 0 && (
         <p className="text-white/20 text-xs mb-4">
@@ -473,8 +299,6 @@ function DiscoverSection() {
     </div>
   );
 }
-
-// ─── Section Mes Listes ───────────────────────────────────────────────────────
 
 function MyListsSection({
   createdLists,
@@ -626,8 +450,6 @@ function MyListsSection({
   );
 }
 
-// ─── Squelette ────────────────────────────────────────────────────────────────
-
 function GridSkeleton() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -650,8 +472,6 @@ function GridSkeleton() {
   );
 }
 
-// ─── Composant principal ──────────────────────────────────────────────────────
-
 export default function TierListHomeClient({
   myCreatedLists: initialMyCreatedLists,
   myLikedLists: initialMyLikedLists,
@@ -665,7 +485,6 @@ export default function TierListHomeClient({
     { id: "decouvrir", label: "Découvrir", icon: Globe },
   ];
 
-  // Bouton CTA rendu ici côté client — accès direct au state showCreate
   const createButton = isLoggedIn ? (
     <button
       onClick={() => setShowCreate(true)}
@@ -685,7 +504,6 @@ export default function TierListHomeClient({
 
   return (
     <div className="w-full">
-      {/* Hero unifié via PageHero — action = bouton client qui ouvre la modal */}
       <PageHero
         eyebrow="Communauté"
         title="Tier Lists"
@@ -693,7 +511,6 @@ export default function TierListHomeClient({
         action={createButton}
       />
 
-      {/* Onglets */}
       <div className="border-b border-white/6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex">
@@ -729,7 +546,6 @@ export default function TierListHomeClient({
         </div>
       </div>
 
-      {/* Contenu */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AnimatePresence mode="wait">
           {tab === "mes-listes" && (

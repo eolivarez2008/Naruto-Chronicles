@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { StoryArc } from "@/types/story";
+import type { TocItem, ArcNeighbor, ContentBlock } from "@/types/story";
 import { getArcText } from "@/lib/arcLang";
 import {
   ChevronLeft,
@@ -15,30 +16,13 @@ import {
   ChevronUp,
 } from "lucide-react";
 
-interface TocItem {
-  id: string;
-  text: string;
-  level: 2 | 3;
-}
-
-interface Neighbor {
-  slug: string;
-  title: string;
-}
-
 interface Props {
   arc: StoryArc;
-  prev: Neighbor | null;
-  next: Neighbor | null;
+  prev: ArcNeighbor | null;
+  next: ArcNeighbor | null;
   sagaColor: string;
   sagaLabel: string;
 }
-
-type Block =
-  | { type: "h2"; id: string; text: string }
-  | { type: "h3"; id: string; text: string }
-  | { type: "p"; text: string }
-  | { type: "ul"; items: string[] };
 
 function slugify(text: string): string {
   return text
@@ -49,9 +33,12 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
-function parseContent(content: string): { blocks: Block[]; toc: TocItem[] } {
+function parseContent(content: string): {
+  blocks: ContentBlock[];
+  toc: TocItem[];
+} {
   const rawBlocks = content.split("\n\n").filter((b) => b.trim().length > 0);
-  const blocks: Block[] = [];
+  const blocks: ContentBlock[] = [];
   const toc: TocItem[] = [];
   const usedIds = new Map<string, number>();
 
@@ -96,7 +83,7 @@ function ContentRenderer({
   blocks,
   sagaColor,
 }: {
-  blocks: Block[];
+  blocks: ContentBlock[];
   sagaColor: string;
 }) {
   return (
@@ -220,15 +207,15 @@ function ArcNavigation({
   next,
   color,
 }: {
-  prev: Neighbor | null;
-  next: Neighbor | null;
+  prev: ArcNeighbor | null;
+  next: ArcNeighbor | null;
   color: string;
 }) {
   function Btn({
     item,
     direction,
   }: {
-    item: Neighbor | null;
+    item: ArcNeighbor | null;
     direction: "prev" | "next";
   }) {
     const isDisabled = !item;

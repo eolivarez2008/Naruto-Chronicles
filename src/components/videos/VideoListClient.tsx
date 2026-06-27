@@ -22,17 +22,12 @@ import {
   SORT_OPTIONS,
   VIDEO_CATEGORIES,
 } from "@/types/videos";
-import {
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-  Check,
-  Clapperboard,
-  Filter,
-} from "lucide-react";
+import { Clapperboard } from "lucide-react";
 import VideoCardItem from "@/components/videos/VideoCard";
 import VideoModal from "@/components/videos/VideoModal";
 import { trackEvent, EVENTS } from "@/lib/analytics";
+import FilterToolbar from "@/components/ui/FilterToolbar";
+import type { FilterOption } from "@/components/ui/FilterToolbar";
 
 const LIMIT = 12;
 
@@ -132,34 +127,13 @@ export default function VideoListClient() {
   const [searchRaw, setSearchRaw] = useState("");
   const [category, setCategory] = useState<VideoCategory | "all">("all");
   const [sort, setSort] = useState<VideoSortField>("popular");
-  const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const search = useDeferredValue(searchRaw);
-  const sortMenuRef = useRef<HTMLDivElement>(null);
-  const categoryMenuRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
   const { videos, loading, loadingMore, loadMore, hasMore, total, toggleLike } =
     useVideos(search, category, sort);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        sortMenuRef.current &&
-        !sortMenuRef.current.contains(e.target as Node)
-      )
-        setIsSortOpen(false);
-      if (
-        categoryMenuRef.current &&
-        !categoryMenuRef.current.contains(e.target as Node)
-      )
-        setIsCategoryOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -184,169 +158,36 @@ export default function VideoListClient() {
     window.history.pushState({}, "", "/videos");
   };
 
-  const currentSortLabel =
-    SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Trier";
-
-  const getCategoryColor = (cat: VideoCategory | "all"): string => {
-    if (cat === "all") return "#text-white/70";
-    return CATEGORY_COLORS[cat] ?? "#text-white/70";
-  };
+  const categoryFilterOptions: FilterOption[] = [
+    { id: "all", label: CATEGORY_LABELS["all"] },
+    ...VIDEO_CATEGORIES.map((cat) => ({
+      id: cat,
+      label: CATEGORY_LABELS[cat],
+      icon: CATEGORY_ICONS[cat],
+      color: CATEGORY_COLORS[cat],
+    })),
+  ];
 
   return (
     <>
-      {/* Barre de filtres */}
-      <div className="relative z-110 mb-8 flex flex-wrap items-center gap-2 sm:gap-3 bg-[#050505]/80 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/10">
-        <div className="relative flex-1 min-w-40">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
-          />
-          <input
-            type="text"
-            placeholder="Rechercher une vidéo..."
-            value={searchRaw}
-            onChange={(e) => {
-              setSearchRaw(e.target.value);
-              if (e.target.value.length > 2)
-                trackEvent(EVENTS.VIDEO_SEARCH, { query: e.target.value });
-            }}
-            className="w-full bg-white/5 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
-          />
-        </div>
+      <FilterToolbar
+        searchValue={searchRaw}
+        onSearchChange={(v) => {
+          setSearchRaw(v);
+          if (v.length > 2) trackEvent(EVENTS.VIDEO_SEARCH, { query: v });
+        }}
+        searchPlaceholder="Rechercher une vidéo..."
+        sortOptions={SORT_OPTIONS}
+        sortValue={sort}
+        onSortChange={(v) => setSort(v as VideoSortField)}
+        filterOptions={categoryFilterOptions}
+        filterValue={category}
+        onFilterChange={(v) => {
+          setCategory(v as VideoCategory | "all");
+          trackEvent(EVENTS.VIDEO_FILTER, { category: v });
+        }}
+      />
 
-        <div className="flex flex-wrap gap-2">
-          {/* Menu tri */}
-          <div className="relative" ref={sortMenuRef}>
-            <button
-              onClick={() => setIsSortOpen((v) => !v)}
-              className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-40"
-            >
-              <span className="flex items-center gap-2 overflow-hidden">
-                <SlidersHorizontal
-                  size={16}
-                  className="text-white/50 shrink-0"
-                />
-                <span className="hidden sm:inline truncate">
-                  {currentSortLabel}
-                </span>
-              </span>
-              <ChevronDown
-                size={12}
-                className={`text-white/30 transition-transform shrink-0 ${isSortOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            <AnimatePresence>
-              {isSortOpen && (
-                <motion.ul
-                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                  className="absolute top-full right-0 mt-2 w-44 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
-                >
-                  {SORT_OPTIONS.map((opt) => (
-                    <li key={opt.value}>
-                      <button
-                        onClick={() => {
-                          setSort(opt.value);
-                          setIsSortOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-left transition-colors cursor-pointer ${sort === opt.value ? "text-naruto-orange bg-[rgba(255,102,0,0.1)]" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                      >
-                        {opt.label}
-                        {sort === opt.value && <Check size={14} />}
-                      </button>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Menu catégories */}
-          <div className="relative" ref={categoryMenuRef}>
-            <button
-              onClick={() => setIsCategoryOpen((v) => !v)}
-              className="flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 sm:min-w-50"
-            >
-              <span className="flex items-center gap-2 overflow-hidden text-left">
-                {category === "all" ? (
-                  <Filter size={14} className="text-white/50 shrink-0" />
-                ) : (
-                  (() => {
-                    const Icon = CATEGORY_ICONS[category];
-                    const catColor = getCategoryColor(category);
-                    return Icon ? (
-                      <Icon
-                        size={14}
-                        className="shrink-0"
-                        style={{ color: catColor }}
-                      />
-                    ) : null;
-                  })()
-                )}
-                <span className="hidden sm:inline truncate">
-                  {CATEGORY_LABELS[category]}
-                </span>
-              </span>
-              <ChevronDown
-                size={12}
-                className={`text-white/30 transition-transform shrink-0 ${isCategoryOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            <AnimatePresence>
-              {isCategoryOpen && (
-                <motion.ul
-                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                  className="absolute top-full right-0 mt-2 w-48 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-120"
-                >
-                  {(
-                    [
-                      { id: "all", label: "all" },
-                      ...VIDEO_CATEGORIES.map((cat) => ({
-                        id: cat,
-                        label: cat,
-                      })),
-                    ] as const
-                  ).map((item) => {
-                    const cat = item.id as VideoCategory | "all";
-                    const isDefault = cat === "all";
-                    const Icon = isDefault ? Filter : CATEGORY_ICONS[cat];
-                    const catColor = getCategoryColor(cat);
-                    return (
-                      <li key={cat}>
-                        <button
-                          onClick={() => {
-                            setCategory(cat);
-                            setIsCategoryOpen(false);
-                            trackEvent(EVENTS.VIDEO_FILTER, { category: cat });
-                          }}
-                          className={`w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors cursor-pointer ${category === cat ? "text-naruto-orange bg-naruto-orange/10" : "text-white/70 hover:bg-white/5 hover:text-white"}`}
-                        >
-                          <span className="flex items-center gap-2">
-                            {Icon ? (
-                              <Icon
-                                size={14}
-                                className={!isDefault ? "" : "text-white/70"}
-                                style={!isDefault ? { color: catColor } : {}}
-                              />
-                            ) : null}
-                            {CATEGORY_LABELS[cat]}
-                          </span>
-                          {category === cat && <Check size={14} />}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-
-      {/* Grille */}
       {loading ? (
         <VideoSkeletonGrid />
       ) : !videos || videos.length === 0 ? (

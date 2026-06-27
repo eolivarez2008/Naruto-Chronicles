@@ -11,9 +11,13 @@ import {
   ThermometerSnowflake,
   Magnet,
   CircleSlash,
-  LucideIcon,
   Sun,
   Moon,
+  Filter,
+  BookOpen,
+  Shield,
+  Crown,
+  type LucideIcon,
 } from "lucide-react";
 
 // ─── Carte personnage (grille) ────────────────────────────────────────────────
@@ -105,3 +109,50 @@ export const NATURE_ICONS: Record<string, LucideIcon> = {
   Yang: Sun,
   "Yin–Yang": CircleSlash,
 };
+
+// ─── Types pour la toolbar ───────────────────────────────────────────────
+
+export type CharacterSortField = "popularity" | "name_asc" | "name_desc";
+
+export type RankType =
+  | ""
+  | "Academy Student"
+  | "Genin"
+  | "Chūnin"
+  | "Jōnin"
+  | "Kage";
+
+export const RANK_OPTIONS: RankType[] = [
+  "Academy Student",
+  "Genin",
+  "Chūnin",
+  "Jōnin",
+  "Kage",
+];
+
+export const RANK_COLORS: Record<RankType, string> = {
+  "": "#ffffff",
+  "Academy Student": "#10b981",
+  Genin: "#3b82f6",
+  Chūnin: "#eab308",
+  Jōnin: "#f97316",
+  Kage: "#ef4444",
+};
+
+export const RANK_ICONS: Record<RankType, LucideIcon | null> = {
+  "": Filter,
+  "Academy Student": BookOpen,
+  Genin: Zap,
+  Chūnin: Shield,
+  Jōnin: Flame,
+  Kage: Crown,
+};
+
+export const CHARACTER_SORT_OPTIONS: {
+  value: CharacterSortField;
+  label: string;
+}[] = [
+  { value: "popularity", label: "Popularité" },
+  { value: "name_asc", label: "Nom (A-Z)" },
+  { value: "name_desc", label: "Nom (Z-A)" },
+];
