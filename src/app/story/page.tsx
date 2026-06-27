@@ -1,38 +1,80 @@
 import type { Metadata } from "next";
+import prisma from "@/lib/prisma";
+import type { StoryArc } from "@/types/story";
+import { SAGA_ORDER } from "@/types/story";
 import PageHero from "@/components/ui/PageHero";
-import GlassCard from "@/components/ui/GlassCard";
-import { STORY_PARAGRAPHS } from "@/lib/homeData";
+import StoryListClient from "@/components/story/StoryListClient";
+import { BookOpen } from "lucide-react";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Histoire",
   description:
-    "Découvrez l'histoire complète de Naruto Uzumaki depuis ses origines jusqu'à son ascension en tant que Hokage.",
+    "Explorez l'histoire complète de la série, de l'Académie Ninja à la Quatrième Grande Guerre Ninja.",
 };
 
-export default function StoryPage() {
+async function getArcs(): Promise<StoryArc[]> {
+  const rows = await prisma.storyArc.findMany({
+    orderBy: [{ sagaKey: "asc" }, { order: "asc" }],
+    select: {
+      id: true,
+      slug: true,
+      order: true,
+      sagaKey: true,
+      title: true,
+      summary: true,
+      content: true,
+      titleFr: true,
+      summaryFr: true,
+      contentFr: true,
+      fetchedAt: true,
+    },
+  });
+
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    order: r.order,
+    sagaKey: r.sagaKey as StoryArc["sagaKey"],
+    title: r.title,
+    summary: r.summary,
+    content: r.content,
+    titleFr: r.titleFr ?? undefined,
+    summaryFr: r.summaryFr ?? undefined,
+    contentFr: r.contentFr ?? undefined,
+    fetchedAt: r.fetchedAt,
+  }));
+}
+
+export default async function StoryPage() {
+  const arcs = await getArcs();
+
   return (
     <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-16">
       <PageHero
         eyebrow="Chroniques"
         title="Histoire"
-        description="Découvrez l'épopée complète de Naruto Uzumaki, depuis ses origines d'orphelin rejeté jusqu'à son ascension légendaire en tant que Septième Hokage."
+        description="Explorez l'histoire complète de la série Naruto, Shippuden et Boruto."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <GlassCard className="p-6 md:p-10">
-          <div className="space-y-5">
-            {STORY_PARAGRAPHS.map((p, i) => (
-              <p
-                key={i}
-                className="text-white/70 leading-[1.85] text-[15px] fade-in-up"
-                style={{ animationDelay: `${i * 60}ms` }}
-              >
-                {p}
-              </p>
-            ))}
-          </div>
-        </GlassCard>
-      </div>
+      {arcs.length === 0 ? <EmptyState /> : <StoryListClient arcs={arcs} />}
     </main>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-32 text-center gap-6">
+      <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+        <BookOpen size={24} className="text-orange-500" />
+      </div>
+      <div>
+        <h2 className="text-xl font-black text-white mb-2">Aucun arc chargé</h2>
+        <p className="text-white/40 text-sm">
+          Vérifie la base de données ou Prisma.
+        </p>
+      </div>
+    </div>
   );
 }

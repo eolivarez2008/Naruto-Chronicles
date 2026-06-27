@@ -169,3 +169,24 @@ model TierListLike {
   @@index([userId])
   @@index([tierListId])
 }
+
+model StoryArc {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+
+  order         Int
+  sagaKey       String
+
+  title         String
+  summary       String
+  content       String   @default("")
+
+  titleFr     String?
+  summaryFr   String?
+  contentFr   String?
+
+  fetchedAt     DateTime @default(now())
+  lastUpdated   DateTime @default(now()) @updatedAt
+
+  @@index([sagaKey, order])
+}
