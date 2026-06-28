@@ -8,7 +8,6 @@ import {
   useDeferredValue,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
 import type {
   VideoCard,
   VideoCategory,
@@ -28,6 +27,7 @@ import VideoModal from "@/components/videos/VideoModal";
 import { trackEvent, EVENTS } from "@/lib/analytics";
 import FilterToolbar from "@/components/ui/FilterToolbar";
 import type { FilterOption } from "@/components/ui/FilterToolbar";
+import Pagination from "@/components/ui/Pagination";
 
 const LIMIT = 12;
 
@@ -35,68 +35,51 @@ function useVideos(
   search: string,
   category: VideoCategory | "all",
   sort: VideoSortField,
+  page: number,
 ) {
   const [videos, setVideos] = useState<VideoCard[]>([]);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  const fetchPage = useCallback(
-    async (pageNum: number) => {
-      if (abortRef.current) abortRef.current.abort();
-      const controller = new AbortController();
-      abortRef.current = controller;
+  const fetchPage = useCallback(async () => {
+    if (abortRef.current) abortRef.current.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
-      if (pageNum === 1) setLoading(true);
-      else setLoadingMore(true);
+    setLoading(true);
 
-      const params = new URLSearchParams({
-        page: String(pageNum),
-        limit: String(LIMIT),
-        sort,
-        ...(search && { search }),
-        ...(category !== "all" && { category }),
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(LIMIT),
+      sort,
+      ...(search && { search }),
+      ...(category !== "all" && { category }),
+    });
+
+    try {
+      const res = await fetch(`/api/videos?${params}`, {
+        signal: controller.signal,
       });
-
-      try {
-        const res = await fetch(`/api/videos?${params}`, {
-          signal: controller.signal,
-        });
-        if (!res.ok) {
-          setVideos([]);
-          return;
-        }
-
-        const json: VideosApiResponse = await res.json();
-        setVideos((prev) =>
-          pageNum === 1 ? (json.data ?? []) : [...prev, ...(json.data ?? [])],
-        );
-        setTotalPages(json.meta.totalPages);
-        setTotal(json.meta.total);
-        setPage(pageNum);
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === "AbortError") return;
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-          setLoadingMore(false);
-        }
+      if (!res.ok) {
+        setVideos([]);
+        return;
       }
-    },
-    [search, category, sort],
-  );
+      const json: VideosApiResponse = await res.json();
+      setVideos(json.data ?? []);
+      setTotalPages(json.meta.totalPages);
+      setTotal(json.meta.total);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") return;
+    } finally {
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }, [search, category, sort, page]);
 
   useEffect(() => {
-    setVideos([]);
-    fetchPage(1);
+    fetchPage();
   }, [fetchPage]);
-
-  const loadMore = useCallback(() => {
-    if (!loadingMore && page < totalPages) fetchPage(page + 1);
-  }, [loadingMore, page, totalPages, fetchPage]);
 
   const toggleLike = useCallback(
     (videoId: string, liked: boolean, newCount: number) => {
@@ -111,42 +94,32 @@ function useVideos(
     [],
   );
 
-  return {
-    videos,
-    loading,
-    loadingMore,
-    loadMore,
-    hasMore: page < totalPages,
-    total,
-    toggleLike,
-  };
+  return { videos, loading, totalPages, total, toggleLike };
 }
 
 export default function VideoListClient() {
-  const router = useRouter();
   const [searchRaw, setSearchRaw] = useState("");
   const [category, setCategory] = useState<VideoCategory | "all">("all");
   const [sort, setSort] = useState<VideoSortField>("popular");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   const search = useDeferredValue(searchRaw);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  const { videos, loading, loadingMore, loadMore, hasMore, total, toggleLike } =
-    useVideos(search, category, sort);
 
   useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) loadMore();
-      },
-      { rootMargin: "400px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [loadMore]);
+    setPage(1);
+  }, [search, category, sort]);
+
+  const { videos, loading, totalPages, total, toggleLike } = useVideos(
+    search,
+    category,
+    sort,
+    page,
+  );
+
+  const handlePageChange = (p: number) => {
+    setPage(p);
+  };
 
   const handleCardClick = (id: string) => {
     setSelectedId(id);
@@ -194,8 +167,12 @@ export default function VideoListClient() {
         <VideoEmpty />
       ) : (
         <>
+          <p className="text-white/20 text-xs mb-4 font-mono">
+            {total.toLocaleString()} vidéos · page {page}/{totalPages}
+          </p>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence initial={false}>
               {videos.map((video, i) => (
                 <VideoCardItem
                   key={video.id}
@@ -208,19 +185,11 @@ export default function VideoListClient() {
             </AnimatePresence>
           </div>
 
-          <div ref={sentinelRef} className="h-1 mt-4" aria-hidden />
-
-          {loadingMore && (
-            <div className="flex justify-center py-6">
-              <div className="w-7 h-7 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
-            </div>
-          )}
-
-          {!hasMore && videos.length > 0 && (
-            <p className="text-center text-white/20 text-xs py-8 font-mono">
-              — {total.toLocaleString()} vidéos affichées —
-            </p>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </>
       )}
 

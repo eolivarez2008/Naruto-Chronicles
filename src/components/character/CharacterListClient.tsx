@@ -24,6 +24,7 @@ import { normalizeString } from "@/lib/network";
 import { Leaf } from "lucide-react";
 import FilterToolbar from "@/components/ui/FilterToolbar";
 import type { FilterOption } from "@/components/ui/FilterToolbar";
+import Pagination from "@/components/ui/Pagination";
 
 const LIMIT = 40;
 const FALLBACK = "/logo/favicon-naruto.png";
@@ -32,73 +33,49 @@ function useCharacters(
   search: string,
   rank: RankType,
   sort: CharacterSortField,
+  page: number,
 ) {
   const [characters, setCharacters] = useState<CharacterCard[]>([]);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  const fetchPage = useCallback(
-    async (pageNum: number) => {
-      if (abortRef.current) abortRef.current.abort();
-      const controller = new AbortController();
-      abortRef.current = controller;
+  const fetchPage = useCallback(async () => {
+    if (abortRef.current) abortRef.current.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
-      if (pageNum === 1) setLoading(true);
-      else setLoadingMore(true);
+    setLoading(true);
 
-      const params = new URLSearchParams({
-        page: String(pageNum),
-        limit: String(LIMIT),
-        ...(search && { search }),
-        ...(rank && { rank }),
-        sort,
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(LIMIT),
+      ...(search && { search }),
+      ...(rank && { rank }),
+      sort,
+    });
+
+    try {
+      const res = await fetch(`/api/characters?${params}`, {
+        signal: controller.signal,
       });
-
-      try {
-        const res = await fetch(`/api/characters?${params}`, {
-          signal: controller.signal,
-        });
-        const json: CharactersApiResponse = await res.json();
-
-        setCharacters((prev) =>
-          pageNum === 1 ? json.data : [...prev, ...json.data],
-        );
-        setTotalPages(json.meta.totalPages);
-        setTotal(json.meta.total);
-        setPage(pageNum);
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === "AbortError") return;
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-          setLoadingMore(false);
-        }
-      }
-    },
-    [search, rank, sort],
-  );
+      const json: CharactersApiResponse = await res.json();
+      setCharacters(json.data);
+      setTotalPages(json.meta.totalPages);
+      setTotal(json.meta.total);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") return;
+    } finally {
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }, [search, rank, sort, page]);
 
   useEffect(() => {
-    setCharacters([]);
-    fetchPage(1);
+    fetchPage();
   }, [fetchPage]);
 
-  const loadMore = useCallback(() => {
-    if (!loadingMore && page < totalPages) fetchPage(page + 1);
-  }, [loadingMore, page, totalPages, fetchPage]);
-
-  return {
-    characters,
-    loading,
-    loadingMore,
-    loadMore,
-    hasMore: page < totalPages,
-    total,
-  };
+  return { characters, loading, totalPages, total };
 }
 
 export default function CharacterListClient() {
@@ -106,25 +83,24 @@ export default function CharacterListClient() {
   const [rank, setRank] = useState<RankType>("");
   const [sort, setSort] = useState<CharacterSortField>("popularity");
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
 
   const search = useDeferredValue(normalizeString(searchRaw));
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  const { characters, loading, loadingMore, loadMore, hasMore, total } =
-    useCharacters(search, rank, sort);
 
   useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) loadMore();
-      },
-      { rootMargin: "200px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [loadMore]);
+    setPage(1);
+  }, [search, rank, sort]);
+
+  const { characters, loading, totalPages, total } = useCharacters(
+    search,
+    rank,
+    sort,
+    page,
+  );
+
+  const handlePageChange = (p: number) => {
+    setPage(p);
+  };
 
   const rankFilterOptions: FilterOption[] = [
     { id: "", label: "Tous les rangs" },
@@ -159,11 +135,8 @@ export default function CharacterListClient() {
         <EmptyState />
       ) : (
         <>
-          <motion.div
-            layout
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-          >
-            <AnimatePresence mode="popLayout">
+          <motion.div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <AnimatePresence>
               {characters.map((char, i) => (
                 <CharacterCardItem
                   key={char.id}
@@ -181,19 +154,11 @@ export default function CharacterListClient() {
             </AnimatePresence>
           </motion.div>
 
-          <div ref={sentinelRef} className="h-8 mt-4" />
-
-          {loadingMore && (
-            <div className="flex justify-center py-8">
-              <div className="w-10 h-10 rounded-full border-2 border-naruto-orange border-t-transparent animate-spin" />
-            </div>
-          )}
-
-          {!hasMore && characters.length > 0 && (
-            <p className="text-center text-white/20 text-xs py-8 font-mono">
-              — {total.toLocaleString()} personnages affichés —
-            </p>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </>
       )}
 
@@ -218,16 +183,16 @@ export function CharacterCardItem({
 
   return (
     <motion.button
-      layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.2, delay: Math.min(index % LIMIT, 20) * 0.02 }}
+      transition={{ duration: 0.15 }}
       onClick={onClick}
       className="group relative flex flex-col overflow-hidden rounded-xl bg-[#050505] outline-none cursor-pointer"
     >
       <div className="relative w-full aspect-3/4 overflow-hidden">
         <Image
+          priority={index < 5}
           src={imageSrc}
           alt={character.name}
           fill
@@ -254,7 +219,7 @@ export function CharacterCardItem({
 function SkeletonGrid() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-      {Array.from({ length: 20 }).map((_, i) => (
+      {Array.from({ length: LIMIT }).map((_, i) => (
         <div
           key={i}
           className="rounded-xl bg-neutral-900 overflow-hidden animate-pulse"
