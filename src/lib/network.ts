@@ -12,7 +12,13 @@ export async function fetchWithRetry(
   url: string,
   attempt = 0,
 ): Promise<Response> {
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+      Accept: "application/json",
+    },
+  });
 
   if (res.status === 429 && attempt < MAX_RETRY) {
     const retryAfter = parseInt(res.headers.get("retry-after") ?? "0", 10);
@@ -20,9 +26,19 @@ export async function fetchWithRetry(
       retryAfter > 0 ? retryAfter * 1000 : 1_000 * 2 ** attempt,
       MAX_RETRY_WAIT,
     );
+
     console.warn(
       `⏳ 429 — attente ${wait / 1000}s (tentative ${attempt + 1}/${MAX_RETRY})`,
     );
+
+    await sleep(wait);
+    return fetchWithRetry(url, attempt + 1);
+  }
+
+  if (res.status === 403 && attempt < MAX_RETRY) {
+    const wait = 1500 * (attempt + 1);
+    console.warn(`⛔ 403 retry ${attempt + 1}/${MAX_RETRY}`);
+
     await sleep(wait);
     return fetchWithRetry(url, attempt + 1);
   }
@@ -33,7 +49,15 @@ export async function fetchWithRetry(
 // Fetch JSON typé avec retry
 export async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetchWithRetry(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} — ${url}`);
+
+  if (res.status === 403) {
+    throw new Error(`Jikan 403 — accès temporairement bloqué — ${url}`);
+  }
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} — ${url}`);
+  }
+
   return res.json() as Promise<T>;
 }
 

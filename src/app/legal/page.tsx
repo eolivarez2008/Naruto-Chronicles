@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function LegalPage() {
-  const lastUpdated = "25 avril 2026";
+  const lastUpdated = "03 Mai 2026";
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-12 fade-in-up">
@@ -86,7 +86,7 @@ export default function LegalPage() {
                   [
                     "Email, Nom et Avatar",
                     "Google Auth / Identification du compte",
-                    "Durée du compte",
+                    "Jusqu'à suppression du compte",
                   ],
                   [
                     "Tier-Lists",
@@ -99,7 +99,7 @@ export default function LegalPage() {
                     "Jusqu'au retrait",
                   ],
                   [
-                    "Email (Contact)",
+                    "Email et Nom (Contact)",
                     "Formulaire / Répondre à vos demandes",
                     "1 an après l'échange",
                   ],

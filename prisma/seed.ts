@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import axios from "axios";
+import * as cheerio from "cheerio";
 import {
   sleep,
   fetchWithRetry,
@@ -15,8 +17,6 @@ import {
 
 const prisma = new PrismaClient();
 
-const SEED_MAX_RESULTS = 10;
-
 const JIKAN_BASE = "https://api.jikan.moe/v4";
 const DB_BATCH_SIZE = 50;
 
@@ -25,6 +25,8 @@ const SOURCE_SRINIOUSLY =
 const SOURCE_GUSTAVO =
   "https://raw.githubusercontent.com/gustavonobreza/naruto-api/main/src/shared/data/en/prod-V3.json";
 const DATTEBAYO_BASE = "https://dattebayo-api.onrender.com";
+
+const SEED_MAX_RESULTS = 10;
 
 const SAGA_CONFIG = [
   { key: "naruto", id: 20, type: "anime", label: "Naruto" },
@@ -43,7 +45,23 @@ const STORIES_FR: Record<string, string> = {
   tbv: "Trois ans après le cataclysme de l'Omnipotence, Boruto est devenu un fugitif traqué par le monde entier. Devenu plus puissant après son exil avec Sasuke, il revient pour protéger le village de nouvelles menaces divines et restaurer la vérité.",
 };
 
-// ─── Types sources personnages ────────────────────────────────────────────────
+const WIKI_API_URL = "https://naruto.fandom.com/api.php";
+const WIKI_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+};
+
+// ─── CLI flags ────────────────────────────────────────────────────────────────
+
+const args = process.argv.slice(2);
+const SKIP = {
+  characters: args.includes("--skip-characters"),
+  sagas: args.includes("--skip-sagas"),
+  videos: args.includes("--skip-videos"),
+  story: args.includes("--skip-story"),
+};
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface SriniouslyChar {
   id: number;
@@ -126,7 +144,9 @@ interface MergedCharacter {
   lastUpdated: Date;
 }
 
-// ─── Utilitaires personnages ──────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 1 — PERSONNAGES
+// ─────────────────────────────────────────────────────────────────────────────
 
 function mergeArraysUniq<T>(...arrays: (T[] | undefined | null)[]): T[] {
   const seen = new Set<string>();
@@ -191,8 +211,6 @@ function normalizeRankRecord(
   }
   return result;
 }
-
-// ─── Fetch sources personnages ────────────────────────────────────────────────
 
 async function fetchSriniously(): Promise<Map<number, SriniouslyChar>> {
   process.stdout.write("  📥 [1/3] sriniously... ");
@@ -390,9 +408,22 @@ async function upsertCharacters(characters: MergedCharacter[]): Promise<void> {
   );
 }
 
-// ─── Sagas ────────────────────────────────────────────────────────────────────
+async function seedCharacters(): Promise<void> {
+  const [s1, s2, s3] = await Promise.all([
+    fetchSriniously(),
+    fetchGustavo(),
+    fetchDattebayo(),
+  ]);
+  const popularityScores = await fetchJikanPopularity();
+  const characters = buildCharacters(s1, s2, s3, popularityScores);
+  await upsertCharacters(characters);
+}
 
-async function syncSagas(): Promise<void> {
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 2 — SAGAS
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function seedSagas(): Promise<void> {
   for (const saga of SAGA_CONFIG) {
     await sleep(JIKAN_DELAY_MS * 4);
     process.stdout.write(`  ${saga.label}... `);
@@ -457,7 +488,9 @@ async function syncSagas(): Promise<void> {
   }
 }
 
-// ─── Vidéos initiales avec stats ─────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 3 — VIDÉOS
+// ─────────────────────────────────────────────────────────────────────────────
 
 async function seedVideos(): Promise<void> {
   if (!hasApiKey()) {
@@ -518,27 +551,286 @@ async function seedVideos(): Promise<void> {
   console.log(`\n  ✓ ${totalInserted} insérées · ${total} au total en base`);
 }
 
-// ─── Point d'entrée ───────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 4 — STORY ARCS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function detectSaga(
+  sectionTitle: string,
+): "naruto" | "shippuden" | "boruto" | "tbv" {
+  const t = sectionTitle.toLowerCase();
+  if (t.includes("two blue vortex")) return "tbv";
+  if (t.includes("boruto") || t.includes("new era")) return "boruto";
+  if (t.includes("part ii") || t.includes("shippuden")) return "shippuden";
+  return "naruto";
+}
+
+function buildSlug(sagaKey: string, arcName: string): string {
+  return `${sagaKey}_${arcName
+    .toLowerCase()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_]/g, "")}`;
+}
+
+async function getArcIndex(): Promise<
+  Array<{
+    arcName: string;
+    pageTitle: string;
+    summary: string;
+    sagaKey: string;
+  }>
+> {
+  const { data } = await axios.get(WIKI_API_URL, {
+    params: {
+      action: "parse",
+      page: "Plot of Naruto",
+      prop: "text",
+      format: "json",
+    },
+    headers: WIKI_HEADERS,
+  });
+
+  const $ = cheerio.load(data.parse.text["*"]);
+  const entries: Array<{
+    arcName: string;
+    pageTitle: string;
+    summary: string;
+    sagaKey: string;
+  }> = [];
+
+  for (const section of $("h2").toArray()) {
+    const sectionTitle = $(section).find(".mw-headline").text().trim();
+    if (!sectionTitle || ["Contents", "See also"].includes(sectionTitle))
+      continue;
+
+    const sagaKey = detectSaga(sectionTitle);
+    const rows = $(section).nextAll("table").first().find("tr").toArray();
+
+    for (const row of rows) {
+      const cells = $(row).find("td");
+      if (cells.length < 2) continue;
+
+      const arcLink = $(cells[0]).find("a").first();
+      const arcName = arcLink.text().trim();
+      const pageTitle = arcLink.attr("title");
+      if (!arcName || !pageTitle) continue;
+
+      const summaryCell =
+        cells.length >= 4 ? cells[3] : cells[cells.length - 1];
+      const summary = $(summaryCell).text().trim();
+      if (!summary) continue;
+
+      entries.push({ arcName, pageTitle, summary, sagaKey });
+    }
+  }
+
+  return entries;
+}
+
+const SECTIONS_TO_DROP = [
+  "chapters",
+  "episodes",
+  "references",
+  "promotional material",
+  "see also",
+  "trivia",
+  "translation",
+  "notes",
+];
+
+function parseWikitext(raw: string): string {
+  const lines = raw.split("\n");
+  let inSummary = false;
+  let skipSection = false;
+  const output: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    const h2Match = trimmed.match(/^==\s*([^=]+?)\s*==$/);
+    if (h2Match) {
+      const sectionName = h2Match[1].toLowerCase();
+      if (sectionName === "summary") {
+        inSummary = true;
+        skipSection = false;
+        continue;
+      }
+      if (SECTIONS_TO_DROP.includes(sectionName)) {
+        inSummary = false;
+        skipSection = true;
+        continue;
+      }
+      if (inSummary) {
+        inSummary = false;
+        skipSection = true;
+      }
+      continue;
+    }
+
+    if (trimmed.match(/\[\[File:/i)) continue;
+    if (skipSection && !inSummary) continue;
+
+    const h3Match = trimmed.match(/^===\s*([^=]+?)\s*===$/);
+    if (h3Match) {
+      if (inSummary) output.push(`\n## ${h3Match[1]}\n`);
+      continue;
+    }
+
+    const h4Match = trimmed.match(/^====\s*([^=]+?)\s*====$/);
+    if (h4Match) {
+      if (inSummary) output.push(`\n### ${h4Match[1]}\n`);
+      continue;
+    }
+
+    if (!inSummary) continue;
+
+    let cleaned = trimmed;
+    cleaned = cleaned.replace(/<ref[^>]*>.*?<\/ref>/gi, "");
+    cleaned = cleaned.replace(/<ref[^>]*\/>/gi, "");
+    cleaned = cleaned.replace(/\{\{[^{}]*\}\}/g, "");
+    cleaned = cleaned.replace(/\{\{[^{}]*\}\}/g, "");
+    cleaned = cleaned.replace(/\[\[(?:[^\]|]*\|)?([^\]]+)\]\]/g, "$1");
+    cleaned = cleaned.replace(/\[https?:\/\/\S+\s+([^\]]+)\]/g, "$1");
+    cleaned = cleaned.replace(/'{2,3}/g, "");
+    if (
+      cleaned.match(/^<section|^\[\[Category:|^\[\[(?:es|fr|id|pl|de|pt|ja):/)
+    )
+      continue;
+
+    cleaned = cleaned.trim();
+    if (!cleaned) continue;
+
+    output.push(cleaned);
+  }
+
+  return output
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+async function getArcDetail(pageTitle: string): Promise<string> {
+  try {
+    const { data } = await axios.get(WIKI_API_URL, {
+      params: {
+        action: "query",
+        titles: pageTitle,
+        prop: "revisions",
+        rvprop: "content",
+        rvslots: "main",
+        format: "json",
+        redirects: 1,
+      },
+      headers: WIKI_HEADERS,
+    });
+    const pages = data.query?.pages;
+    if (!pages) return "";
+    const page = Object.values(pages)[0] as any;
+    const raw = page?.revisions?.[0]?.slots?.main?.["*"] ?? "";
+    return raw ? parseWikitext(raw) : "";
+  } catch {
+    return "";
+  }
+}
+
+async function seedStoryArcs(): Promise<void> {
+  console.log("  🧹 Reset de la table StoryArc...");
+  await prisma.storyArc.deleteMany({});
+
+  console.log("  📋 Récupération de l'index des arcs...");
+  const arcs = await getArcIndex();
+  console.log(`  ✓ ${arcs.length} arcs trouvés\n`);
+
+  let globalOrder = 1;
+  let created = 0;
+
+  for (const { arcName, pageTitle, summary, sagaKey } of arcs) {
+    process.stdout.write(`  [${globalOrder}] "${arcName}"... `);
+
+    const content = await getArcDetail(pageTitle);
+
+    if (!content && !summary) {
+      console.log("⏭ aucun contenu");
+      continue;
+    }
+
+    await prisma.storyArc.create({
+      data: {
+        slug: buildSlug(sagaKey, arcName),
+        title: arcName,
+        summary,
+        content: content || summary,
+        order: globalOrder++,
+        sagaKey,
+      },
+    });
+
+    created++;
+    console.log("✓");
+    await sleep(400);
+  }
+
+  console.log(`\n  ✓ ${created} arcs créés`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// POINT D'ENTRÉE
+// ─────────────────────────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
   const startedAt = Date.now();
-  console.log("🌀 Seed naruto-chronicles\n");
 
-  console.log("━━━ 1/3  PERSONNAGES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  const [s1, s2, s3] = await Promise.all([
-    fetchSriniously(),
-    fetchGustavo(),
-    fetchDattebayo(),
-  ]);
-  const popularityScores = await fetchJikanPopularity();
-  const characters = buildCharacters(s1, s2, s3, popularityScores);
-  await upsertCharacters(characters);
+  const skippedLabels = Object.entries(SKIP)
+    .filter(([, v]) => v)
+    .map(([k]) => `--skip-${k}`)
+    .join(" ");
 
-  console.log("\n━━━ 2/3  SAGAS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  await syncSagas();
+  console.log(`\n🌀 Seed naruto-chronicles — ${new Date().toISOString()}`);
+  if (skippedLabels) console.log(`⏭  Skips actifs : ${skippedLabels}\n`);
 
-  console.log("\n━━━ 3/3  VIDÉOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  await seedVideos();
+  if (!SKIP.characters) {
+    console.log("━━━ 1/4  PERSONNAGES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    await seedCharacters();
+  } else {
+    console.log("━━━ 1/4  PERSONNAGES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("  ⏭ skipped");
+  }
+
+  if (!SKIP.sagas) {
+    console.log(
+      "\n━━━ 2/4  SAGAS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+    );
+    await seedSagas();
+  } else {
+    console.log(
+      "\n━━━ 2/4  SAGAS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+    );
+    console.log("  ⏭ skipped");
+  }
+
+  if (!SKIP.videos) {
+    console.log(
+      "\n━━━ 3/4  VIDÉOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+    );
+    await seedVideos();
+  } else {
+    console.log(
+      "\n━━━ 3/4  VIDÉOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+    );
+    console.log("  ⏭ skipped");
+  }
+
+  if (!SKIP.story) {
+    console.log(
+      "\n━━━ 4/4  STORY ARCS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+    );
+    await seedStoryArcs();
+  } else {
+    console.log(
+      "\n━━━ 4/4  STORY ARCS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+    );
+    console.log("  ⏭ skipped");
+  }
 
   const duration = Math.round((Date.now() - startedAt) / 1000);
   console.log(`\n✅ Seed terminé en ${duration}s`);

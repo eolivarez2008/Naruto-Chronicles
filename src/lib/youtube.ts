@@ -3,11 +3,31 @@ import { sleep } from "./network";
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY ?? "";
 
 export const VIDEO_CATEGORIES = [
-  { category: "edit", label: "Edit", query: "Naruto edit amv 4k" },
-  { category: "theorie", label: "Théorie", query: "Naruto theories explained" },
-  { category: "react", label: "React", query: "Naruto reaction compilation" },
-  { category: "fanart", label: "Fanart", query: "Naruto fanart speed drawing" },
-  { category: "ost", label: "OST", query: "Naruto OST soundtrack epic" },
+  {
+    category: "edit",
+    label: "Edit",
+    query: "Naruto AMV edit 4K français OR english",
+  },
+  {
+    category: "theorie",
+    label: "Théorie",
+    query: "Naruto théorie explication OR theory explained français",
+  },
+  {
+    category: "react",
+    label: "React",
+    query: "Naruto reaction compilation français OR english",
+  },
+  {
+    category: "fanart",
+    label: "Fanart",
+    query: "Naruto fanart speed drawing français OR drawing",
+  },
+  {
+    category: "ost",
+    label: "OST",
+    query: "Naruto OST musique soundtrack français OR music",
+  },
 ] as const;
 
 export type VideoCategory = (typeof VIDEO_CATEGORIES)[number]["category"];
@@ -195,5 +215,16 @@ export async function searchVideosWithStats(
     viewCount: statsResult.data.get(item.id.videoId) ?? BigInt(0),
   }));
 
-  return { ok: true, data: videos };
+  const filtered = videos.filter((v) => {
+    const t = v.title.toLowerCase();
+
+    const isFrench =
+      /français|fr|vf|version française|anime fr|naruto fr/i.test(t);
+
+    const isEnglish = /english|eng|amv|edit|reaction|explained/i.test(t);
+
+    return isFrench || isEnglish;
+  });
+
+  return { ok: true, data: filtered };
 }
