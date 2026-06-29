@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import FilterToolbar from "@/components/ui/FilterToolbar";
 import type { FilterOption } from "@/components/ui/FilterToolbar";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 type Tab = "mes-listes" | "decouvrir";
 
@@ -54,12 +55,23 @@ function CreateModal({ onClose }: { onClose: () => void }) {
 
   const handleCreate = () => {
     if (!selected) return;
+    trackEvent(EVENTS.TIERLIST_CREATE_OPEN, { pack: selected });
     router.push(`/tier-list/new?pack=${selected}`);
     onClose();
   };
 
+  const handlePackSelect = (packId: string) => {
+    setSelected(packId);
+    trackEvent(EVENTS.TIERLIST_PACK_SELECT, { pack: packId });
+  };
+
   return (
-    <BaseModal isOpen onClose={onClose} maxWidth="sm:max-w-xl">
+    <BaseModal
+      isOpen
+      onClose={onClose}
+      maxWidth="sm:max-w-xl"
+      ariaLabel="Créer une nouvelle tier list"
+    >
       <div className="flex flex-col">
         <div className="px-5 py-4 border-b border-white/6 shrink-0">
           <h2 className="text-base font-black text-naruto-orange">
@@ -78,7 +90,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
                 <motion.button
                   key={pack.id}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => setSelected(pack.id)}
+                  onClick={() => handlePackSelect(pack.id)}
                   className={[
                     "relative flex flex-col items-start gap-2 p-3.5 rounded-xl border text-left transition-all duration-150 cursor-pointer",
                     isSelected
@@ -167,6 +179,7 @@ function DiscoverSection() {
   const [pack, setPack] = useState<string>("all");
   const [searchRaw, setSearchRaw] = useState("");
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const packFilterOptions: FilterOption[] = [
     { id: "all", label: "Tous les packs" },
@@ -186,6 +199,10 @@ function DiscoverSection() {
       currentPack: string,
       reset = false,
     ) => {
+      if (abortRef.current) abortRef.current.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       try {
         const params = new URLSearchParams({
           page: String(pageNum),
@@ -194,7 +211,9 @@ function DiscoverSection() {
           ...(currentSearch.trim() && { search: currentSearch.trim() }),
           ...(currentPack !== "all" && { pack: currentPack }),
         });
-        const res = await fetch(`/api/tier-lists?${params}`);
+        const res = await fetch(`/api/tier-lists?${params}`, {
+          signal: controller.signal,
+        });
         const json = (await res.json()) as TierListsApiResponse;
         setLists((prev) =>
           reset || pageNum === 1 ? json.data : [...prev, ...json.data],
@@ -202,6 +221,8 @@ function DiscoverSection() {
         setTotal(json.meta.total);
         setHasMore(pageNum < json.meta.totalPages);
         setPage(pageNum);
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") return;
       } finally {
         setLoading(false);
         setLoadingMore(false);
@@ -211,15 +232,13 @@ function DiscoverSection() {
   );
 
   useEffect(() => {
-    void fetchPage(1, sort, searchRaw, pack, true);
-  }, [sort, pack, fetchPage]);
-
-  useEffect(() => {
+    setLoading(true);
+    const delay = searchRaw ? 400 : 0;
     const t = setTimeout(() => {
       void fetchPage(1, sort, searchRaw, pack, true);
-    }, 400);
+    }, delay);
     return () => clearTimeout(t);
-  }, [searchRaw, pack]);
+  }, [sort, pack, searchRaw, fetchPage]);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -243,18 +262,33 @@ function DiscoverSection() {
     );
   };
 
+  const handleSortChange = (v: string) => {
+    setSort(v as TierListSortOption);
+    trackEvent(EVENTS.TIERLIST_SORT, { sort: v });
+  };
+
+  const handlePackChange = (v: string) => {
+    setPack(v);
+    trackEvent(EVENTS.TIERLIST_FILTER, { pack: v });
+  };
+
+  const handleSearchChange = (v: string) => {
+    setSearchRaw(v);
+    if (v.length > 2) trackEvent(EVENTS.TIERLIST_SEARCH, { query: v });
+  };
+
   return (
     <div>
       <FilterToolbar
         searchValue={searchRaw}
-        onSearchChange={setSearchRaw}
+        onSearchChange={handleSearchChange}
         searchPlaceholder="Rechercher une tier list…"
         sortOptions={TIER_LIST_SORT_OPTIONS}
         sortValue={sort}
-        onSortChange={(v) => setSort(v as TierListSortOption)}
+        onSortChange={handleSortChange}
         filterOptions={packFilterOptions}
         filterValue={pack}
-        onFilterChange={setPack}
+        onFilterChange={handlePackChange}
       />
 
       {total > 0 && (
@@ -341,6 +375,11 @@ function MyListsSection({
     });
   };
 
+  const handleSubTabChange = (tab: "creees" | "likees") => {
+    setSubTab(tab);
+    trackEvent(EVENTS.TIERLIST_TAB_SWITCH, { tab });
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="flex flex-col items-center py-24 text-center">
@@ -381,7 +420,7 @@ function MyListsSection({
           ].map((t) => (
             <button
               key={t.id}
-              onClick={() => setSubTab(t.id)}
+              onClick={() => handleSubTabChange(t.id)}
               className={[
                 "flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                 subTab === t.id
@@ -435,6 +474,9 @@ function MyListsSection({
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                   <Link
                     href={`/tier-list/${l.id}/edit`}
+                    onClick={() =>
+                      trackEvent(EVENTS.TIERLIST_EDIT, { tierListId: l.id })
+                    }
                     className="w-7 h-7 rounded-full bg-black/80 backdrop-blur border border-white/15 flex items-center justify-center text-white/60 hover:text-white transition-colors"
                     title="Modifier"
                   >
@@ -485,9 +527,19 @@ export default function TierListHomeClient({
     { id: "decouvrir", label: "Découvrir", icon: Globe },
   ];
 
+  const handleTabChange = (id: Tab) => {
+    setTab(id);
+    trackEvent(EVENTS.TIERLIST_TAB_SWITCH, { tab: id });
+  };
+
+  const handleShowCreate = () => {
+    setShowCreate(true);
+    trackEvent(EVENTS.TIERLIST_CREATE_OPEN);
+  };
+
   const createButton = isLoggedIn ? (
     <button
-      onClick={() => setShowCreate(true)}
+      onClick={handleShowCreate}
       className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-naruto-orange hover:bg-[#e65500] text-white transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,102,0,0.25)] cursor-pointer shrink-0"
     >
       <Plus size={16} />
@@ -517,7 +569,7 @@ export default function TierListHomeClient({
             {TABS.map((t) => (
               <button
                 key={t.id}
-                onClick={() => setTab(t.id)}
+                onClick={() => handleTabChange(t.id)}
                 className={[
                   "relative flex items-center gap-2 px-4 sm:px-6 py-3 text-sm font-semibold transition-all cursor-pointer",
                   tab === t.id
@@ -559,7 +611,7 @@ export default function TierListHomeClient({
                 createdLists={initialMyCreatedLists}
                 likedLists={initialMyLikedLists}
                 isLoggedIn={isLoggedIn}
-                onShowCreate={() => setShowCreate(true)}
+                onShowCreate={handleShowCreate}
               />
             </motion.div>
           )}

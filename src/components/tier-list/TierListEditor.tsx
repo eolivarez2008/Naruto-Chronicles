@@ -25,9 +25,10 @@ import { DEFAULT_TIERS, EditorProps } from "@/types/tierlist";
 import TierRowComponent from "@/components/tier-list/TierRow";
 import CharacterPool from "@/components/tier-list/CharacterPool";
 import SafeImage from "@/components/ui/SafeImage";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
-function uid() {
-  return Math.random().toString(36).slice(2, 9);
+function uid(): string {
+  return crypto.randomUUID();
 }
 
 function DeleteModal({
@@ -157,7 +158,7 @@ export default function TierListEditor({
       }
 
       setPool(allChars);
-      setPoolTotal(json.meta.total);
+      setPoolTotal(allChars.length);
     } finally {
       setPoolLoading(false);
     }
@@ -228,14 +229,18 @@ export default function TierListEditor({
       ),
     );
 
-  const addTier = () =>
+  const addTier = () => {
     setTiers((prev) => [
       ...prev,
       { id: uid(), label: "?", color: "#6b7280", characterIds: [] },
     ]);
+    trackEvent(EVENTS.TIERLIST_EDIT, { action: "add-tier" });
+  };
 
-  const deleteTier = (id: string) =>
+  const deleteTier = (id: string) => {
     setTiers((prev) => prev.filter((t) => t.id !== id));
+    trackEvent(EVENTS.TIERLIST_EDIT, { action: "delete-tier" });
+  };
 
   const updateTierLabel = (id: string, label: string) =>
     setTiers((prev) => prev.map((t) => (t.id === id ? { ...t, label } : t)));
@@ -286,6 +291,11 @@ export default function TierListEditor({
         setSaveError(data.error ?? "Erreur lors de la sauvegarde.");
         return;
       }
+      if (mode === "edit") {
+        trackEvent(EVENTS.TIERLIST_EDIT, { tierListId });
+      } else {
+        trackEvent(EVENTS.TIERLIST_CREATE, { pack: packId });
+      }
       router.push(`/tier-list/${mode === "edit" ? tierListId! : data.id!}`);
     } catch {
       setSaveError("Erreur réseau. Réessaie.");
@@ -301,7 +311,10 @@ export default function TierListEditor({
       const res = await fetch(`/api/tier-lists/${tierListId}`, {
         method: "DELETE",
       });
-      if (res.ok) router.push("/tier-list");
+      if (res.ok) {
+        trackEvent(EVENTS.TIERLIST_DELETE, { tierListId });
+        router.push("/tier-list");
+      }
     } catch {
     } finally {
       setDeleting(false);
@@ -319,6 +332,7 @@ export default function TierListEditor({
             maxLength={100}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Titre de ta tier list…"
+            aria-label="Titre de la tier list"
             className="flex-1 bg-transparent text-white font-bold text-sm focus:outline-none placeholder:text-white/20 min-w-0"
           />
           <div className="flex items-center gap-1.5 shrink-0">

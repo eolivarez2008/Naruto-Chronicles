@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useDeferredValue } from "react";
+import React, { useState, useEffect, useDeferredValue } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { StoryArc, SagaKey } from "@/types/story";
@@ -15,6 +15,7 @@ import { ArrowRight, Leaf, Flame, Zap, type LucideIcon } from "lucide-react";
 import FilterToolbar from "@/components/ui/FilterToolbar";
 import type { FilterOption } from "@/components/ui/FilterToolbar";
 import TranslationBanner from "@/components/story/TranslationBanner";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 const SAGA_ICONS: Record<SagaKey, LucideIcon> = {
   naruto: Leaf,
@@ -37,6 +38,13 @@ function ArcCard({
     <Link
       href={`/story/${encodeURIComponent(arc.slug)}`}
       className="group h-full"
+      onClick={() =>
+        trackEvent(EVENTS.STORY_ARC_OPEN, {
+          slug: arc.slug,
+          saga: arc.sagaKey,
+          title: arc.title,
+        })
+      }
     >
       <article className="relative h-full flex flex-col bg-white/3 hover:bg-white/6 border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-white/20 hover:translate-x-1 shadow-lg p-4 sm:p-5">
         <div className="flex items-center justify-between mb-3">
@@ -129,14 +137,6 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
 
   const hasFr = arcs.some((a) => a.titleFr && a.summaryFr);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem("storyScrollY", String(window.scrollY));
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const sagaFilterOptions: FilterOption[] = [
     { id: "all", label: "Toutes les sagas" },
     ...SAGA_ORDER.map((key) => ({
@@ -146,6 +146,26 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
       color: SAGA_CONFIG[key].color,
     })),
   ];
+
+  const handleLangToggle = (l: ArcLang) => {
+    setLang(l);
+    trackEvent(EVENTS.STORY_LANG_TOGGLE, { lang: l });
+  };
+
+  const handleSortChange = (v: string) => {
+    setSort(v as StorySortOption);
+    trackEvent(EVENTS.STORY_SORT, { sort: v });
+  };
+
+  const handleFilterChange = (v: string) => {
+    setActiveSaga(v as SagaKey | "all");
+    trackEvent(EVENTS.STORY_FILTER, { saga: v });
+  };
+
+  const handleSearchChange = (v: string) => {
+    setSearchRaw(v);
+    if (v.length > 2) trackEvent(EVENTS.STORY_SEARCH, { query: v });
+  };
 
   const filtered = arcs
     .filter((arc) => {
@@ -184,18 +204,22 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-3">
       <FilterToolbar
         searchValue={searchRaw}
-        onSearchChange={setSearchRaw}
+        onSearchChange={handleSearchChange}
         searchPlaceholder="Rechercher un arc…"
         sortOptions={STORY_SORT_OPTIONS}
         sortValue={sort}
-        onSortChange={(v) => setSort(v as StorySortOption)}
+        onSortChange={handleSortChange}
         filterOptions={sagaFilterOptions}
         filterValue={activeSaga}
-        onFilterChange={(v) => setActiveSaga(v as SagaKey | "all")}
+        onFilterChange={handleFilterChange}
       />
 
       <div className="mb-6">
-        <TranslationBanner lang={lang} hasFr={hasFr} onToggle={setLang} />
+        <TranslationBanner
+          lang={lang}
+          hasFr={hasFr}
+          onToggle={handleLangToggle}
+        />
       </div>
 
       {filtered.length === 0 ? (

@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHash } from "crypto";
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
-
-function hashIp(req: NextRequest): string {
-  const ip =
-    req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
-    "unknown";
-  return createHash("sha256").update(ip + "naruto-salt").digest("hex");
-}
 
 export async function GET(
   req: NextRequest,
@@ -25,13 +16,12 @@ export async function GET(
     const video = await prisma.video.findUnique({
       where: { id },
       include: {
-        likes: userId
-          ? { where: { userId }, select: { id: true } }
-          : false,
+        likes: userId ? { where: { userId }, select: { id: true } } : false,
       },
     });
 
-    if (!video) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!video)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     return NextResponse.json({
       id: video.id,
@@ -46,6 +36,9 @@ export async function GET(
     });
   } catch (err) {
     console.error("API video [id] error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

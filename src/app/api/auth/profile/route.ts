@@ -32,6 +32,9 @@ export async function DELETE() {
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE profile] :", err);
-    return NextResponse.json({ error: "Erreur lors de la suppression." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la suppression." },
+      { status: 500 },
+    );
   }
 }

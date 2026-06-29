@@ -7,6 +7,7 @@ import type { StoryArc } from "@/types/story";
 import type { TocItem, ArcNeighbor, ContentBlock } from "@/types/story";
 import { getArcText, type ArcLang } from "@/lib/arcLang";
 import TranslationBanner from "@/components/story/TranslationBanner";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 import {
   ChevronLeft,
   ChevronRight,
@@ -207,10 +208,12 @@ function ArcNavigation({
   prev,
   next,
   color,
+  arcTitle,
 }: {
   prev: ArcNeighbor | null;
   next: ArcNeighbor | null;
   color: string;
+  arcTitle: string;
 }) {
   function Btn({
     item,
@@ -241,6 +244,12 @@ function ArcNavigation({
     return (
       <Link
         href={`/story/${encodeURIComponent(item.slug)}`}
+        onClick={() =>
+          trackEvent(isNext ? EVENTS.STORY_NAV_NEXT : EVENTS.STORY_NAV_PREV, {
+            from: arcTitle,
+            to: item.title,
+          })
+        }
         className={`${base} ${
           isNext
             ? "text-white border-transparent"
@@ -350,6 +359,11 @@ export default function ArcDetailClient({
     });
   }, []);
 
+  const handleLangToggle = (l: ArcLang) => {
+    setLang(l);
+    trackEvent(EVENTS.STORY_LANG_TOGGLE, { lang: l, arc: arc.slug });
+  };
+
   return (
     <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-19">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -378,7 +392,11 @@ export default function ArcDetailClient({
         </nav>
 
         <div className="mb-6">
-          <TranslationBanner lang={lang} hasFr={hasFr} onToggle={setLang} />
+          <TranslationBanner
+            lang={lang}
+            hasFr={hasFr}
+            onToggle={handleLangToggle}
+          />
         </div>
 
         <div className="flex gap-10 items-start">
@@ -461,7 +479,12 @@ export default function ArcDetailClient({
               </div>
 
               <div className="shrink-0 p-3 rounded-xl border border-white/8 bg-white/2 backdrop-blur-sm">
-                <ArcNavigation prev={prev} next={next} color={sagaColor} />
+                <ArcNavigation
+                  prev={prev}
+                  next={next}
+                  color={sagaColor}
+                  arcTitle={arc.title}
+                />
               </div>
             </div>
           </aside>
@@ -488,7 +511,12 @@ export default function ArcDetailClient({
                   transition={{ delay: 0.05 }}
                   className="absolute bottom-19 right-4 w-64 bg-[#111] border border-white/10 rounded-2xl shadow-2xl p-3 origin-bottom-right"
                 >
-                  <ArcNavigation prev={prev} next={next} color={sagaColor} />
+                  <ArcNavigation
+                    prev={prev}
+                    next={next}
+                    color={sagaColor}
+                    arcTitle={arc.title}
+                  />
                 </motion.div>
 
                 <motion.div
@@ -554,6 +582,7 @@ export default function ArcDetailClient({
 
           <button
             onClick={() => setTocOpen(!tocOpen)}
+            aria-label={tocOpen ? "Fermer le sommaire" : "Ouvrir le sommaire"}
             className="flex items-center justify-center w-12 h-12 rounded-2xl shadow-2xl border border-white/10 transition-transform active:scale-95 cursor-pointer"
             style={{ backgroundColor: sagaColor }}
           >

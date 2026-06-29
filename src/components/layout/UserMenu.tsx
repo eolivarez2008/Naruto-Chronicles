@@ -16,9 +16,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const hasConsented =
-    (session?.user as { consentGiven?: boolean } | undefined)?.consentGiven ===
-    true;
+  const hasConsented = session?.user?.consentGiven === true;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -37,6 +35,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
     return (
       <Link
         href="/profile"
+        onClick={() => trackEvent(EVENTS.AUTH_LOGIN)}
         className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
       >
         <User size={16} />
@@ -111,6 +110,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
         onClick={() => setOpen((v) => !v)}
         className="p-1 hover:bg-white/5 rounded-xl transition-all cursor-pointer"
         aria-label="Menu utilisateur"
+        aria-expanded={open}
       >
         <div className="w-8 h-8 rounded-full overflow-hidden border border-naruto-orange/35 shrink-0 shadow-lg shadow-naruto-orange/10">
           {avatarSrc ? (

@@ -1,15 +1,22 @@
 "use client";
 
-export default function ConsentButtons({ userId }: { userId: string }) {
+import { trackEvent, EVENTS } from "@/lib/analytics";
+
+export default function ConsentButtons({
+  userId: _userId,
+}: {
+  userId: string;
+}) {
   const handleAccept = async () => {
-    const res = await fetch("/api/auth/consent", {
-      method: "POST",
-      body: JSON.stringify({ userId }),
-    });
-    if (res.ok) window.location.href = "/profile";
+    const res = await fetch("/api/auth/consent", { method: "POST" });
+    if (res.ok) {
+      trackEvent(EVENTS.AUTH_CONSENT_ACCEPT);
+      window.location.href = "/profile";
+    }
   };
 
   const handleRefuse = async () => {
+    trackEvent(EVENTS.AUTH_CONSENT_REFUSE);
     await fetch("/api/auth/profile", { method: "DELETE" });
     window.location.href = "/";
   };

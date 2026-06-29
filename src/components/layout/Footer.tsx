@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Flame, ArrowRight, Map, Scale, Copyright, Github } from "lucide-react";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 const FOOTER_LINKS = {
   navigation: [
@@ -44,7 +45,7 @@ export default function Footer() {
             <div className="flex items-center gap-2 text-white/20 pt-2">
               <Copyright size={14} />
               <span className="text-[10px] font-mono uppercase tracking-widest font-bold">
-                2023-2026 — Développé par Emilien OLIVAREZ
+                2023-{currentYear} — Développé par Emilien OLIVAREZ
               </span>
             </div>
           </div>
@@ -66,6 +67,12 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
+                      onClick={() =>
+                        trackEvent(EVENTS.FOOTER_LINK_CLICK, {
+                          page: link.href,
+                          label: link.name,
+                        })
+                      }
                       className="group flex items-center gap-2 text-[12px] text-white/40 hover:text-naruto-orange transition-all"
                     >
                       <ArrowRight
@@ -94,6 +101,12 @@ export default function Footer() {
             <div className="space-y-4 flex flex-col items-center md:items-start">
               <Link
                 href="/legal"
+                onClick={() =>
+                  trackEvent(EVENTS.FOOTER_LINK_CLICK, {
+                    page: "/legal",
+                    label: "Mentions Légales",
+                  })
+                }
                 className="group flex items-center gap-2 text-[12px] text-white/40 hover:text-white transition-all"
               >
                 Mentions Légales & CGU
@@ -101,6 +114,8 @@ export default function Footer() {
               <a
                 href="https://github.com/eolivarez2008/Naruto-Chronicles"
                 target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent(EVENTS.FOOTER_GITHUB_CLICK)}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-white transition-all"
               >
                 <Github size={14} />

@@ -6,8 +6,18 @@ import TierListCardItem from "@/components/tier-list/TierListCard";
 import type { TierListCard } from "@/types/tierlist";
 import { VideoCategory, CATEGORY_ICONS, CATEGORY_COLORS } from "@/types/videos";
 import Link from "next/link";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 type Tab = "created" | "liked" | "videos";
+
+interface VideoLikeItem {
+  video: {
+    id: string;
+    title: string;
+    thumbnail: string;
+    category: string;
+  };
+}
 
 export default function ProfileTierLists({
   myCreatedLists,
@@ -16,7 +26,7 @@ export default function ProfileTierLists({
 }: {
   myCreatedLists: Array<TierListCard & { tiersData: string }>;
   myLikedLists: Array<TierListCard & { tiersData: string }>;
-  likedVideos: any[];
+  likedVideos: VideoLikeItem[];
 }) {
   const [tab, setTab] = useState<Tab>("created");
 
@@ -41,13 +51,18 @@ export default function ProfileTierLists({
     },
   ] as const;
 
+  const handleTabChange = (id: Tab) => {
+    setTab(id);
+    trackEvent(EVENTS.PROFILE_TAB_SWITCH, { tab: id });
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-center p-1 bg-white/5 rounded-2xl w-fit mx-auto border border-white/5">
         {tabs.map((t) => (
           <button
             key={t.id}
-            onClick={() => setTab(t.id)}
+            onClick={() => handleTabChange(t.id)}
             className={`relative cursor-pointer flex items-center gap-2 px-4 sm:px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${tab === t.id ? "text-white bg-white/10 shadow-lg" : "text-white/40 hover:text-white/60"}`}
           >
             <t.icon
@@ -87,7 +102,6 @@ export default function ProfileTierLists({
             ))}
             {likedVideos.length === 0 && (
               <div className="col-span-full">
-                {" "}
                 <EmptyState text="Aucune vidéo aimée." />
               </div>
             )}
@@ -98,7 +112,13 @@ export default function ProfileTierLists({
   );
 }
 
-function Grid({ items, emptyText }: { items: any[]; emptyText: string }) {
+function Grid({
+  items,
+  emptyText,
+}: {
+  items: Array<TierListCard & { tiersData: string }>;
+  emptyText: string;
+}) {
   if (items.length === 0) return <EmptyState text={emptyText} />;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,11 +129,24 @@ function Grid({ items, emptyText }: { items: any[]; emptyText: string }) {
   );
 }
 
-function VideoCard({ video }: any) {
+function VideoCard({
+  video,
+}: {
+  video: { id: string; title: string; thumbnail: string; category: string };
+}) {
   const color = CATEGORY_COLORS[video.category as VideoCategory] ?? "#ff6600";
   const CategoryIcon = CATEGORY_ICONS[video.category as VideoCategory];
   return (
-    <Link href={`/videos/${video.id}`} className="group space-y-3">
+    <Link
+      href={`/videos/${video.id}`}
+      className="group space-y-3"
+      onClick={() =>
+        trackEvent(EVENTS.PROFILE_VIDEO_CLICK, {
+          videoId: video.id,
+          category: video.category,
+        })
+      }
+    >
       <div className="aspect-video relative rounded-2xl overflow-hidden ring-1 ring-white/10 transition-transform group-hover:scale-[1.02] duration-300">
         <img
           src={video.thumbnail}

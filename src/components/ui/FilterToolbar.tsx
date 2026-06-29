@@ -77,6 +77,8 @@ function SortDropdown({
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-label="Trier les résultats"
+        aria-expanded={open}
         className={`flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 ${minWidth}`}
       >
         <span className="flex items-center gap-2 overflow-hidden">
@@ -91,13 +93,19 @@ function SortDropdown({
       <AnimatePresence>
         {open && (
           <motion.ul
+            role="listbox"
+            aria-label="Options de tri"
             initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
             className="absolute top-full right-0 mt-2 w-44 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
           >
             {options.map((opt) => (
-              <li key={opt.value}>
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={value === opt.value}
+              >
                 <button
                   onClick={() => {
                     onChange(opt.value);
@@ -141,6 +149,8 @@ function FilterDropdown({
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-label="Filtrer les résultats"
+        aria-expanded={open}
         className={`flex items-center justify-between gap-2 bg-white/5 rounded-xl px-3 py-2 text-sm text-white/80 hover:bg-white/10 transition-all cursor-pointer whitespace-nowrap min-w-12.5 ${minWidth}`}
       >
         <span className="flex items-center gap-2 overflow-hidden text-left">
@@ -165,13 +175,15 @@ function FilterDropdown({
       <AnimatePresence>
         {open && (
           <motion.ul
+            role="listbox"
+            aria-label="Options de filtre"
             initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
             className="absolute top-full right-0 mt-2 w-52 bg-[#141414] border border-white/10 rounded-xl overflow-hidden shadow-xl z-20"
           >
             {options.map((opt) => (
-              <li key={opt.id}>
+              <li key={opt.id} role="option" aria-selected={value === opt.id}>
                 <button
                   onClick={() => {
                     onChange(opt.id);
@@ -228,11 +240,13 @@ export default function FilterToolbar({
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={searchPlaceholder}
+          aria-label={searchPlaceholder}
           className="w-full bg-white/5 rounded-xl pl-9 pr-8 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500/40 transition-all"
         />
         {searchValue && (
           <button
             onClick={() => onSearchChange("")}
+            aria-label="Effacer la recherche"
             className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 cursor-pointer"
           >
             <X size={14} />

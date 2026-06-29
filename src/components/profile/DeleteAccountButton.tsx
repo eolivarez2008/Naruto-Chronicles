@@ -1,6 +1,8 @@
 "use client";
+
 import { useState } from "react";
-import { Trash2, AlertTriangle, X } from "lucide-react";
+import { Trash2, AlertTriangle } from "lucide-react";
+import { trackEvent, EVENTS } from "@/lib/analytics";
 
 export default function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
@@ -10,7 +12,10 @@ export default function DeleteAccountButton() {
     setLoading(true);
     try {
       const res = await fetch("/api/auth/profile", { method: "DELETE" });
-      if (res.ok) window.location.href = "/?deleted=1";
+      if (res.ok) {
+        trackEvent(EVENTS.AUTH_DELETE);
+        window.location.href = "/?deleted=1";
+      }
     } catch {
       setLoading(false);
     }

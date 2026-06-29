@@ -46,11 +46,10 @@ export default function Navbar() {
     { name: "CONTACT", href: "/contact", icon: <Mail size={20} /> },
   ];
 
-  const hasConsented =
-    session?.user && (session.user as any).consentGiven === true;
+  const hasConsented = session?.user?.consentGiven === true;
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-10002 w-[92%] max-w-225 pointer-events-none font-sans">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-10003 w-[92%] max-w-225 pointer-events-none font-sans">
       <div className="flex flex-col items-center justify-center w-full">
         <div className="relative w-full bg-[#050505]/80 backdrop-blur-2xl border border-white/10 pointer-events-auto rounded-4xl p-2 shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
           <div className="flex items-center justify-between w-full h-11 px-4">
@@ -87,6 +86,7 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href="/profile"
+                    onClick={() => trackEvent(EVENTS.AUTH_LOGIN)}
                     className="p-2 rounded-full bg-white/5 text-white/55 hover:text-white hover:bg-white/10 transition-all"
                   >
                     <User size={20} />
@@ -96,6 +96,8 @@ export default function Navbar() {
 
               <button
                 onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+                aria-expanded={isOpen}
                 className="lg:hidden text-white p-2 hover:bg-white/5 rounded-full transition-colors active:scale-95"
               >
                 {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -112,6 +114,9 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
+                  onClick={() =>
+                    trackEvent(EVENTS.NAV_CLICK, { page: link.href })
+                  }
                   className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all duration-300 ${isActive ? "bg-naruto-orange/10 text-naruto-orange" : "text-zinc-400 hover:bg-white/5"}`}
                 >
                   <span

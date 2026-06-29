@@ -10,6 +10,7 @@ interface BaseModalProps {
   onClose: () => void;
   children: React.ReactNode;
   maxWidth?: string;
+  ariaLabel?: string;
 }
 
 export default function BaseModal({
@@ -17,6 +18,7 @@ export default function BaseModal({
   onClose,
   children,
   maxWidth = "sm:max-w-2xl",
+  ariaLabel = "Fenêtre de dialogue",
 }: BaseModalProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -58,6 +60,9 @@ export default function BaseModal({
         {isOpen && (
           <motion.div
             key="modal-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label={ariaLabel}
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 60 }}
