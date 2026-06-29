@@ -61,7 +61,9 @@ Le projet s'appuie sur un environnement **full-stack React moderne**, orienté p
   - [Dattebayo API](https://dattebayo-api.onrender.com) — Fallback et données supplémentaires
   - [Jikan API](https://jikan.moe/) — Scores de popularité MyAnimeList et statistiques des sagas
   - [YouTube Data API v3](https://developers.google.com/youtube/v3/getting-started?hl=fr) — Récupération automatique des vidéos (chaînes, stats, thumbnails)
-- **Maintenance** : [tsx](https://tsx.is/) — Exécution des scripts de seed et de synchronisation quotidienne TypeScript
+- **Maintenance** :
+  - [tsx](https://tsx.is/) — Exécution des scripts de seed et de synchronisation quotidienne TypeScript
+  - [OpenAI API](https://openai.com/api/) — Traduction automatisée des contenus (arcs narratifs) via GPT.
 
 ---
 
@@ -113,9 +115,10 @@ npm run lint       # Linting ESLint
 ### Base de données (Prisma)
 
 ```bash
-npx prisma db push         # Sync schéma SQLite
-npx prisma generate        # Génération Prisma client
-npx tsx prisma/seed.ts     # Seed complet base de données
+npx prisma db push                  # Sync schéma SQLite
+npx prisma generate                 # Génération Prisma client
+npx tsx prisma/seed.ts              # Seed complet base de données
+npx tsx scripts/translate-arcs.ts   # Traduction des arcs
 ```
 
 Les options peuvent être combinées librement :

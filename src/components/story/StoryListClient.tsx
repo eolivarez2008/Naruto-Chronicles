@@ -10,10 +10,11 @@ import {
   StorySortOption,
   STORY_SORT_OPTIONS,
 } from "@/types/story";
-import { getArcText } from "@/lib/arcLang";
+import { getArcText, type ArcLang } from "@/lib/arcLang";
 import { ArrowRight, Leaf, Flame, Zap, type LucideIcon } from "lucide-react";
 import FilterToolbar from "@/components/ui/FilterToolbar";
 import type { FilterOption } from "@/components/ui/FilterToolbar";
+import TranslationBanner from "@/components/story/TranslationBanner";
 
 const SAGA_ICONS: Record<SagaKey, LucideIcon> = {
   naruto: Leaf,
@@ -21,8 +22,17 @@ const SAGA_ICONS: Record<SagaKey, LucideIcon> = {
   boruto: Zap,
 };
 
-function ArcCard({ arc, color }: { arc: StoryArc; color: string }) {
-  const { title, summary } = getArcText(arc, "fr");
+function ArcCard({
+  arc,
+  color,
+  lang,
+}: {
+  arc: StoryArc;
+  color: string;
+  lang: ArcLang;
+}) {
+  const { title, summary } = getArcText(arc, lang);
+
   return (
     <Link
       href={`/story/${encodeURIComponent(arc.slug)}`}
@@ -113,8 +123,11 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
   const [searchRaw, setSearchRaw] = useState("");
   const [sort, setSort] = useState<StorySortOption>("chronologique");
   const [activeSaga, setActiveSaga] = useState<SagaKey | "all">("all");
+  const [lang, setLang] = useState<ArcLang>("fr");
 
   const search = useDeferredValue(searchRaw.toLowerCase().trim());
+
+  const hasFr = arcs.some((a) => a.titleFr && a.summaryFr);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,7 +151,7 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
     .filter((arc) => {
       if (activeSaga !== "all" && arc.sagaKey !== activeSaga) return false;
       if (search) {
-        const t = getArcText(arc, "fr");
+        const t = getArcText(arc, lang);
         return (
           t.title.toLowerCase().includes(search) ||
           t.summary.toLowerCase().includes(search)
@@ -148,13 +161,13 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
     })
     .sort((a, b) => {
       if (sort === "alpha_asc") {
-        return getArcText(a, "fr").title.localeCompare(
-          getArcText(b, "fr").title,
+        return getArcText(a, lang).title.localeCompare(
+          getArcText(b, lang).title,
         );
       }
       if (sort === "alpha_desc") {
-        return getArcText(b, "fr").title.localeCompare(
-          getArcText(a, "fr").title,
+        return getArcText(b, lang).title.localeCompare(
+          getArcText(a, lang).title,
         );
       }
       const sagaDiff =
@@ -181,6 +194,10 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
         onFilterChange={(v) => setActiveSaga(v as SagaKey | "all")}
       />
 
+      <div className="mb-6">
+        <TranslationBanner lang={lang} hasFr={hasFr} onToggle={setLang} />
+      </div>
+
       {filtered.length === 0 ? (
         <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
           <p className="text-white/20 italic">
@@ -200,6 +217,7 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
                         key={arc.id}
                         arc={arc}
                         color={SAGA_CONFIG[arc.sagaKey].color}
+                        lang={lang}
                       />
                     ))}
                   </React.Fragment>
@@ -210,6 +228,7 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
                   key={arc.id}
                   arc={arc}
                   color={SAGA_CONFIG[arc.sagaKey].color}
+                  lang={lang}
                 />
               ))}
         </div>

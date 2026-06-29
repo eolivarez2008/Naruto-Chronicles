@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { StoryArc } from "@/types/story";
 import type { TocItem, ArcNeighbor, ContentBlock } from "@/types/story";
-import { getArcText } from "@/lib/arcLang";
+import { getArcText, type ArcLang } from "@/lib/arcLang";
+import TranslationBanner from "@/components/story/TranslationBanner";
 import {
   ChevronLeft,
   ChevronRight,
@@ -278,7 +279,8 @@ export default function ArcDetailClient({
   sagaColor,
   sagaLabel,
 }: Props) {
-  const { title, summary, content } = getArcText(arc, "fr");
+  const [lang, setLang] = useState<ArcLang>("fr");
+  const { title, summary, content, hasFr } = getArcText(arc, lang);
   const hasContent = content?.trim().length > 0;
   const source = hasContent ? content : summary;
   const { blocks, toc } = parseContent(source);
@@ -374,6 +376,10 @@ export default function ArcDetailClient({
             <span className="truncate max-w-37.5 lg:max-w-none">{title}</span>
           </span>
         </nav>
+
+        <div className="mb-6">
+          <TranslationBanner lang={lang} hasFr={hasFr} onToggle={setLang} />
+        </div>
 
         <div className="flex gap-10 items-start">
           <article className="flex-1 min-w-0">

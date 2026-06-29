@@ -55,7 +55,7 @@ export default async function StoryPage() {
       <PageHero
         eyebrow="Chroniques"
         title="Histoire"
-        description="Explorez l'histoire complète de la série Naruto, Shippuden et Boruto."
+        description="Découvrez les arcs majeurs, les événements clés et les personnages emblématiques de la série Naruto, Shippuden et Boruto. Les données proviennents de MediaWiki."
       />
 
       {arcs.length === 0 ? <EmptyState /> : <StoryListClient arcs={arcs} />}
