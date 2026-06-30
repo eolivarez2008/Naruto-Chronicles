@@ -1,75 +1,90 @@
-# Naruto Chronicles – Website
+<div align="center">
 
-Bienvenue sur le dépôt du **site web Naruto** créé par Emilien.
+# Naruto Chronicles
 
-**Naruto Chronicles** est une plateforme immersive dédiée à l'univers de Naruto. Lancé en **2023** en HTML/CSS, le projet a été intégralement refondu en **2026** sous Next.js pour offrir une expérience dynamique et performante à travers différentes rubriques :
+A full-stack website dedicated to the Naruto universe, rebuilt in 2026 from a vanilla HTML/CSS project into a modern Next.js application.
 
-- **Histoire** : exploration des arcs narratifs récupérés via l'API MediaWiki pour une chronologie fidèle de l'œuvre.
-- **Personnages** : fiches détaillées issues d'un merge multi-sources, synchronisées avec les scores de popularité MyAnimeList via Jikan.
-- **Vidéos** : agrégation automatique de contenus YouTube thématiques avec système d'interactions (likes).
-- **Tierlists** : outil de création de classements personnalisés et exploration des tierlists de la communauté.
-- **Saga** : présentation dynamique de la collection, incluant les statistiques et scores en temps réel via l'API Jikan.
-- **Contact** : formulaire dédié aux suggestions et remarques des utilisateurs.
-- **Profil** : espace personnel centralisant les vidéos likées ainsi que les tierlists créées et aimées.
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel-F38020?logo=cloudflare&logoColor=white)](https://www.cloudflare.com/products/tunnel/)
 
----
+**[Live Website](https://naruto.eolivarez.site)**
 
-## Architecture du Projet
-
-Ce projet est organisé en deux branches distinctes pour séparer l'évolution technique :
-
-- **`react-version` (Main)** : version actuelle basée sur **Next.js (App Router)**, optimisée performance, SEO et UI moderne.
-- **`vanilla`** : archive historique en **HTML / CSS / JS natif**, pour consulter les bases du projet.
+</div>
 
 ---
 
-## Déploiement & Infrastructure
+## Project Status: Completed & Maintained
 
-Le projet est containerisé et auto-hébergé.
-
-- **Containerisation** : Docker + Docker Compose
-- **Hébergement** : VM Debian
-- **Tunnel sécurisé** : Cloudflare Tunnel (Zero Trust + SSL automatique)
-- **CI/CD** : déploiement manuel via Git + Docker
-- **Base de données** : SQLite (via Prisma ORM)
-
-**Accès au site :** https://naruto.eolivarez.site
+This project is fully finalized and operational. No new features or major upgrades are planned. However, I regularly monitor the platform to perform routine maintenance, check dependencies, and patch any runtime bugs.
 
 ---
 
-## Stack Technique
+## Table of Contents
 
-Le projet s'appuie sur un environnement **full-stack React moderne**, orienté performance, typage strict et déploiement optimisé Edge.
-
-- **Framework** : [Next.js 16](https://nextjs.org/) — App Router, Server Components, API Routes
-- **ORM** : [Prisma 6](https://www.prisma.io/) — Gestion de la base de données SQLite
-- **Langage** : [TypeScript](https://www.typescriptlang.org/) — Typage strict, interfaces centralisées
-- **Styling** : [Tailwind CSS](https://tailwindcss.com/) — Design system cohérent, responsive natif
-- **Animations** : [Framer Motion](https://www.framer.com/motion/) — Transitions fluides, layout animations
-- **Icônes** : [Lucide React](https://lucide.dev/) — SVG optimisés, tree-shaking compatible
-- **Analytics** : [Umami](https://umami.is/) — Auto-hébergé, sans cookie, RGPD compliant
-- **Hébergement** : [Docker](https://www.docker.com/) — Containerisation via Docker Compose, auto-hébergé sur VM Debian dédiée
-- **Réseau** : [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) — Zero Trust, SSL automatique, protection DDoS
-- **Formulaire** : [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) — Anti-bot sans friction
-- **Notifications** : [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) — Alertes de monitoring et réception des formulaires de contact
-- **Authentification OAuth** : [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2?hl=fr) — Connexion utilisateur sécurisée
-- **Auth Backend** : [NextAuth.js](https://next-auth.js.org/) — Gestion des sessions, providers OAuth et sécurité
-- **Données (seed & synchronisation)** :
-  - [MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) — Extraction automatisée des arcs narratifs pour la section Story
-  - [narutodb-website](https://github.com/sriniously/narutodb-website) — Source principale : données structurées (rangs, famille, débuts)
-  - [naruto-api](https://github.com/gustavonobreza/naruto-api) — Complément : jutsus, natures de chakra
-  - [Dattebayo API](https://dattebayo-api.onrender.com) — Fallback et données supplémentaires
-  - [Jikan API](https://jikan.moe/) — Scores de popularité MyAnimeList et statistiques des sagas
-  - [YouTube Data API v3](https://developers.google.com/youtube/v3/getting-started?hl=fr) — Récupération automatique des vidéos (chaînes, stats, thumbnails)
-- **Maintenance** :
-  - [tsx](https://tsx.is/) — Exécution des scripts de seed et de synchronisation quotidienne TypeScript
-  - [OpenAI API](https://openai.com/api/) — Traduction automatisée des contenus (arcs narratifs) via GPT.
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Deployment & Infrastructure](#deployment--infrastructure)
+- [Getting Started](#getting-started)
+- [License](#license)
 
 ---
 
-## Installation et Configuration
+## Overview
 
-### 1 — Cloner le projet
+**Naruto Chronicles** is a full-stack web platform exploring the Naruto universe through dynamic, API-driven content. Originally built in **2023** as a static HTML/CSS site, the project was fully rebuilt in **2026** under **Next.js (App Router)** to deliver a modern, performant, and scalable experience.
+
+The repository is organized into two branches:
+
+- **`react-version` (Main)** — current Next.js version, optimized for performance, SEO and modern UI.
+- **`vanilla`** — historical archive of the original HTML/CSS/JS version.
+
+---
+
+## Features
+
+- **Story** — narrative arcs automatically extracted via the MediaWiki API for an accurate chronological timeline.
+- **Characters** — detailed character sheets built from a multi-source merge, synchronized with MyAnimeList popularity scores via Jikan.
+- **Videos** — automatic aggregation of thematic YouTube content with an interaction system (likes).
+- **Tierlists** — tool for creating custom rankings and browsing community tierlists.
+- **Saga** — dynamic collection showcase including real-time statistics and scores via the Jikan API.
+- **Contact** — dedicated form for user suggestions and feedback.
+- **Profile** — personal space centralizing liked videos and created or saved tierlists.
+
+---
+
+## Tech Stack
+
+- **Framework & Logic:** [Next.js 16](https://nextjs.org/) (App Router, Server Components, API Routes) paired with strict [TypeScript](https://www.typescriptlang.org/) for type safety and centralized interfaces.
+- **Database & ORM:** SQLite database management structured through [Prisma 6](https://www.prisma.io/).
+- **Authentication:** [NextAuth.js](https://next-auth.js.org/) handling secure sessions integrated with [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2).
+- **UI & Animations:** [Tailwind CSS](https://tailwindcss.com/) for a utility-first responsive design system, [Framer Motion](https://www.framer.com/motion/) for smooth layout animations, and [Lucide React](https://lucide.dev/) for optimized tree-shakable icons.
+- **Data Engineering & APIs:** Multi-source mashup engine leveraging the [MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) (lore extraction), [YouTube Data API v3](https://developers.google.com/youtube/v3) (video aggregation), [Jikan API](https://jikan.moe/) (MyAnimeList stats), and dedicated community repositories (`narutodb-website`, `naruto-api`, `Dattebayo API`).
+- **AI Integration:** [OpenAI API](https://openai.com/api/) workflows utilizing GPT models for automated asynchronous content translation.
+
+---
+
+## Deployment & Infrastructure
+
+While the core application handles complex full-stack features, the production deployment incorporates modern network, system administration, and security practices:
+
+- **Web Server & Database:** Built Next.js production server communicating with a local embedded SQLite instance via Prisma ORM.
+- **Containerization:** The entire stack and its environments are fully containerized and automated using **Docker** and **Docker Compose**, self-hosted on a dedicated **Debian VM**.
+- **Zero Trust Network:** Securely exposed using a **Cloudflare Tunnel (Zero Trust)**. This architecture allows secure hosting without opening any inbound ports on the local host firewall, providing native DDoS mitigation and automated SSL/TLS certificate management.
+- **Bot Mitigation:** [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) integration for frictionless anti-bot security on public forms.
+- **Ops Monitoring:** [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) routing runtime system event telemetry and contact form notifications directly to dedicated channels.
+- **Privacy-First Analytics:** Integration of a self-hosted, cookie-less, GDPR-compliant instance of [Umami](https://umami.is/).
+
+---
+
+## Getting Started
+
+### Development (Local Run)
+
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/eolivarez2008/Naruto-Chronicles.git
@@ -77,13 +92,13 @@ cd Naruto-Chronicles
 npm install
 ```
 
-### 2 — Variables d'environnement
+2. Set up environment variables:
 
 ```bash
 cp .env.example .env
 ```
 
-### 3 — Base de données
+3. Set up the database:
 
 ```bash
 npx prisma db push
@@ -91,85 +106,66 @@ npx prisma generate
 npx tsx prisma/seed.ts
 ```
 
-### 4 — Lancer le projet
+4. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Accès : [http://localhost:3000](http://localhost:3000)
+The site will be available at `http://localhost:3000`.
 
----
+### Available Scripts
 
-## Scripts disponibles
-
-### Développement
+#### Development
 
 ```bash
-npm run dev        # Serveur de développement
-npm run build      # Build production
-npm run start      # Serveur production
-npm run lint       # Linting ESLint
+npm run dev        # Development server
+npm run build      # Production build
+npm run start      # Production server
+npm run lint       # ESLint linting
 ```
 
-### Base de données (Prisma)
+#### Database (Prisma)
 
 ```bash
-npx prisma db push                  # Sync schéma SQLite
-npx prisma generate                 # Génération Prisma client
-npx tsx prisma/seed.ts              # Seed complet base de données
-npx tsx scripts/translate-arcs.ts   # Traduction des arcs
+npx prisma db push                  # Sync SQLite schema
+npx prisma generate                 # Generate Prisma client
+npx tsx prisma/seed.ts              # Full database seed
+npx tsx scripts/translate-arcs.ts   # Translate story arcs
 ```
 
-Les options peuvent être combinées librement :
+Seed flags can be combined freely:
 
-```Bash
+```bash
 npx tsx prisma/seed.ts --skip-characters --skip-sagas --skip-videos --skip-story
 ```
 
-Détail des flags :
+| Flag                | Description                |
+| ------------------- | -------------------------- |
+| `--skip-characters` | Skip character seeding     |
+| `--skip-sagas`      | Skip saga seeding          |
+| `--skip-videos`     | Skip YouTube video seeding |
+| `--skip-story`      | Skip story arc seeding     |
 
-- **--skip-characters** : ignore les personnages
-- **--skip-sagas** : ignore les sagas
-- **--skip-videos** : ignore les vidéos YouTube
-- **--skip-story** : ignore l’histoire
-
-### Synchronisation automatique (CRON)
+#### Scheduled Sync (CRON)
 
 ```bash
-npm run cron:daily       # Sync globale (contenu complet)
-npm run cron:sagas       # Stats des sagas
-npm run cron:videos      # Vidéos YouTube
-npm run cron:characters  # Popularité personnages
+npm run cron:daily       # Full content sync
+npm run cron:sagas       # Saga statistics
+npm run cron:videos      # YouTube videos
+npm run cron:characters  # Character popularity
+```
+
+### Production Deployment (Docker)
+
+```bash
+docker compose up -d --build     # Build and start
+docker logs portfolio --tail 50  # View logs
+docker compose down              # Stop
 ```
 
 ---
 
-## Déploiement Docker
+## License
 
-```bash
-docker compose up -d --build     # Build et démarrage
-docker logs portfolio --tail 50  # Logs
-docker compose down              # Arrêt
-```
-
----
-
-## Auteur
-
-Développé par **Emilien Olivarez** – Étudiant en Bac Pro CIEL  
-Lycée Louis de Cormontaigne, Metz
-
----
-
-## Licence
-
-Ce projet est sous licence **MIT**.  
-Tu peux :
-
-- utiliser librement le code,
-- le modifier,
-- le distribuer,
-- même à usage commercial,
-
-tant que tu respectes les conditions de la [licence MIT](https://opensource.org/license/MIT).
+Distributed under the **Apache 2.0 License** — see [LICENSE](LICENSE) for details.
