@@ -137,8 +137,10 @@ export default async function ProfilePage({
   ]);
 
   const likedRaw = likedRelations
-    .filter((r) => r.tierList.isPublic || r.tierList.userId === currentUserId)
-    .map((r) => r.tierList);
+    .filter(
+      (r: any) => r.tierList.isPublic || r.tierList.userId === currentUserId,
+    )
+    .map((r: any) => r.tierList);
 
   const [myCreatedLists, myLikedLists] = await Promise.all([
     mapLists(createdRaw, currentUserId),
@@ -278,8 +280,20 @@ function ConsentPage({ userId }: { userId: string }) {
           </ul>
         </div>
 
-        <div className="pt-2">
-          <ConsentButtons userId={userId} />
+        <div className="space-y-4">
+          <p className="text-[11px] leading-relaxed text-white/40 px-2">
+            En acceptant, tu confirmes avoir pris connaissance de nos{" "}
+            <a
+              href="/legal"
+              className="text-naruto-orange/80 hover:text-naruto-orange underline transition-colors"
+            >
+              Mentions Légales & Politique de Confidentialité
+            </a>
+            .
+          </p>
+          <div>
+            <ConsentButtons userId={userId} />
+          </div>
         </div>
       </div>
     </div>
