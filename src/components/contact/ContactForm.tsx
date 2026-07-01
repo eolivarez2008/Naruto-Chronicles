@@ -123,6 +123,7 @@ export default function ContactForm() {
   const [error, setError] = useState<string | null>(null);
   const [isSent, setIsSent] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const limits: Record<string, number> = {
     nom: 50,
@@ -186,29 +187,29 @@ export default function ContactForm() {
             <div className="flex flex-col gap-6 lg:gap-0 lg:justify-between h-full">
               <InfoCard icon={CheckCheck} title="Types de demandes acceptées">
                 <ul className="list-disc list-inside text-left">
-                  <li>Question sur Naruto</li> <li>Bug sur une page</li>
+                  <li>Question sur Naruto</li>
+                  <li>Bug sur une page</li>
                   <li>Suggestion d’amélioration</li>
                   <li>Discussion libre</li>
                 </ul>
               </InfoCard>
               <InfoCard icon={Clock} title="Délai de réponse">
-                Réponds en général sous
-                <span className="text-white/70 font-semibold">
-                  48 heures
-                </span>. <br /> Les week-ends peuvent allonger ce délai.
+                Réponds en général sous{" "}
+                <span className="text-white/70 font-semibold">48 heures</span>.{" "}
+                <br /> Les week-ends peuvent allonger ce délai.
               </InfoCard>
               <InfoCard icon={Mail} title="Suivi des messages">
-                Une réponse est envoyée par
+                Une réponse est envoyée par{" "}
                 <span className="text-white/70 font-semibold">email</span>.
                 <br /> Pensez à vérifier les spams.
               </InfoCard>
               <InfoCard icon={Shield} title="Confidentialité">
-                Vos données ne sont jamais partagées. <br /> Voir les
+                Vos données ne sont jamais partagées. <br /> Voir notre{" "}
                 <a
                   href="/legal"
                   className="text-naruto-orange/80 hover:text-naruto-orange underline transition-colors"
                 >
-                  mentions légales
+                  Politique de Confidentialité.
                 </a>
                 .
               </InfoCard>
@@ -281,11 +282,36 @@ export default function ContactForm() {
               />
             </div>
 
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-white/2 border border-white/4">
+              <input
+                type="checkbox"
+                id="acceptTerms"
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-white/5 text-naruto-orange focus:ring-naruto-orange/50 transition-colors cursor-pointer accent-naruto-orange"
+              />
+              <label
+                htmlFor="acceptTerms"
+                className="text-xs text-white/50 leading-relaxed cursor-pointer select-none"
+              >
+                Ce formulaire est protégé par Cloudflare Turnstile. En envoyant
+                votre message, vous acceptez que vos données soient transmises
+                et traitées conformément à notre{" "}
+                <a
+                  href="/legal"
+                  className="text-naruto-orange hover:underline font-semibold"
+                >
+                  Politique de Confidentialité
+                </a>
+                .
+              </label>
+            </div>
+
             {error && <p className="text-red-400 text-sm">{error}</p>}
 
             <button
               type="submit"
-              disabled={submitting || !captchaToken}
+              disabled={submitting || !captchaToken || !acceptTerms}
               className="w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base bg-naruto-orange hover:bg-[#e65500] transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer shadow-lg shadow-naruto-orange/20 overflow-hidden"
             >
               {submitting ? "Envoi en cours ..." : "Envoyer votre message"}
