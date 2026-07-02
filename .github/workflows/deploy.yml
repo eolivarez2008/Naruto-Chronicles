@@ -3,7 +3,7 @@ name: Deploy Site via Cloudflare Tunnel
 on:
   push:
     branches:
-      - react-version
+      - main
 
 jobs:
   deploy:

@@ -37,11 +37,6 @@ This project is fully finalized and operational. No new features or major upgrad
 
 **Naruto Chronicles** is a full-stack web platform exploring the Naruto universe through dynamic, API-driven content. Originally built in **2023** as a static HTML/CSS site, the project was fully rebuilt in **2026** under **Next.js (App Router)** to deliver a modern, performant, and scalable experience.
 
-The repository is organized into two branches:
-
-- **`react-version` (Main)** — current Next.js version, optimized for performance, SEO and modern UI.
-- **`vanilla`** — historical archive of the original HTML/CSS/JS version.
-
 ---
 
 ## Features
