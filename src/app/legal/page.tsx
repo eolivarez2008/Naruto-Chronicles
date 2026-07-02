@@ -8,16 +8,16 @@ export const metadata: Metadata = {
 };
 
 export default function LegalPage() {
-  const lastUpdated = "03 Mai 2026";
+  const lastUpdated = "23 Juin 2026";
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-12 fade-in-up">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 fade-in-up">
       <div className="mb-8">
         <span className="text-naruto-orange text-xs font-bold tracking-[0.2em] uppercase">
           Légal
         </span>
         <h1 className="text-3xl font-black text-white mt-1">
-          Mentions légales & Confidentialité
+          Mentions légales, Politique de Confidentialité & CGU
         </h1>
         <div className="accent-line w-24" />
         <p className="text-white/30 text-xs">
@@ -33,12 +33,13 @@ export default function LegalPage() {
           <div className="space-y-2">
             <p>
               <span className="text-white/40">Éditeur :</span> Emilien Olivarez
-              — étudiant en Bac Pro CIEL, Lycée Louis de Cormontaigne, Metz
-              (57000)
+              — étudiant en Bac Pro CIEL, Lycée Louis de Cormontaigne, 12 Place
+              Cormontaigne, 57000 Metz (57000)
             </p>
             <p>
               <span className="text-white/40">Hébergement :</span> Auto-hébergé
-              sur serveur privé via Cloudflare Tunnel
+              sur serveur privé via Cloudflare Tunnel (Zero Trust) — sans port
+              entrant exposé, SSL/TLS géré automatiquement par Cloudflare.
             </p>
             <p>
               <span className="text-white/40">Contact :</span>{" "}
@@ -133,7 +134,9 @@ export default function LegalPage() {
             <strong className="text-white/80">consentement explicite</strong> de
             l&apos;utilisateur (Article 6.1.a du RGPD), recueilli lors de la
             première connexion. Tu peux retirer ce consentement à tout moment en
-            supprimant ton compte.
+            supprimant ton compte. Les données analytiques collectées par Umami
+            sont strictement anonymes et ne permettent pas d'identifier un
+            individu.
           </p>
         </section>
 
@@ -188,18 +191,30 @@ export default function LegalPage() {
 
         <section>
           <h2 className="text-base font-bold text-white mb-3">
-            5. Cookies et sessions
+            5. Cookies, Lecteurs tiers et sessions
           </h2>
           <p>
-            Ce site utilise uniquement un cookie de session sécurisé (
+            Ce site utilise uniquement des cookies techniques essentiels pour
+            l'authentification (
             <code className="text-naruto-orange/80 text-xs bg-white/5 px-1 py-0.5 rounded">
               next-auth.session-token
             </code>
-            ) nécessaire au fonctionnement de l&apos;authentification. Ce cookie
-            est <strong className="text-white/75">httpOnly</strong>,{" "}
+            ) et la mémorisation de tes préférences de consentement (
+            <code className="text-naruto-orange/80 text-xs bg-white/5 px-1 py-0.5 rounded">
+              cookie_consent
+            </code>
+            ). Ces cookies de session sont{" "}
+            <strong className="text-white/75">httpOnly</strong>,{" "}
             <strong className="text-white/75">Secure</strong> et{" "}
             <strong className="text-white/75">SameSite=Lax</strong>. Aucun
-            cookie publicitaire ou de tracking tiers n&apos;est utilisé.
+            cookie publicitaire ou traceur tiers n&apos;est utilisé.
+          </p>
+          <p className="mt-2">
+            Les vidéos intégrées sur le site utilisent le domaine restreint{" "}
+            <strong className="text-white/75">youtube-nocookie.com</strong>{" "}
+            officiel de Google. Ce mode empêche le dépôt de traceurs
+            publicitaires ou comportementaux avant la lecture active d'une vidéo
+            par l'utilisateur.
           </p>
           <p className="mt-2">
             Les analytics sont assurés par{" "}
