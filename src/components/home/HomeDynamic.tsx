@@ -28,7 +28,7 @@ function SectionHeader({
   hrefLabel: string;
 }) {
   return (
-    <div className="flex items-end justify-between mb-6">
+    <div className="flex items-center justify-between mb-6">
       <div>
         <p className="text-naruto-orange text-[10px] font-black uppercase tracking-[0.3em] mb-1">
           {eyebrow}
@@ -154,7 +154,7 @@ export default function HomeDynamic() {
               eyebrow="Fan-Hub"
               title="Les vidéos les plus appéciées"
               href="/videos"
-              hrefLabel="Voir tout"
+              hrefLabel="Plus"
             />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <AnimatePresence mode="popLayout" initial={false}>
