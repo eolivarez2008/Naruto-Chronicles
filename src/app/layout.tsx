@@ -3,6 +3,7 @@ import Script from "next/script";
 import "@/styles/globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import CookieBanner from "@/components/ui/CookieBanner";
 import { SessionProvider } from "next-auth/react";
 import { DM_Sans, Syne } from "next/font/google";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
           <main className="relative z-10 flex flex-1 flex-col">{children}</main>
           <Footer />
         </SessionProvider>
+        <CookieBanner />
         <Script
           src={`${process.env.NEXT_PUBLIC_UMAMI_URL ?? "..."}/script.js`}
           data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
