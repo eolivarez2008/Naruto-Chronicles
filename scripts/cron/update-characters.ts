@@ -1,15 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import {
   sleep,
-  fetchJson,
+  fetchWithRetry,
   normalizeString,
-  JIKAN_DELAY_MS,
+  TENRAI_DELAY_MS,
 } from "@/lib/network";
 import { sendDiscordEmbed, sendDiscordFatal } from "../discord-logger";
 
 const prisma = new PrismaClient();
 
-const JIKAN_BASE = "https://api.jikan.moe/v4";
+const TENRAI_BASE = "https://api.tenrai.org/v1";
 
 const ANIMES = [
   { id: 20, label: "Naruto" },
@@ -23,16 +23,26 @@ interface ChangeLog {
   after: number;
 }
 
-// ─── MAJ des scores de popularité depuis Jikan ──────────────────────────────────
+interface TenraiCharactersResponse {
+  data: Array<{ character: { name: string }; favorites?: number }>;
+}
+
+function isValidCharactersResponse(
+  json: unknown,
+): json is TenraiCharactersResponse {
+  return (
+    !!json &&
+    typeof json === "object" &&
+    Array.isArray((json as TenraiCharactersResponse).data)
+  );
+}
 
 async function fetchPopularityScores(): Promise<{
   scores: Map<string, number>;
-  rateLimitHit: boolean;
   errors: string[];
 }> {
   const scores = new Map<string, number>();
   const errors: string[] = [];
-  let rateLimitHit = false;
 
   const addScore = (name: string, favorites: number | undefined) => {
     const safe = favorites ?? 1;
@@ -45,32 +55,39 @@ async function fetchPopularityScores(): Promise<{
 
   for (const anime of ANIMES) {
     process.stdout.write(`  [${anime.label}] fetch... `);
-    try {
-      await sleep(JIKAN_DELAY_MS);
-      const data = await fetchJson<{
-        data: Array<{ character: { name: string }; favorites?: number }>;
-      }>(`${JIKAN_BASE}/anime/${anime.id}/characters`);
+    await sleep(TENRAI_DELAY_MS);
 
-      let count = 0;
-      for (const entry of data.data ?? []) {
-        if (entry.character?.name) {
-          addScore(entry.character.name, entry.favorites);
-          count++;
-        }
-      }
-      console.log(`✓ ${count} personnages`);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("429")) rateLimitHit = true;
-      errors.push(`${anime.label} : ${msg}`);
-      console.log(`⚠ skipped (${msg})`);
+    const res = await fetchWithRetry(
+      `${TENRAI_BASE}/anime/${anime.id}/characters`,
+    );
+
+    if (!res.ok) {
+      const msg = `${anime.label} : HTTP ${res.status}`;
+      errors.push(msg);
+      console.log(`❌ ${msg}`);
+      continue;
     }
+
+    const json = (await res.json()) as unknown;
+    if (!isValidCharactersResponse(json)) {
+      const msg = `${anime.label} : réponse invalide`;
+      errors.push(msg);
+      console.log(`❌ ${msg}`);
+      continue;
+    }
+
+    let count = 0;
+    for (const entry of json.data) {
+      if (entry.character?.name) {
+        addScore(entry.character.name, entry.favorites);
+        count++;
+      }
+    }
+    console.log(`✓ ${count} personnages`);
   }
 
-  return { scores, rateLimitHit, errors };
+  return { scores, errors };
 }
-
-// ─── Comparaison et mise à jour en base ───────────────────────────────────────
 
 async function applyPopularityUpdates(
   scores: Map<string, number>,
@@ -109,12 +126,10 @@ async function applyPopularityUpdates(
   return changes;
 }
 
-// ─── Rapport Discord ──────────────────────────────────────────────────────────
-
 async function notify(
   changes: ChangeLog[],
   errors: string[],
-  rateLimitHit: boolean,
+  aborted: boolean,
   durationSeconds: number,
 ): Promise<void> {
   const hasError = errors.length > 0;
@@ -123,8 +138,9 @@ async function notify(
     .sort((a, b) => Math.abs(b.after - b.before) - Math.abs(a.after - a.before))
     .slice(0, 10);
 
-  const changesField =
-    changes.length === 0
+  const changesField = aborted
+    ? "Mise à jour annulée — au moins une source a échoué"
+    : changes.length === 0
       ? "Aucun changement détecté"
       : topChanges
           .map((c) => `**${c.name}** ${c.before} → **${c.after}**`)
@@ -133,7 +149,9 @@ async function notify(
 
   const fields = [
     {
-      name: `👥 Popularité — ${changes.length} personnage(s) mis à jour`,
+      name: aborted
+        ? "🚫 Mise à jour annulée"
+        : `👥 Popularité — ${changes.length} personnage(s) mis à jour`,
       value: changesField.slice(0, 1024),
       inline: false,
     },
@@ -141,7 +159,7 @@ async function notify(
 
   if (errors.length > 0) {
     fields.push({
-      name: "❌ Erreurs Jikan",
+      name: "❌ Erreurs Tenrai",
       value: errors
         .map((e) => `• ${e}`)
         .join("\n")
@@ -150,55 +168,53 @@ async function notify(
     });
   }
 
-  if (rateLimitHit) {
-    fields.push({
-      name: "⚠️ Rate-limit Jikan",
-      value:
-        "Un rate-limit a été détecté pendant la récupération. Certaines données peuvent être incomplètes.",
-      inline: false,
-    });
-  }
-
   await sendDiscordEmbed(
     {
-      title: hasError
-        ? "⚠️ update-characters — erreurs Jikan"
-        : `✅ update-characters — ${changes.length} changement(s)`,
-      color: hasError ? 0xff4747 : rateLimitHit ? 0xf59e0b : 0xff6600,
+      title: aborted
+        ? "🚫 update-characters — mise à jour annulée"
+        : hasError
+          ? "⚠️ update-characters — erreurs Tenrai"
+          : `✅ update-characters — ${changes.length} changement(s)`,
+      color: aborted ? 0xff4747 : hasError ? 0xf59e0b : 0xff6600,
       fields,
       footer: {
         text: `Naruto Chronicles · update-characters · ${durationSeconds}s`,
       },
     },
-    hasError || rateLimitHit,
+    aborted || hasError,
   );
 }
-
-// ─── Point d'entrée ───────────────────────────────────────────────────────────
 
 export async function run(): Promise<void> {
   const startedAt = Date.now();
   console.log("👥 update-characters — démarrage\n");
 
-  const { scores, rateLimitHit, errors } = await fetchPopularityScores();
+  const { scores, errors } = await fetchPopularityScores();
+  const aborted = errors.length > 0;
+
+  if (aborted) {
+    console.log(`\n🚫 ${errors.length} source(s) en échec — mise à jour annulée`);
+    const duration = Math.round((Date.now() - startedAt) / 1000);
+    await notify([], errors, true, duration);
+    return;
+  }
+
   console.log(`\n  ${scores.size} entrées de popularité récupérées`);
 
   const changes = await applyPopularityUpdates(scores);
   console.log(`  ✓ ${changes.length} personnage(s) mis à jour`);
 
   const duration = Math.round((Date.now() - startedAt) / 1000);
-  console.log(`\n${errors.length > 0 ? "⚠" : "✅"} Terminé en ${duration}s`);
+  console.log(`\n✅ Terminé en ${duration}s`);
 
-  await notify(changes, errors, rateLimitHit, duration);
+  await notify(changes, [], false, duration);
 }
 
-// Exécution directe (npx tsx scripts/cron/update-characters.ts)
-if (import.meta.url === `file://${process.argv[1]}`) {
-  run()
-    .catch(async (err) => {
-      console.error("❌ Erreur fatale :", err);
-      await sendDiscordFatal("update-characters.ts", err);
-      process.exit(1);
-    })
-    .finally(() => prisma.$disconnect());
-}
+// Exécution directe du script
+run()
+  .catch(async (err) => {
+    console.error("❌ Erreur fatale :", err);
+    await sendDiscordFatal("update-characters.ts", err);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

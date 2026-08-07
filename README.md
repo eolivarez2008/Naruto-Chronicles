@@ -42,10 +42,10 @@ This project is fully finalized and operational. No new features or major upgrad
 ## Features
 
 - **Story** — narrative arcs automatically extracted via the MediaWiki API for an accurate chronological timeline.
-- **Characters** — detailed character sheets built from a multi-source merge, synchronized with MyAnimeList popularity scores via Jikan.
+- **Characters** — detailed character sheets built from a multi-source merge, synchronized with MyAnimeList popularity scores via Tenrai.
 - **Videos** — automatic aggregation of thematic YouTube content with an interaction system (likes).
 - **Tierlists** — tool for creating custom rankings and browsing community tierlists.
-- **Saga** — dynamic collection showcase including real-time statistics and scores via the Jikan API.
+- **Saga** — dynamic collection showcase including real-time statistics and scores via the Tenrai API.
 - **Contact** — dedicated form for user suggestions and feedback.
 - **Profile** — personal space centralizing liked videos and created or saved tierlists.
 
@@ -57,7 +57,7 @@ This project is fully finalized and operational. No new features or major upgrad
 - **Database & ORM:** SQLite database management structured through [Prisma 6](https://www.prisma.io/).
 - **Authentication:** [NextAuth.js](https://next-auth.js.org/) handling secure sessions integrated with [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2).
 - **UI & Animations:** [Tailwind CSS](https://tailwindcss.com/) for a utility-first responsive design system, [Framer Motion](https://www.framer.com/motion/) for smooth layout animations, and [Lucide React](https://lucide.dev/) for optimized tree-shakable icons.
-- **Data Engineering & APIs:** Multi-source mashup engine leveraging the [MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) (lore extraction), [YouTube Data API v3](https://developers.google.com/youtube/v3) (video aggregation), [Jikan API](https://jikan.moe/) (MyAnimeList stats), and dedicated community repositories (`narutodb-website`, `naruto-api`, `Dattebayo API`).
+- **Data Engineering & APIs:** Multi-source mashup engine leveraging the [MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) (lore extraction), [YouTube Data API v3](https://developers.google.com/youtube/v3) (video aggregation), [Tenrai API](https://tenrai.org/) (MyAnimeList stats), and dedicated community repositories (`narutodb-website`, `naruto-api`, `Dattebayo API`).
 - **AI Integration:** [OpenAI API](https://openai.com/api/) workflows utilizing GPT models for automated asynchronous content translation.
 
 ---

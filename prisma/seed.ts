@@ -7,7 +7,7 @@ import {
   fetchJson,
   fetchJsonSafe,
   normalizeString,
-  JIKAN_DELAY_MS,
+  TENRAI_DELAY_MS,
 } from "@/lib/network";
 import {
   searchVideosWithStats,
@@ -17,7 +17,7 @@ import {
 
 const prisma = new PrismaClient();
 
-const JIKAN_BASE = "https://api.jikan.moe/v4";
+const TENRAI_BASE = "https://api.tenrai.org/v1";
 const DB_BATCH_SIZE = 50;
 
 const SOURCE_SRINIOUSLY =
@@ -28,11 +28,15 @@ const DATTEBAYO_BASE = "https://dattebayo-api.onrender.com";
 
 const SEED_MAX_RESULTS = 10;
 
-const SAGA_CONFIG = [
-  { key: "naruto", id: 20, type: "anime", label: "Naruto" },
-  { key: "shippuden", id: 1735, type: "anime", label: "Naruto Shippuden" },
-  { key: "boruto", id: 34566, type: "anime", label: "Boruto" },
-  { key: "tbv", id: 160786, type: "manga", label: "Two Blue Vortex" },
+type SagaType = "anime" | "manga";
+
+const SAGA_CONFIG: SagaTarget[] = [
+  { storyKey: "naruto", id: 20, type: "anime", label: "Naruto" },
+  { storyKey: "naruto", id: 11, type: "manga", label: "Naruto" },
+  { storyKey: "shippuden", id: 1735, type: "anime", label: "Naruto Shippuden" },
+  { storyKey: "boruto", id: 34566, type: "anime", label: "Boruto" },
+  { storyKey: "boruto", id: 95210, type: "manga", label: "Boruto" },
+  { storyKey: "tbv", id: 160786, type: "manga", label: "Two Blue Vortex" },
 ];
 
 const STORIES_FR: Record<string, string> = {
@@ -62,6 +66,13 @@ const SKIP = {
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+interface SagaTarget {
+  storyKey: string;
+  id: number;
+  type: SagaType;
+  label: string;
+}
 
 interface SriniouslyChar {
   id: number;
@@ -278,8 +289,8 @@ async function fetchDattebayo(): Promise<Map<number, DattebayoChar>> {
   return map;
 }
 
-async function fetchJikanPopularity(): Promise<Map<string, number>> {
-  console.log("\n  ⭐ Popularité Jikan...");
+async function fetchTenraiPopularity(): Promise<Map<string, number>> {
+  console.log("\n  ⭐ Popularité Tenrai...");
   const scores = new Map<string, number>();
 
   const addScore = (name: string, favorites: number | undefined) => {
@@ -298,10 +309,10 @@ async function fetchJikanPopularity(): Promise<Map<string, number>> {
   ]) {
     process.stdout.write(`  [${anime.label}] fetch... `);
     try {
-      await sleep(JIKAN_DELAY_MS);
+      await sleep(TENRAI_DELAY_MS);
       const data = await fetchJson<{
         data: Array<{ character: { name: string }; favorites?: number }>;
-      }>(`${JIKAN_BASE}/anime/${anime.id}/characters`);
+      }>(`${TENRAI_BASE}/anime/${anime.id}/characters`);
       let count = 0;
       for (const entry of data.data ?? []) {
         if (entry.character?.name) {
@@ -414,7 +425,7 @@ async function seedCharacters(): Promise<void> {
     fetchGustavo(),
     fetchDattebayo(),
   ]);
-  const popularityScores = await fetchJikanPopularity();
+  const popularityScores = await fetchTenraiPopularity();
   const characters = buildCharacters(s1, s2, s3, popularityScores);
   await upsertCharacters(characters);
 }
@@ -425,59 +436,66 @@ async function seedCharacters(): Promise<void> {
 
 async function seedSagas(): Promise<void> {
   for (const saga of SAGA_CONFIG) {
-    await sleep(JIKAN_DELAY_MS * 4);
-    process.stdout.write(`  ${saga.label}... `);
+    await sleep(TENRAI_DELAY_MS * 4);
+    process.stdout.write(`  ${saga.label} (${saga.type})... `);
+    const endpoint = saga.type === "anime" ? "anime" : "manga";
+
     try {
-      const res = await fetchWithRetry(
-        `${JIKAN_BASE}/${saga.type}/${saga.id}/full`,
-      );
+      const res = await fetchWithRetry(`${TENRAI_BASE}/${endpoint}/${saga.id}/full`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { data } = (await res.json()) as { data: Record<string, unknown> };
 
       let creator = "Masashi Kishimoto";
       const authors = data.authors as Array<{ name: string }> | undefined;
       const studios = data.studios as Array<{ name: string }> | undefined;
-      if (authors?.length)
-        creator = authors[0].name.split(", ").reverse().join(" ");
+      if (authors?.length) creator = authors[0].name.split(", ").reverse().join(" ");
       else if (studios?.length) creator = studios[0].name;
 
       const status =
-        data.status === "Finished" || data.status === "Finished Airing"
+        data.status === "Finished" ||
+        data.status === "Finished Airing" ||
+        data.status === "Complete"
           ? "Terminé"
           : "En cours";
-      const images = data.images as
-        | Record<string, Record<string, string>>
-        | undefined;
-      const aired = data.aired as
-        | Record<string, Record<string, Record<string, number>>>
-        | undefined;
-      const published = data.published as
-        | Record<string, Record<string, Record<string, number>>>
-        | undefined;
+
+      const images = data.images as Record<string, Record<string, string>> | undefined;
+      const aired = data.aired as Record<string, Record<string, Record<string, number>>> | undefined;
+      const published = data.published as Record<string, Record<string, Record<string, number>>> | undefined;
+
+      const image = images?.jpg?.large_image_url?.trim() || "/logo/favicon-naruto.png";
+      const episodes = saga.type === "anime" ? ((data.episodes as number | null) ?? null) : null;
+      const chapters = saga.type === "manga" ? ((data.chapters as number | null) ?? null) : null;
+      const volumes = saga.type === "manga" ? ((data.volumes as number | null) ?? null) : null;
+
+      const whereCondition = {
+        tenraiId_type: {
+          tenraiId: saga.id,
+          type: saga.type,
+        },
+      };
 
       await prisma.saga.upsert({
-        where: { key: saga.key },
+        where: whereCondition,
         update: {
           score: data.score as number | null,
           status,
-          total:
-            (data.episodes as number | null) ??
-            (data.chapters as number | null),
+          episodes,
+          chapters,
+          volumes,
           lastUpdated: new Date(),
         },
         create: {
-          key: saga.key,
-          jikanId: saga.id,
+          tenraiId: saga.id,
           type: saga.type,
           label: saga.label,
-          synopsisFr: STORIES_FR[saga.key] ?? "À venir",
-          image: images?.jpg?.large_image_url ?? "",
+          synopsisFr: STORIES_FR[saga.storyKey] ?? "À venir",
+          image,
           status,
           score: data.score as number | null,
           creator,
-          total:
-            (data.episodes as number | null) ??
-            (data.chapters as number | null),
+          episodes,
+          chapters,
+          volumes,
           year: aired?.prop?.from?.year ?? published?.prop?.from?.year,
         },
       });

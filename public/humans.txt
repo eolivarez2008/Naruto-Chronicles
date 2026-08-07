@@ -4,7 +4,6 @@ Role: Développeur Full-Stack
 School: Lycée Louis de Cormontaigne, Metz (57000)
 Formation: Bac Pro CIEL (Cybersécurité, Informatique et réseaux, Électronique)
 GitHub: https://github.com/eolivarez2008
-Portfolio: https://eolivarez.site
 Location: Metz, Grand Est, France
 
 /* SITE */
@@ -12,7 +11,7 @@ Name: Naruto Chronicles
 Version: 2.0.0
 Language: French
 Charset: UTF-8
-Last update: 2026/04
+Last update: 2026/08
 
 /* STACK */
 Framework: Next.js 16 (App Router, Server Components)
@@ -27,7 +26,7 @@ Analytics: Umami (Self-hosted, Privacy-focused)
 Monitoring: Discord Webhooks
 
 /* SOURCES DE DONNÉES */
-Jikan API (MyAnimeList): https://jikan.moe/
+Tenrai API (MyAnimeList): https://tenrai.org
 Dattebayo API: https://dattebayo-api.onrender.com/
 YouTube Data API v3: https://developers.google.com/youtube/v3
 

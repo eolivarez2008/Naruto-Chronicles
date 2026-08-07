@@ -9,8 +9,7 @@ datasource db {
 
 model Saga {
   id          String   @id @default(cuid())
-  jikanId     Int      @unique
-  key         String   @unique
+  tenraiId     Int?
   type        String
   label       String
   synopsisFr  String
@@ -18,9 +17,14 @@ model Saga {
   status      String
   score       Float?
   creator     String
-  total       Int?
+  episodes    Int?
+  chapters    Int?
+  volumes     Int?
   year        Int?
   lastUpdated DateTime @default(now())
+
+  @@unique([tenraiId, type])
+  @@index([type])
 }
 
 model Character {

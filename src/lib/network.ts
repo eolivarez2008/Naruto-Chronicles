@@ -1,7 +1,7 @@
-// Délai configurable entre requêtes Jikan
-export const JIKAN_DELAY_MS = 500;
+export const TENRAI_DELAY_MS = 500;
 const MAX_RETRY = 4;
 const MAX_RETRY_WAIT = 30_000;
+const RETRYABLE_STATUS = [429, 403, 502, 503, 504];
 
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,7 +20,7 @@ export async function fetchWithRetry(
     },
   });
 
-  if (res.status === 429 && attempt < MAX_RETRY) {
+  if (RETRYABLE_STATUS.includes(res.status) && attempt < MAX_RETRY) {
     const retryAfter = parseInt(res.headers.get("retry-after") ?? "0", 10);
     const wait = Math.min(
       retryAfter > 0 ? retryAfter * 1000 : 1_000 * 2 ** attempt,
@@ -28,16 +28,8 @@ export async function fetchWithRetry(
     );
 
     console.warn(
-      `⏳ 429 — attente ${wait / 1000}s (tentative ${attempt + 1}/${MAX_RETRY})`,
+      `⏳ ${res.status} — attente ${wait / 1000}s (tentative ${attempt + 1}/${MAX_RETRY})`,
     );
-
-    await sleep(wait);
-    return fetchWithRetry(url, attempt + 1);
-  }
-
-  if (res.status === 403 && attempt < MAX_RETRY) {
-    const wait = 1500 * (attempt + 1);
-    console.warn(`⛔ 403 retry ${attempt + 1}/${MAX_RETRY}`);
 
     await sleep(wait);
     return fetchWithRetry(url, attempt + 1);
@@ -51,7 +43,7 @@ export async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetchWithRetry(url);
 
   if (res.status === 403) {
-    throw new Error(`Jikan 403 — accès temporairement bloqué — ${url}`);
+    throw new Error(`TENRAI 403 — accès temporairement bloqué — ${url}`);
   }
 
   if (!res.ok) {
