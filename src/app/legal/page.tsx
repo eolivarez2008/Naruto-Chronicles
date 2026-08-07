@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function LegalPage() {
-  const lastUpdated = "23 Juin 2026";
+  const lastUpdated = "07 Août 2026";
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 fade-in-up">
@@ -33,8 +33,6 @@ export default function LegalPage() {
           <div className="space-y-2">
             <p>
               <span className="text-white/40">Éditeur :</span> Emilien Olivarez
-              — étudiant en Bac Pro CIEL, Lycée Louis de Cormontaigne, 12 Place
-              Cormontaigne, 57000 Metz (57000)
             </p>
             <p>
               <span className="text-white/40">Hébergement :</span> Auto-hébergé
@@ -48,7 +46,8 @@ export default function LegalPage() {
                 className="text-naruto-orange/80 hover:text-naruto-orange underline transition-colors"
               >
                 Formulaire de contact
-              </Link>
+              </Link>{" "}<span>ou</span>{" "}
+              <Link href="mailto:eolivarez2008@gmail.com" className="text-naruto-orange/80 hover:text-naruto-orange underline transition-colors">eolivarez2008@gmail.com</Link>
             </p>
             <p className="text-white/35 text-xs pt-2">
               Ce site est un projet personnel à caractère non commercial, dédié

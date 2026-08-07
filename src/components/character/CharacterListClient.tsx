@@ -188,7 +188,7 @@ export function CharacterCardItem({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.15 }}
       onClick={onClick}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-[#050505] outline-none cursor-pointer"
+      className="group relative flex flex-col overflow-hidden border border-white/10 rounded-xl bg-white-3 outline-none cursor-pointer transition-all duration-300 hover:border-white/20 hover:-translate-y-1 hover:bg-white/6"
     >
       <div className="relative w-full aspect-3/4 overflow-hidden">
         <Image
@@ -197,7 +197,7 @@ export function CharacterCardItem({
           alt={character.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-110 scale-[1.01]"
+          className="object-cover object-top transition-all duration-300 group-hover:scale-105"
           unoptimized
           onError={(e) => {
             (e.target as HTMLImageElement).src = FALLBACK;

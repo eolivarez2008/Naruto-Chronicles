@@ -201,7 +201,7 @@ export default function StoryListClient({ arcs }: { arcs: StoryArc[] }) {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-3">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-10">
       <FilterToolbar
         searchValue={searchRaw}
         onSearchChange={handleSearchChange}

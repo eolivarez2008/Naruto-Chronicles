@@ -126,7 +126,7 @@ export default async function TierListPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-16">
+    <main className="min-h-screen text-white -mt-16 pt-16">
       <TierListHomeClient
         myCreatedLists={myCreatedLists}
         myLikedLists={myLikedLists}

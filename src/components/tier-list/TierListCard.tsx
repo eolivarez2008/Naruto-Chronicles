@@ -55,7 +55,7 @@ function TierMiniPreview({ tiersData }: { tiersData?: string }) {
   if (nonEmpty.length === 0) return <EmptyPreview />;
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden">
+    <div className="w-full h-full flex flex-col overflow-hidden duration-300 group-hover:scale-105">
       {nonEmpty.map((tier) => {
         const images = Array.isArray(tier.characterImages)
           ? tier.characterImages
@@ -159,7 +159,7 @@ export default function TierListCardItem({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18, delay: Math.min(index % 12, 8) * 0.04 }}
-        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-[#0d0d0d] hover:border-white/15 transition-colors duration-300"
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white-3 hover:border-white/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white/6"
       >
         <Link href={`/tier-list/${list.id}`} className="block">
           <div className="relative h-36 overflow-hidden bg-[#0d0d0d] border-b border-white/5">
@@ -238,7 +238,7 @@ export default function TierListCardItem({
           </button>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity bg-linear-to-r from-naruto-orange to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-naruto-orange" />
       </motion.div>
 
       <LoginPromptModal

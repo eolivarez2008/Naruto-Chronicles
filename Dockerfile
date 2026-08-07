@@ -3,7 +3,9 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
+COPY prisma ./prisma/
 RUN npm install
+RUN npx prisma generate
 
 # Build
 FROM node:20-alpine AS builder
@@ -23,7 +25,6 @@ ENV NEXT_PUBLIC_UMAMI_URL=$NEXT_PUBLIC_UMAMI_URL
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
-RUN npx prisma generate
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
@@ -46,4 +47,4 @@ COPY --from=builder /app/src ./src
 
 EXPOSE 3001
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npx prisma db push && npm start"]

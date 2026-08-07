@@ -365,7 +365,7 @@ export default function ArcDetailClient({
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-19">
+    <main className="min-h-screen text-white -mt-16 pt-19">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <nav className="flex items-center gap-2 text-xs text-white/30 mb-6">
           <Link

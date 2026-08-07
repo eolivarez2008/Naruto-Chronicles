@@ -51,7 +51,7 @@ export default async function StoryPage() {
   const arcs = await getArcs();
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white -mt-16 pt-16">
+    <main className="min-h-screen text-white -mt-16 pt-16">
       <PageHero
         eyebrow="Chroniques"
         title="Histoire"

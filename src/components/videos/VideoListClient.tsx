@@ -167,10 +167,6 @@ export default function VideoListClient() {
         <VideoEmpty />
       ) : (
         <>
-          <p className="text-white/20 text-xs mb-4 font-mono">
-            {total.toLocaleString()} vidéos · page {page}/{totalPages}
-          </p>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <AnimatePresence initial={false}>
               {videos.map((video, i) => (

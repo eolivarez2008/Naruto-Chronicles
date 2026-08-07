@@ -45,7 +45,7 @@ function SagaCard({ saga, index }: { saga: SagaData; index: number }) {
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25, delay: index * 0.05 }}
     >
-      <GlassCard className="group relative h-full flex flex-row overflow-hidden border-white/8 bg-linear-to-b from-white/5 to-transparent hover:translate-x-1 hover:bg-white/6 hover:border-white/20 transition-all duration-300">
+      <GlassCard className="group relative h-full flex flex-row overflow-hidden border border-white/10 bg-white-3 hover:translate-x-1 hover:bg-white/6 hover:border-white/20 transition-all duration-300">
         <div className="relative w-28 sm:w-36 aspect-[2/3] shrink-0 overflow-hidden border-r border-white/8">
           <Image
             src={saga.image}
@@ -53,7 +53,7 @@ function SagaCard({ saga, index }: { saga: SagaData; index: number }) {
             fill
             sizes="(max-width: 640px) 120px, 150px"
             unoptimized
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20" />
 

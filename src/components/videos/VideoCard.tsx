@@ -60,7 +60,7 @@ export default function VideoCardItem({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18, delay: Math.min(index % 12, 8) * 0.04 }}
-        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/4 cursor-pointer hover:border-white/15 transition-colors duration-300"
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white-3  cursor-pointer hover:border-white/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white/6"
         onClick={() => {
           trackEvent(EVENTS.VIDEO_OPEN, {
             videoId: video.id,
@@ -74,7 +74,7 @@ export default function VideoCardItem({
           <img
             src={video.thumbnail}
             alt={video.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
@@ -127,9 +127,9 @@ export default function VideoCardItem({
         </div>
 
         <div
-          className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity"
           style={{
-            background: `linear-gradient(90deg, ${color}, transparent)`,
+            background: `${color}`,
           }}
         />
       </motion.div>

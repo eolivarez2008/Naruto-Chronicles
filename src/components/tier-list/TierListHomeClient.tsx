@@ -290,13 +290,6 @@ function DiscoverSection() {
         filterValue={pack}
         onFilterChange={handlePackChange}
       />
-
-      {total > 0 && (
-        <p className="text-white/20 text-xs mb-4">
-          {total.toLocaleString()} tier list{total > 1 ? "s" : ""}
-        </p>
-      )}
-
       {loading && lists.length === 0 ? (
         <GridSkeleton />
       ) : lists.length === 0 ? (
@@ -563,20 +556,17 @@ export default function TierListHomeClient({
         action={createButton}
       />
 
-      <div className="border-b border-white/6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex">
+        <div className="border-b border-white/6 mb-8">
+          <div className="flex justify-center">
             {TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => handleTabChange(t.id)}
-                className={[
-                  "relative flex items-center gap-2 px-4 sm:px-6 py-3 text-sm font-semibold transition-all cursor-pointer",
-                  tab === t.id
-                    ? "text-white"
-                    : "text-white/40 hover:text-white/65",
-                ].join(" ")}
-              >
+                <button
+                  key={t.id}
+                  onClick={() => handleTabChange(t.id)}
+                  className={[
+                    "relative flex items-center gap-2 px-4 sm:px-6 py-3 text-sm font-semibold transition-all cursor-pointer",
+                    tab === t.id ? "text-white" : "text-white/40 hover:text-white/65",
+                  ].join(" ")}
+                >
                 {(() => {
                   const Icon = t.icon;
                   return (
@@ -585,7 +575,7 @@ export default function TierListHomeClient({
                     />
                   );
                 })()}
-                <span className="hidden sm:inline">{t.label}</span>
+                <span>{t.label}</span>
                 {tab === t.id && (
                   <motion.div
                     layoutId="tab-underline"
@@ -596,7 +586,6 @@ export default function TierListHomeClient({
             ))}
           </div>
         </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AnimatePresence mode="wait">
