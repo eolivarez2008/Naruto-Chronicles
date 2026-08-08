@@ -211,10 +211,12 @@ export async function run(): Promise<void> {
 }
 
 // Exécution directe du script
-run()
-  .catch(async (err) => {
-    console.error("❌ Erreur fatale :", err);
-    await sendDiscordFatal("update-characters.ts", err);
-    process.exit(1);
-  })
-  .finally(() => prisma.$disconnect());
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run()
+    .catch(async (err) => {
+      console.error("❌ Erreur fatale :", err);
+      await sendDiscordFatal("update-characters.ts", err);
+      process.exit(1);
+    })
+    .finally(() => prisma.$disconnect());
+}

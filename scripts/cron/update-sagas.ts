@@ -250,14 +250,6 @@ export async function run(): Promise<void> {
   await notify(results, duration);
 }
 
-run()
-  .catch(async (err) => {
-    console.error("❌ Erreur fatale :", err);
-    await sendDiscordFatal("update-sagas.ts", err);
-    process.exit(1);
-  })
-  .finally(() => prisma.$disconnect());
-
 if (import.meta.url === `file://${process.argv[1]}`) {
   run()
     .catch(async (err) => {
