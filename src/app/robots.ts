@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/profile/", "/private/"],
       crawlDelay: 1,
     },
-    sitemap: "https://naruto.eolivarez.site/sitemap.xml",
+    sitemap: "https://naruto.eolivarez.fr/sitemap.xml",
   };
 }

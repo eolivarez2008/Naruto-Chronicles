@@ -9,7 +9,7 @@ import { DM_Sans, Syne } from "next/font/google";
 
 export const metadata: Metadata = {
   title: { default: "Naruto Chronicles", template: "%s | Naruto Chronicles" },
-  metadataBase: new URL("https://naruto.eolivarez.site"),
+  metadataBase: new URL("https://naruto.eolivarez.fr"),
   description:
     "Site dédié à l'univers de Naruto — histoire, personnages, sagas et bien plus.",
   icons: { icon: "/logo/favicon-naruto.png" },

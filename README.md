@@ -10,7 +10,7 @@ A full-stack website dedicated to the Naruto universe, rebuilt in 2026 from a va
 [![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel-F38020?logo=cloudflare&logoColor=white)](https://www.cloudflare.com/products/tunnel/)
 
-**[Live Website](https://naruto.eolivarez.site)**
+**[Live Website](https://naruto.eolivarez.fr)**
 
 </div>
 

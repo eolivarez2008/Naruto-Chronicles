@@ -391,7 +391,7 @@ export default function TierListEditor({
                   {title || "Tier List"}
                 </h2>
                 <span className="text-[10px] text-white/20 font-mono shrink-0">
-                  naruto.eolivarez.site
+                  naruto.eolivarez.fr
                 </span>
               </div>
               <div className="divide-y divide-white/5">

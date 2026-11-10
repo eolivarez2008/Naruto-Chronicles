@@ -1,8 +1,6 @@
 /* TEAM */
 Developer: Emilien Olivarez
-Role: Développeur Full-Stack
-School: Lycée Louis de Cormontaigne, Metz (57000)
-Formation: Bac Pro CIEL (Cybersécurité, Informatique et réseaux, Électronique)
+Role: Student
 GitHub: https://github.com/eolivarez2008
 Location: Metz, Grand Est, France
 
@@ -11,7 +9,7 @@ Name: Naruto Chronicles
 Version: 2.0.0
 Language: French
 Charset: UTF-8
-Last update: 2026/08
+Last update: 2026/10
 
 /* STACK */
 Framework: Next.js 16 (App Router, Server Components)
