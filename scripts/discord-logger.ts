@@ -1,7 +1,7 @@
 // Utilitaire d'envoi de notifications Discord pour tous les scripts cron
 
 const WEBHOOK_URL = process.env.DISCORD_ADMIN_WEBHOOK_URL ?? "";
-const ADMIN_ROLE_ID = "1483836726429356123";
+const ADMIN_ROLE_ID = process.env.DISCORD_ADMIN_ROLE_ID ?? "";
 
 export interface DiscordEmbed {
   title: string;

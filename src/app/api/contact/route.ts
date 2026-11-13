@@ -28,7 +28,7 @@ function buildDiscordPayload(
 ) {
   return {
     username: "Naruto Contact",
-    content: "<@&1483836726429356123> Nouveau message de contact reçu !",
+    content: `<@&${process.env.DISCORD_ADMIN_ROLE_ID}> Nouveau message de contact reçu !`,
     embeds: [
       {
         title: "Nouveau message reçu",
