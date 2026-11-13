@@ -3,10 +3,10 @@ services:
     build:
       context: .
       args:
-        - NEXT_PUBLIC_TURNSTILE_SITE_KEY=${NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-        - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-        - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL}
-        - DATABASE_URL=${DATABASE_URL}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
+        NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
+        NEXT_PUBLIC_UMAMI_URL: ${NEXT_PUBLIC_UMAMI_URL:-}
+        DATABASE_URL: ${DATABASE_URL:-file:./prisma/SQLite.db}
     image: naruto:latest
     container_name: naruto-chronicles
     restart: always
@@ -14,5 +14,7 @@ services:
       - 127.0.0.1:3001:3001
     env_file:
       - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-file:./prisma/SQLite.db}
     volumes:
       - ./prisma:/app/prisma

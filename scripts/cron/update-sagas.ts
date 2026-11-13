@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { sleep, fetchWithRetry, TENRAI_DELAY_MS } from "@/lib/network";
 import { sendDiscordEmbed, sendDiscordFatal } from "../discord-logger";
-
-const prisma = new PrismaClient();
 
 const TENRAI_BASE = "https://api.tenrai.org/v1";
 
@@ -164,7 +162,7 @@ async function updateSaga(target: SagaTarget): Promise<SagaResult> {
         tenraiId,
         type,
         label,
-        synopsisFr : "",
+        synopsisFr: "",
         image,
         status: newStatus,
         score: newScore,

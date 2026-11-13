@@ -3,6 +3,7 @@ node_modules
 .next
 out
 build
+/src/generated/prisma
 
 # Fichiers de configuration locale et secrets
 .env

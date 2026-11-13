@@ -1,4 +1,5 @@
-import { PrismaClient, StoryArc } from "@prisma/client";
+import type { StoryArc } from "@/generated/prisma/client";
+import prisma from "@/lib/prisma";
 import OpenAI from "openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
@@ -6,7 +7,6 @@ import * as path from "path";
 
 dotenv.config();
 
-const prisma = new PrismaClient();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // ─── Config ───────────────────────────────────────────────────────────────────

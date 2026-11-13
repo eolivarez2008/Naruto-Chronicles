@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-import { sleep } from "../../src/lib/network";
+import prisma from "@/lib/prisma";
+import { sleep } from "@/lib/network";
 import {
   searchVideosWithStats,
   hasApiKey,
   VIDEO_CATEGORIES,
 } from "@/lib/youtube";
 import { sendDiscordEmbed, sendDiscordFatal } from "../discord-logger";
-
-const prisma = new PrismaClient();
 
 const MAX_RESULTS = 17;
 

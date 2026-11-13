@@ -7,7 +7,7 @@ A full-stack website dedicated to the Naruto universe, rebuilt in 2026 from a va
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel-F38020?logo=cloudflare&logoColor=white)](https://www.cloudflare.com/products/tunnel/)
 
 **[Live Website](https://naruto.eolivarez.fr)**
@@ -54,7 +54,7 @@ This project is fully finalized and operational. No new features or major upgrad
 ## Tech Stack
 
 - **Framework & Logic:** [Next.js 16](https://nextjs.org/) (App Router, Server Components, API Routes) paired with strict [TypeScript](https://www.typescriptlang.org/) for type safety and centralized interfaces.
-- **Database & ORM:** SQLite database management structured through [Prisma 6](https://www.prisma.io/).
+- **Database & ORM:** SQLite database management structured through [Prisma 7](https://www.prisma.io/).
 - **Authentication:** [NextAuth.js](https://next-auth.js.org/) handling secure sessions integrated with [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2).
 - **UI & Animations:** [Tailwind CSS](https://tailwindcss.com/) for a utility-first responsive design system, [Framer Motion](https://www.framer.com/motion/) for smooth layout animations, and [Lucide React](https://lucide.dev/) for optimized tree-shakable icons.
 - **Data Engineering & APIs:** Multi-source mashup engine leveraging the [MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) (lore extraction), [YouTube Data API v3](https://developers.google.com/youtube/v3) (video aggregation), [Tenrai API](https://tenrai.org/) (MyAnimeList stats), and dedicated community repositories (`narutodb-website`, `naruto-api`, `Dattebayo API`).
@@ -68,6 +68,7 @@ While the core application handles complex full-stack features, the production d
 
 - **Web Server & Database:** Built Next.js production server communicating with a local embedded SQLite instance via Prisma ORM.
 - **Containerization:** The entire stack and its environments are fully containerized and automated using **Docker** and **Docker Compose**, self-hosted on a dedicated **Debian VM**.
+- **Database path:** On the server, set `DATABASE_URL=file:./prisma/SQLite.db` in `/srv/naruto-chronicles/.env`. The deploy workflow intentionally preserves that file and the `prisma/` volume, so it must be updated separately when changing the database URL.
 - **Zero Trust Network:** Securely exposed using a **Cloudflare Tunnel (Zero Trust)**. This architecture allows secure hosting without opening any inbound ports on the local host firewall, providing native DDoS mitigation and automated SSL/TLS certificate management.
 - **Bot Mitigation:** [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) integration for frictionless anti-bot security on public forms.
 - **Ops Monitoring:** [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) routing runtime system event telemetry and contact form notifications directly to dedicated channels.
@@ -84,6 +85,8 @@ While the core application handles complex full-stack features, the production d
 ```bash
 git clone https://github.com/eolivarez2008/Naruto-Chronicles.git
 cd Naruto-Chronicles
+nvm install
+nvm use
 npm install
 ```
 
@@ -96,8 +99,7 @@ cp .env.example .env
 3. Set up the database:
 
 ```bash
-npx prisma db push
-npx prisma generate
+npm run db:push
 npx tsx prisma/seed.ts
 ```
 
@@ -108,6 +110,24 @@ npm run dev
 ```
 
 The site will be available at `http://localhost:3000`.
+
+### Pre-push checks
+
+Use an isolated SQLite file so local checks never alter your development or production database:
+
+```bash
+nvm install
+nvm use
+export DATABASE_URL="file:./prisma/ci.db"
+npm ci
+npx prisma validate
+npm run db:push
+npx tsc --noEmit
+npm run build
+docker compose build
+```
+
+GitHub Actions runs these checks and builds the Docker image before allowing a push to `main` to deploy. To run the verification job locally with [act](https://github.com/nektos/act), use `act pull_request -j verify`. Do not run the deployment job locally.
 
 ### Available Scripts
 

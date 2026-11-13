@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import {
   sleep,
   fetchWithRetry,
@@ -6,8 +6,6 @@ import {
   TENRAI_DELAY_MS,
 } from "@/lib/network";
 import { sendDiscordEmbed, sendDiscordFatal } from "../discord-logger";
-
-const prisma = new PrismaClient();
 
 const TENRAI_BASE = "https://api.tenrai.org/v1";
 
@@ -193,7 +191,9 @@ export async function run(): Promise<void> {
   const aborted = errors.length > 0;
 
   if (aborted) {
-    console.log(`\n🚫 ${errors.length} source(s) en échec — mise à jour annulée`);
+    console.log(
+      `\n🚫 ${errors.length} source(s) en échec — mise à jour annulée`,
+    );
     const duration = Math.round((Date.now() - startedAt) / 1000);
     await notify([], errors, true, duration);
     return;

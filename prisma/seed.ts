@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../src/lib/prisma";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import {
@@ -14,8 +14,6 @@ import {
   hasApiKey,
   VIDEO_CATEGORIES,
 } from "@/lib/youtube";
-
-const prisma = new PrismaClient();
 
 const TENRAI_BASE = "https://api.tenrai.org/v1";
 const DB_BATCH_SIZE = 50;
@@ -441,14 +439,17 @@ async function seedSagas(): Promise<void> {
     const endpoint = saga.type === "anime" ? "anime" : "manga";
 
     try {
-      const res = await fetchWithRetry(`${TENRAI_BASE}/${endpoint}/${saga.id}/full`);
+      const res = await fetchWithRetry(
+        `${TENRAI_BASE}/${endpoint}/${saga.id}/full`,
+      );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { data } = (await res.json()) as { data: Record<string, unknown> };
 
       let creator = "Masashi Kishimoto";
       const authors = data.authors as Array<{ name: string }> | undefined;
       const studios = data.studios as Array<{ name: string }> | undefined;
-      if (authors?.length) creator = authors[0].name.split(", ").reverse().join(" ");
+      if (authors?.length)
+        creator = authors[0].name.split(", ").reverse().join(" ");
       else if (studios?.length) creator = studios[0].name;
 
       const status =
@@ -458,14 +459,30 @@ async function seedSagas(): Promise<void> {
           ? "Terminé"
           : "En cours";
 
-      const images = data.images as Record<string, Record<string, string>> | undefined;
-      const aired = data.aired as Record<string, Record<string, Record<string, number>>> | undefined;
-      const published = data.published as Record<string, Record<string, Record<string, number>>> | undefined;
+      const images = data.images as
+        | Record<string, Record<string, string>>
+        | undefined;
+      const aired = data.aired as
+        | Record<string, Record<string, Record<string, number>>>
+        | undefined;
+      const published = data.published as
+        | Record<string, Record<string, Record<string, number>>>
+        | undefined;
 
-      const image = images?.jpg?.large_image_url?.trim() || "/logo/favicon-naruto.png";
-      const episodes = saga.type === "anime" ? ((data.episodes as number | null) ?? null) : null;
-      const chapters = saga.type === "manga" ? ((data.chapters as number | null) ?? null) : null;
-      const volumes = saga.type === "manga" ? ((data.volumes as number | null) ?? null) : null;
+      const image =
+        images?.jpg?.large_image_url?.trim() || "/logo/favicon-naruto.png";
+      const episodes =
+        saga.type === "anime"
+          ? ((data.episodes as number | null) ?? null)
+          : null;
+      const chapters =
+        saga.type === "manga"
+          ? ((data.chapters as number | null) ?? null)
+          : null;
+      const volumes =
+        saga.type === "manga"
+          ? ((data.volumes as number | null) ?? null)
+          : null;
 
       const whereCondition = {
         tenraiId_type: {

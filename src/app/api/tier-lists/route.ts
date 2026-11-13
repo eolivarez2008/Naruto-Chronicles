@@ -7,7 +7,7 @@ import type {
   SaveTierListPayload,
   TierRank,
 } from "@/types/tierlist";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 
 async function enrichTiersData(tiersData: string): Promise<string> {
   let tiers: TierRank[] = [];

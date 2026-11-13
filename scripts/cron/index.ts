@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { sendDiscordFatal } from "../discord-logger";
 import { run as runCharacters } from "./update-characters";
 import { run as runSagas } from "./update-sagas";
 import { run as runVideos } from "./update-videos";
-
-const prisma = new PrismaClient();
 
 interface TaskResult {
   label: string;

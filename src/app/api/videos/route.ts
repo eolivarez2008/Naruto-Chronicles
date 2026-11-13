@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import type { VideoCard, VideoSortField } from "@/types/videos";
 import { VIDEO_CATEGORIES } from "@/types/videos";
 import { auth } from "@/auth";
