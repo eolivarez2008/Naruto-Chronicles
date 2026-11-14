@@ -49,10 +49,10 @@ export default function Navbar() {
   const hasConsented = session?.user?.consentGiven === true;
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-10003 w-[92%] max-w-225 pointer-events-none font-sans">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-10003 w-[92%] max-w-230 pointer-events-none font-sans">
       <div className="flex flex-col items-center justify-center w-full">
         <div className="relative w-full bg-[#050505]/80 backdrop-blur-2xl border border-white/10 pointer-events-auto rounded-4xl p-2 shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
-          <div className="flex items-center justify-between w-full h-11 px-4">
+          <div className="flex items-center justify-between w-full h-11 px-2">
             <span className="lg:hidden text-white font-black tracking-tighter text-xs uppercase italic opacity-90">
               Naruto <span className="text-naruto-orange">Chronicles</span>
             </span>
@@ -87,7 +87,7 @@ export default function Navbar() {
                   <Link
                     href="/profile"
                     onClick={() => trackEvent(EVENTS.AUTH_LOGIN)}
-                    className="p-2 rounded-full bg-white/5 text-white/55 hover:text-white hover:bg-white/10 transition-all"
+                    className="p-2 ml-2 rounded-full bg-white/5 text-white/55 hover:text-white hover:bg-white/10 transition-all"
                   >
                     <User size={20} />
                   </Link>

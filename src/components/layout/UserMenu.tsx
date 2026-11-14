@@ -36,7 +36,7 @@ export default function UserMenu({ isMobile = false }: UserMenuProps) {
       <Link
         href="/profile"
         onClick={() => trackEvent(EVENTS.AUTH_LOGIN)}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
+        className="flex items-center gap-4 px-4 py-2 rounded-xl text-[13px] font-semibold text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
       >
         <User size={16} />
         <span>Connexion</span>
