@@ -2,12 +2,23 @@ import { auth, signIn, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import type { Metadata } from "next";
-import { LogOut, Calendar, ShieldCheck, Mail } from "lucide-react";
+import {
+  LogOut,
+  Calendar,
+  ShieldCheck,
+  Mail,
+  Flame,
+  ListOrdered,
+  Heart,
+  Scroll,
+  User,
+  ImageIcon,
+  CheckCircle2,
+} from "lucide-react";
 import DeleteAccountButton from "@/components/profile/DeleteAccountButton";
 import ConsentButtons from "@/components/profile/ConsentButtons";
 import ProfileTierLists from "@/components/profile/ProfileTierLists";
 import type { TierListCard } from "@/types/tierlist";
-import { Scroll, User, ImageIcon, CheckCircle2 } from "lucide-react";
 import { enrichTiersDataBatch } from "@/lib/tierlist";
 
 export const metadata: Metadata = {
@@ -70,7 +81,15 @@ export default async function ProfilePage({
   const session = await auth();
   const params = await searchParams;
 
-  if (!session?.user) return <LoginPage error={params.error} />;
+  if (!session?.user) {
+    const loginCharacters = await prisma.character.findMany({
+      where: { image: { not: null } },
+      select: { name: true, image: true },
+      orderBy: { popularity: "desc" },
+      take: 48,
+    });
+    return <LoginPage error={params.error} characters={loginCharacters} />;
+  }
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -300,45 +319,182 @@ function ConsentPage({ userId }: { userId: string }) {
   );
 }
 
-function LoginPage({ error }: { error?: string }) {
+function LoginPage({
+  error,
+  characters = [],
+}: {
+  error?: string;
+  characters: { name: string; image: string | null }[];
+}) {
+  // Deux rangées décalées, chacune dupliquée pour le loop sans couture
+  const row1 = characters.slice(0, 24);
+  const row2 = characters.slice(24, 48);
+
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-24">
-      <div className="w-full max-w-sm space-y-8 text-center">
-        <div className="text-naruto-orange w-fit mx-auto">
-          <Scroll size={80} />
-        </div>
-        <div className="space-y-3">
-          <h1 className="text-2xl font-black text-naruto-orange">
-            Connexion - Inscription
-          </h1>
-          <p className="text-white/40 text-sm">
-            Rejoins le village caché pour créer tes tier lists et bien plus
-            encore !
-          </p>
-        </div>
-        {error && (
-          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
-            {error}
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24 fade-in-up">
+      <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+        {/* ── Colonne gauche ── */}
+        <div className="flex-1 space-y-6 sm:space-y-8 w-full">
+          <div className="space-y-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+              Rejoins la
+              <br />
+              <span className="text-naruto-orange">communauté</span>
+            </h1>
+            <p className="text-white/50 text-base sm:text-lg leading-relaxed max-w-md">
+              Crée tes tier lists, sauvegarde tes vidéos favorites et rejoins
+              des milliers de fans de l&rsquo;univers Naruto.
+            </p>
           </div>
-        )}
-        <form
-          action={async () => {
-            "use server";
-            await signIn("google", { redirectTo: "/profile" });
-          }}
-        >
-          <button
-            type="submit"
-            className="w-full group relative flex items-center justify-center gap-3 px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-white font-bold text-sm transition-all shadow-xl active:scale-95 cursor-pointer"
-          >
-            <img
-              src="https://www.google.com/favicon.ico"
-              className="w-4 h-4 transition-all"
-              alt="Google"
-            />
-            Continuer avec Google
-          </button>
-        </form>
+
+          {/* Features */}
+          <ul className="space-y-4">
+            {[
+              {
+                icon: ListOrdered,
+                label: "Tier Lists personnalisées",
+                desc: "Crée et partage tes classements de personnages avec la communauté",
+              },
+              {
+                icon: Heart,
+                label: "Vidéos & listes favorites",
+                desc: "Retrouve tout ce que tu as aimé dans ton profil",
+              },
+              {
+                icon: ShieldCheck,
+                label: "Compte sécurisé & gratuit",
+                desc: "Connexion via Google, aucun mot de passe, 100% RGPD",
+              },
+            ].map(({ icon: Icon, label, desc }) => (
+              <li key={label} className="flex items-center gap-3 sm:gap-4">
+                <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-naruto-orange/10 border border-naruto-orange/15 flex items-center justify-center">
+                  <Icon size={18} className="text-naruto-orange sm:hidden" />
+                  <Icon
+                    size={22}
+                    className="text-naruto-orange hidden sm:block"
+                  />
+                </div>
+                <div>
+                  <p className="text-white/85 text-sm font-bold">{label}</p>
+                  <p className="text-white/35 text-xs leading-relaxed mt-0.5 hidden sm:block">
+                    {desc}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {/* Stats */}
+          <div className="flex gap-6 sm:gap-8 pt-1">
+            {[
+              ["1 000+", "Personnages"],
+              ["100%", "Gratuit"],
+              ["RGPD", "Conforme"],
+            ].map(([val, lbl]) => (
+              <div key={lbl}>
+                <div className="text-white font-semibold text-sm sm:text-base">
+                  {val}
+                </div>
+                <div className="text-white/40 text-xs mt-0.5">{lbl}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Colonne droite ── */}
+        <div className="w-full lg:w-[460px] shrink-0">
+          <div className="rounded-4xl max-w-md border border-white/10 bg-white/4 backdrop-blur-md p-5 sm:p-7 space-y-5 overflow-hidden relative">
+            <div className="space-y-1">
+              <h2 className="text-xl font-black text-white">
+                Connexion &amp; Inscription
+              </h2>
+              <p className="text-white/40 text-sm">
+                Rejoignez les ninjas en un seul clic !
+              </p>
+            </div>
+
+            {/* Panorama infini */}
+            <div className="relative rounded-2xl overflow-hidden py-2.5 space-y-2 -mx-5 sm:-mx-7">
+              {/* Rangée 1 → gauche */}
+              <div className="flex overflow-hidden">
+                <div className="flex gap-1.5 animate-marquee-left shrink-0">
+                  {[...row1, ...row1].map(({ name, image }, i) => (
+                    <div
+                      key={i}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden shrink-0 border border-white/8"
+                    >
+                      <img
+                        src={image ?? ""}
+                        alt={name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rangée 2 → droite */}
+              <div className="flex overflow-hidden">
+                <div className="flex gap-1.5 animate-marquee-right shrink-0">
+                  {[...row2, ...row2].map(({ name, image }, i) => (
+                    <div
+                      key={i}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden shrink-0 border border-white/8"
+                    >
+                      <img
+                        src={image ?? ""}
+                        alt={name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-black/60 pointer-events-none" />
+              {/* Fades latéraux */}
+              <div className="absolute inset-y-0 left-0 w-6 bg-linear-to-r from-black/60 to-transparent pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-6 bg-linear-to-l from-black/60 to-transparent pointer-events-none" />
+            </div>
+
+            {error && (
+              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
+                {error}
+              </div>
+            )}
+
+            <form
+              action={async () => {
+                "use server";
+                await signIn("google", { redirectTo: "/profile" });
+              }}
+            >
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-white hover:bg-white/92 text-black font-bold text-sm transition-all shadow-2xl shadow-black/30 active:scale-98 cursor-pointer"
+              >
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  className="w-4 h-4"
+                  alt="Google"
+                />
+                Continuer avec Google
+              </button>
+            </form>
+
+            <p className="text-center text-[11px] text-white/25 leading-relaxed">
+              En continuant, tu acceptes nos{" "}
+              <a
+                href="/legal"
+                className="underline underline-offset-2 hover:text-white/50 transition-colors"
+              >
+                Mentions Légales &amp; CGU
+              </a>
+              .
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
